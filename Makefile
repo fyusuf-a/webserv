@@ -1,31 +1,33 @@
-NAME	= webserv
+SRC = 	main.cpp\
+		srcs/config/config.cpp\
+		srcs/server/server.cpp\
+		srcs/server/serverConfig.cpp\
+		srcs/utils/utils.cpp\
+		srcs/webserv/webserv.cpp\
 
-SRCS	 = main.cpp
 
-OBJS	 = ${SRCS:.cpp=.o}
-CC_FLAGS = -Werror -Wextra -Wall -std=c++98
 
-CC		= clang++
-LIBS	=
+NAME = Webserv
+HEADERS = includes
+CC = g++
+CFLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
+O_FILES = $(SRC:.c=.o)
 
-all:	${NAME}
 
-debug: CC_FLAGS += -g3
-debug: CC_FLAGS += -D DEBUG
-debug: all
+.PHONY: clean fclean re
 
-clean:
-	rm -f ${OBJS}
+all : $(NAME)
 
-fclean:	clean
-	rm -f ${NAME}
 
-re:		fclean all
+$(NAME) : $(O_FILES)
+	$(CC) $(CFLAGS) $^ -o $(NAME)
+	@echo "\033[33;32mCompilation...\t""\033[33;31mDONE 🙃"
 
-$(NAME):	${OBJS}
-	${CC} ${CC_FLAGS} ${OBJS} -o ${NAME} ${LIBS}
+clean :
+	@echo "\033[33;36mDeleting - *.o..."
 
-.cpp.o:
-	${CC} ${CC_FLAGS} -I. -c $< -o ${<:.cpp=.o}
+fclean : clean
+	rm -f $(NAME)
+	@echo "\033[33;36mDeleting - exec..."
 
-.PHONY:	all clean fclean re debug
+re : fclean all
