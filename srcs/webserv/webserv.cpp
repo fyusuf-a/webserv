@@ -2,11 +2,11 @@
 
 WebServ::WebServ() : _conf(){};
 
-WebServ::WebServ(const WebServ &other){};
+WebServ::WebServ(const WebServ &other){(void)other;};
 
 WebServ::~WebServ(){};
 
-WebServ &WebServ::operator=(const WebServ &other){return *this;};
+WebServ &WebServ::operator=(const WebServ &other){(void)other;return *this;}
 
 
 

@@ -2,7 +2,7 @@
 
 Config::Config(){}
 
-Config::Config(const Config &other){}
+Config::Config(const Config &other){(void)other;}
 
 Config::~Config(){}
 
@@ -127,6 +127,7 @@ bool Config::parse_value(std::string const &line, std::string &value, int i)
 
 void Config::setup_location(ITER &start, ITER &end)
 {
+    (void)end, (void)start;
     // std::string directive;
     // std::string value;
 
