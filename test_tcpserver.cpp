@@ -1,6 +1,9 @@
-#define DEBUG
+#ifndef DEBUG
+# define DEBUG
+#endif
 #include "TCPServer.hpp"
 #include <cctype>
+#include <arpa/inet.h>
 
 #define MAX_LENGTH 1000
 
@@ -28,7 +31,9 @@ int main(int argc, char** argv)
 			}
 			catch (std::runtime_error& e)
 			{
-				std::cerr << "Connection closed with" << std::endl;
+				char str[INET_ADDRSTRLEN];
+				std::cerr << "Connection closed with" << inet_ntop(AF_INET, active_socket->_address, str, INET_ADDRSTRLEN) << " " << active_socket->_port << std::endl;
+	//inet_pton(AF_INET, address, &(my_addr.sin_addr));
 				delete active_socket;
 				break;
 			}

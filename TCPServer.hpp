@@ -36,6 +36,10 @@ public:
 	std::string recv(int maxlen, int flags = 0) throw (std::runtime_error);
 	ssize_t		recv(void *buf, int maxlen, int flags = 0) throw (std::runtime_error);
 
+	int		_fd;
+	long	_address;
+	short	_port;
+	long	_client_address;
 protected:
 	//int				overflow(int);
 	//int				underflow();
@@ -45,10 +49,6 @@ protected:
 
 protected:
 	void	init(struct sockaddr_in &my_addr, short &port);
-	int		_fd;
-	long	_address;
-	short	_port;
-	long	_client_address;
 };
 
 #endif
