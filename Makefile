@@ -31,9 +31,6 @@ fclean : clean
 	rm -f $(NAME)
 	@echo "\033[33;36mDeleting - exec..."
 
-test:
-	exit 0
-
 re : fclean all
 
 test : all
