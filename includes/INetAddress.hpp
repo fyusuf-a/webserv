@@ -1,5 +1,5 @@
-#ifndef INETADDRESS_HPPPP
-#define INETADDRESS_HPPPP
+#ifndef INETADDRESS_HPP
+#define INETADDRESS_HPP
 
 #include <cstdio>
 #include <cstdlib>
