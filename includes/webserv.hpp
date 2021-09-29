@@ -8,7 +8,6 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <libc.h>
 #include <iostream>
 #include "config.hpp"
 #include "server.hpp"
