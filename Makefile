@@ -9,7 +9,7 @@ SRC = 	main.cpp\
 
 NAME = Webserv
 HEADERS = -Iincludes
-CC = clang++
+CC = g++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
 O_FILES = $(SRC:.cpp=.o)
 
@@ -37,6 +37,6 @@ test : all
 	cd test && ./test_tcpserver.sh
 
 .cpp.o:
-	${CC} ${CC_FLAGS} $(HEADERS) -c $< -o ${<:.cpp=.o}
+	${CC} ${CFLAGS} $(HEADERS) -c $< -o ${<:.cpp=.o}
 
 .PHONY: all clean fclean re debug test
