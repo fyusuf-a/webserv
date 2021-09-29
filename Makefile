@@ -11,7 +11,7 @@ NAME = Webserv
 HEADERS = -Iincludes
 CC = clang++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
-O_FILES = $(SRC:.c=.o)
+O_FILES = $(SRC:.cpp=.o)
 
 all : $(NAME)
 
@@ -33,7 +33,10 @@ fclean : clean
 
 re : fclean all
 
+test : all
+	cd test && ./test_tcpserver.sh
+
 .cpp.o:
 	${CC} ${CC_FLAGS} $(HEADERS) -c $< -o ${<:.cpp=.o}
 
-.PHONY: all clean fclean re debug
+.PHONY: all clean fclean re debug test
