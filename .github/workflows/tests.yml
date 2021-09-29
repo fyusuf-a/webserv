@@ -15,5 +15,5 @@ jobs:
     - uses: actions/checkout@v2
     - name: make test
       run: 
-        apt update && apt install -y netcat
+        sudo apt update && sudo apt install -y netcat
         make test
