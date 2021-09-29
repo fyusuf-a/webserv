@@ -4,26 +4,27 @@ SRC = 	main.cpp\
 		srcs/server/serverConfig.cpp\
 		srcs/utils/utils.cpp\
 		srcs/webserv/webserv.cpp\
-
-
+		srcs/server/TCPServer.cpp\
+		srcs/ipaddress/INetAddress.cpp
 
 NAME = Webserv
-HEADERS = includes
-CC = g++
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
+HEADERS = -Iincludes
+CC = clang++
+CFLAGS = -Wall -Wextra -Werror -std=c++98
 O_FILES = $(SRC:.c=.o)
-
-
-.PHONY: clean fclean re
 
 all : $(NAME)
 
-
 $(NAME) : $(O_FILES)
-	$(CC) $(CFLAGS) $^ -o $(NAME)
+	$(CC) $(CFLAGS) $(HEADERS) $(O_FILES) -o $(NAME)
 	@echo "\033[33;32mCompilation...\t""\033[33;31mDONE 🙃"
 
+debug: CFLAGS += -g3 -fsanitize=address
+debug: CFLAGS += -D DEBUG
+debug: all
+
 clean :
+	rm -f $(O_FILES)
 	@echo "\033[33;36mDeleting - *.o..."
 
 fclean : clean
@@ -31,3 +32,8 @@ fclean : clean
 	@echo "\033[33;36mDeleting - exec..."
 
 re : fclean all
+
+.cpp.o:
+	${CC} ${CC_FLAGS} $(HEADERS) -c $< -o ${<:.cpp=.o}
+
+.PHONY: all clean fclean re debug

@@ -1,6 +1,7 @@
 #ifndef TCPSOCKET_HPP
 #define TCPSOCKET_HPP
 
+#include "INetAddress.hpp"
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
@@ -14,38 +15,32 @@
 #include <unistd.h>
 #include <cstring>
 
-typedef int Handle;
-
-class TCPSocket { //: public std::streambuf {
+class TCPServer { //: public std::streambuf {
 
 public:
 
-	TCPSocket();
+	TCPServer();
 	// Use socket as a server
-	TCPSocket(short port);
-	//TCPSocket(int fd);
+	TCPServer(short port);
+	//TCPServer(int fd);
 	// Use socket as a client
-	TCPSocket(char *address, short port);
-	TCPSocket(const TCPSocket&);
-	TCPSocket&	operator=(const TCPSocket&);
-	virtual 	~TCPSocket();
-	void		listen(short port);
-	TCPSocket*	accept() const throw (std::runtime_error);
+	TCPServer(char *address, short port);
+	TCPServer(const TCPServer&);
+	TCPServer&	operator=(const TCPServer&);
+	virtual 	~TCPServer();
+	void		listen();
+	TCPServer*	accept() const throw (std::runtime_error);
 	ssize_t		send(const std::string& message, int flags = 0) throw (std::runtime_error);
 	ssize_t		send(const void *msg, int len, int flags = 0) throw (std::runtime_error);
 	std::string recv(int maxlen, int flags = 0) throw (std::runtime_error);
 	ssize_t		recv(void *buf, int maxlen, int flags = 0) throw (std::runtime_error);
 
 	int		_fd;
-	long	_address;
-	short	_port;
-	long	_client_address;
-protected:
-	//int				overflow(int);
-	//int				underflow();
-	//std::streambuf*	setbuf(char*, int, int);
-	//int				sync;
-	//virtual int		underflow(int c = EOF);
+	INetAddress	_address;
+
+	//long	_address;
+	//short	_port;
+	//long	_client_address;
 
 protected:
 	void	init(struct sockaddr_in &my_addr, short &port);
