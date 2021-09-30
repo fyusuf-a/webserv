@@ -1,11 +1,10 @@
 #include "TCPServer.hpp"
 #include "INetAddress.hpp"
-#include <sys/socket.h>
 
 TCPServer::TCPServer() {
 }
 
-TCPServer::TCPServer(short port) { //:	_port(port)  {
+TCPServer::TCPServer(short port, bool nonblocking) { //:	_port(port)  {
 	_address = INetAddress(INADDR_ANY, port);
 	if ((_fd = socket(PF_INET, SOCK_STREAM, 0)) < 0)
 	{
@@ -13,19 +12,27 @@ TCPServer::TCPServer(short port) { //:	_port(port)  {
 		oss << "Cannot initialize socket (address " << _address << ')';
 		throw std::runtime_error(oss.str());
 	}
-	//if (bind(_fd, (struct sockaddr*)&my_addr, sizeof my_addr) < 0)
-	struct sockaddr_in my_struct = _address.getAddress();
-	if (bind(_fd, (struct sockaddr*)&my_struct, sizeof my_struct) < 0)
-	{
-		std::ostringstream oss;
-		oss << "cannot bind socket (address: " << _address << ')';
-		throw std::runtime_error(oss.str());
-	}
 	int yes = 1;
 	if (setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes) < 0)
 	{
 		std::ostringstream oss;
 		oss << "setsockopt: unexpected error while setting socket options (address: " << _address << ')';
+		throw std::runtime_error(oss.str());
+	}
+	if (nonblocking)
+	{
+		if (fcntl(_fd, F_SETFL, O_NONBLOCK) < 0)
+		{
+			std::ostringstream oss;
+			oss << "cannot set socket to be not blocking (address: " << _address << ')';
+			throw std::runtime_error(oss.str());
+		}
+	}
+	struct sockaddr_in my_struct = _address.getAddress();
+	if (bind(_fd, (struct sockaddr*)&my_struct, sizeof my_struct) < 0)
+	{
+		std::ostringstream oss;
+		oss << "cannot bind socket (address: " << _address << ')';
 		throw std::runtime_error(oss.str());
 	}
 	if (::listen(_fd, SOMAXCONN) < 0)

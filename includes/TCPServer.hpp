@@ -14,6 +14,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <cstring>
+#include <fcntl.h>
 
 class TCPServer { //: public std::streambuf {
 
@@ -21,7 +22,7 @@ public:
 
 	TCPServer();
 	// Use socket as a server
-	TCPServer(short port);
+	TCPServer(short port, bool nonblocking=true);
 	//TCPServer(int fd);
 	// Use socket as a client
 	TCPServer(char *address, short port);

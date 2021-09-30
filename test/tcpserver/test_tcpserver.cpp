@@ -11,7 +11,7 @@ int main(int argc, char** argv)
 		std::cerr << "No port was given as an argument" << std::endl;
 		return 1;
 	}
-	TCPServer my_server(atoi(argv[1]));
+	TCPServer my_server(atoi(argv[1]), false);
 
 	std::string	received;
 	TCPServer	*active_socket;
