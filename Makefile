@@ -17,7 +17,7 @@ all : $(NAME)
 
 $(NAME) : $(O_FILES)
 	$(CC) $(CFLAGS) $(HEADERS) $(O_FILES) -o $(NAME)
-	@echo "\033[33;32mCompilation...\t""\033[33;31mDONE 🙃"
+	@echo "\033[33;32mCompilation...\t""\033[33;31mDONE 🙃\033[0m"
 
 debug: CFLAGS += -g3 -fsanitize=address
 debug: CFLAGS += -D DEBUG
@@ -25,11 +25,11 @@ debug: all
 
 clean :
 	rm -f $(O_FILES)
-	@echo "\033[33;36mDeleting - *.o..."
+	@echo "\033[33;36mDeleting - *.o...\033[0m"
 
 fclean : clean
 	rm -f $(NAME)
-	@echo "\033[33;36mDeleting - exec..."
+	@echo "\033[33;36mDeleting - exec...\033[0m"
 
 re : fclean all
 
