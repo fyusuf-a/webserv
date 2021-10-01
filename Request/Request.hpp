@@ -10,7 +10,7 @@ class Request
 		int				_code;
 	public:
 		Request();
-		Request( ParsedRequest & req );
+		Request( ParsedRequest req );
 		Request( Request const & src );
 		~Request();
 		Request & operator=( Request const & rhs );
