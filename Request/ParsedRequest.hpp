@@ -10,7 +10,7 @@ class ParsedRequest
 		std::string _path;
 		std::string _protocol;
 		std::map<std::string, std::string> _header;
-		std::map<std::string, std::string> _body;
+		std::string _body;
 		int			_head;
 
 	public:
@@ -24,7 +24,7 @@ class ParsedRequest
 		std::string							get_path(void) const;
 		std::string							get_protocol(void) const;
 		std::map<std::string, std::string>	get_header(void) const;
-		std::map<std::string, std::string>	get_body(void) const;
+		std::string							get_body(void) const;
 		int									get_head(void) const;
 };
 

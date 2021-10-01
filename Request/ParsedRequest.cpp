@@ -9,6 +9,8 @@ std::string	extract_attribute(std::string req_copy, std::string terminating, cha
 	std::string	attribute;
 
 	length = req_copy.find(terminating);
+	if (length == req_copy.npos)
+		std::cout << "he" << std::endl;
 	attribute = req_copy.substr(0, length);
 	(*ptr) += length + terminating.length();
 	return attribute;
@@ -39,11 +41,11 @@ char		*ParsedRequest::parse(char *ptr) {
 				(extract_attribute(req_copy, ":", &ptr), ft_strtrim(extract_attribute((std::string)ptr, "\r\n", &ptr))));
 			break;
 		case 3:
-			_body.insert(std::pair<std::string, std::string>
-				(extract_attribute(req_copy, ":", &ptr), ft_strtrim(extract_attribute((std::string)ptr, "\r\n", &ptr))));
+			_body = extract_attribute(req_copy, "\r\n\r\n", &ptr);
+			++_head;
 			break;
 	}
-	if (((std::string)ptr).find("\r\n") == 0 && _head > 1) {
+	if (((std::string)ptr).find("\r\n") == 0 && _head == 2) {
 		_head++;
 		ptr += 2;
 	}
@@ -66,7 +68,7 @@ std::map<std::string, std::string>	ParsedRequest::get_header(void) const {
 	return this->_header;
 }
 
-std::map<std::string, std::string>	ParsedRequest::get_body(void) const {
+std::string							ParsedRequest::get_body(void) const {
 	return this->_body;
 }
 

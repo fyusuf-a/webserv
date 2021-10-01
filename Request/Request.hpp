@@ -18,6 +18,7 @@ class Request
 		ParsedRequest	get_fields(void) const;
 		int				get_code(void) const;
 		void			check(void);
+		int				check_header(void);
 };
 
 #endif
