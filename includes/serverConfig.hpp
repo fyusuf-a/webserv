@@ -11,6 +11,7 @@ class ServerConfig
     private:
         std::string					_host;
 		std::string					_name;
+		std::string					_error;
 		std::string					_server_root;
 		int							_port;
 
@@ -26,11 +27,14 @@ class ServerConfig
         void            set_host(std::string const &ip);;
         void            set_name(std::string const &name);;
         void            set_root(std::string const &path);
+        void            set_error(std::string const &error);
 
         int             get_port(void);
         std::string    const &get_host(void);
         std::string    const &get_name(void);
         std::string    const &get_root(void);
+        std::string    const &get_error(void);
+
 
         void test(void);
 

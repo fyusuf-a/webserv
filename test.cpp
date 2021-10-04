@@ -42,6 +42,9 @@ void go()
 
 int main()
 {
-    go();
+    std::string str = "post, get  , get";
+
+    std::string st = str.substr(5, 11);
+    std::cout << st << std::endl;
     return 0;
 }

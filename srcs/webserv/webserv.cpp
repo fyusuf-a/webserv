@@ -14,5 +14,6 @@ WebServ &WebServ::operator=(const WebServ &other){(void)other;return *this;}
 void WebServ::init(std::string path)
 {
     _conf.parsing(path, this->_servers);
-    std::cout << "->" << _servers[0]._serverConf.get_host() << std::endl; 
+    std::cout << "->" << _servers[0]._serverConf.get_error() << std::endl; 
+
 }

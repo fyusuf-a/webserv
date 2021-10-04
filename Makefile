@@ -1,7 +1,8 @@
 SRC = 	main.cpp\
-		srcs/config/config.cpp\
+		srcs/parsingConf/parsingConf.cpp\
 		srcs/server/server.cpp\
 		srcs/server/serverConfig.cpp\
+		srcs/server/serverLocation.cpp\
 		srcs/utils/utils.cpp\
 		srcs/webserv/webserv.cpp\
 
@@ -11,7 +12,7 @@ NAME = Webserv
 HEADERS = includes
 CC = g++
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
-O_FILES = $(SRC:.c=.o)
+O_FILES = $(SRC:.cpp=.o)
 
 
 .PHONY: clean fclean re
