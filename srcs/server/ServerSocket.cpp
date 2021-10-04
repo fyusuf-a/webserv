@@ -1,10 +1,10 @@
-#include "TCPServer.hpp"
-#include "INetAddress.hpp"
+#include "../../includes/ServerSocket.hpp"
+#include "../../includes/INetAddress.hpp"
 
-TCPServer::TCPServer() {
+ServerSocket::ServerSocket() {
 }
 
-TCPServer::TCPServer(short port, bool nonblocking) { //:	_port(port)  {
+ServerSocket::ServerSocket(short port, bool nonblocking) { //:	_port(port)  {
 	_address = INetAddress(INADDR_ANY, port);
 	if ((_fd = socket(PF_INET, SOCK_STREAM, 0)) < 0)
 	{
@@ -47,7 +47,7 @@ TCPServer::TCPServer(short port, bool nonblocking) { //:	_port(port)  {
 }
 
 // Examples for address : "90,.12.110.57", "127.0.0.1", etc.
-/*TCPServer::TCPServer(char *address, short port) { //:	_port(port)  {
+/*ServerSocket::ServerSocket(char *address, short port) { //:	_port(port)  {
 	_address = INetAddress(INADDR_ANY, port);
 	if ((_fd = socket(PF_INET, SOCK_STREAM, 0)) < 0)
 	{
@@ -66,11 +66,11 @@ TCPServer::TCPServer(short port, bool nonblocking) { //:	_port(port)  {
 	}
 }*/
 
-TCPServer::~TCPServer() {
+ServerSocket::~ServerSocket() {
 	close(_fd);
 }
 
-void	TCPServer::listen() {
+void	ServerSocket::listen() {
 	if (::listen(_fd, SOMAXCONN) < 0)
 	{
 		std::ostringstream oss;
@@ -79,7 +79,7 @@ void	TCPServer::listen() {
 	}
 }
 
-TCPServer*	 TCPServer::accept() const throw (std::runtime_error)
+ServerSocket*	 ServerSocket::accept() const throw (std::runtime_error)
 {
 	struct sockaddr_storage		address;
 	socklen_t					addr_len;
@@ -88,7 +88,7 @@ TCPServer*	 TCPServer::accept() const throw (std::runtime_error)
 	int newfd = ::accept(_fd, reinterpret_cast<struct sockaddr*>(&address), &addr_len);
 	if (newfd < 0)
 		throw std::runtime_error("accept: error");
-	TCPServer *newSocket = new TCPServer();
+	ServerSocket *newSocket = new ServerSocket();
 	newSocket->_fd = newfd;
 	newSocket->_address.setPort((*reinterpret_cast<struct sockaddr_in*>(&address)).sin_port);
 #ifdef DEBUG 
@@ -97,12 +97,12 @@ TCPServer*	 TCPServer::accept() const throw (std::runtime_error)
 	return (newSocket);
 }
 
-ssize_t TCPServer::send(const std::string& message, int flags) throw (std::runtime_error)
+ssize_t ServerSocket::send(const std::string& message, int flags) throw (std::runtime_error)
 {
 	return ::send(_fd, message.c_str(), message.length(), flags);
 }
 
-ssize_t TCPServer::send(const void *msg, int len, int flags) throw (std::runtime_error)
+ssize_t ServerSocket::send(const void *msg, int len, int flags) throw (std::runtime_error)
 {
 	ssize_t ret = ::send(_fd, msg, len, flags);
 	if (ret < 0)
@@ -110,14 +110,14 @@ ssize_t TCPServer::send(const void *msg, int len, int flags) throw (std::runtime
 	return ret;
 }
 
-std::string TCPServer::recv(int maxlen, int flags) throw (std::runtime_error)
+std::string ServerSocket::recv(int maxlen, int flags) throw (std::runtime_error)
 {
 	char	tmp[maxlen];
 	ssize_t ret = recv(tmp, maxlen, flags);
 	return (std::string(tmp, ret));
 }
 
-ssize_t TCPServer::recv(void *buf, int maxlen, int flags) throw (std::runtime_error)
+ssize_t ServerSocket::recv(void *buf, int maxlen, int flags) throw (std::runtime_error)
 {
 	ssize_t ret = ::recv(_fd, buf, maxlen, flags);
 	if (ret < 0)
@@ -125,4 +125,8 @@ ssize_t TCPServer::recv(void *buf, int maxlen, int flags) throw (std::runtime_er
 	if (ret == 0)
 		throw std::runtime_error("recv: remote host closed connection");
 	return (ret);
+}
+
+int ServerSocket::getFd() const {
+	return _fd;
 }
