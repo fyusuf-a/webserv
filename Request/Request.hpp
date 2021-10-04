@@ -1,24 +1,35 @@
 #ifndef REQUEST_HPP
 # define REQUEST_HPP
 # include <iostream>
-# include "ParsedRequest.hpp"
+# include <map>
 
 class Request
 {
 	private:
-		ParsedRequest	_fields;
-		int				_code;
+		std::string	_method;
+		std::string _path;
+		std::string _protocol;
+		std::map<std::string, std::string> _header;
+		std::string _body;
+		int			_head;
+		int			_code;
+
 	public:
 		Request();
-		Request( ParsedRequest req );
-		Request( Request const & src );
+		Request(char *str);
 		~Request();
+		Request( Request const & src );
 		Request & operator=( Request const & rhs );
 
-		ParsedRequest	get_fields(void) const;
-		int				get_code(void) const;
-		void			check(void);
-		int				check_header(void);
+		char								*parse(char *str);
+		void								check(void);
+		int									check_header(void);
+		std::string							get_method(void) const;
+		std::string							get_path(void) const;
+		std::string							get_protocol(void) const;
+		std::map<std::string, std::string>	get_header(void) const;
+		std::string							get_body(void) const;
+		int									get_head(void) const;
 };
 
 #endif

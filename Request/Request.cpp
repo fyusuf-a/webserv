@@ -1,72 +1,91 @@
 #include "Request.hpp"
-#include <list>
 
-int				Request::check_header(void) {
-	std::list<std::string>				headers;
-	size_t								count = 0;
-	std::list<std::string>::iterator	iter = headers.begin();
+std::string	ft_strtrim(std::string str) {
+	return str.substr(str.find_first_not_of(" \n\r\v\t\f"), str.find_first_not_of(" \n\r\v\t\f") - str.find_last_not_of(" \n\r\v\t\f"));
+}
 
-	headers.push_back("Accept");
-	headers.push_back("Accept-Charset");
-	headers.push_back("Accept-Encoding");
-	headers.push_back("Accept-Language");
-	headers.push_back("Accept-Ranges");
-	headers.push_back("Age");
-	headers.push_back("Allow");
-	headers.push_back("Authorization");
-	headers.push_back("Cache-Control");
-	headers.push_back("Connection");
-	headers.push_back("Content_Encoding");
-	headers.push_back("Content_Language");
-	headers.push_back("Content_Length");
-	headers.push_back("Content_Location");
-	headers.push_back("Content_MD5");
-	headers.push_back("Content_Range");
-	headers.push_back("Content_Type");
-	headers.push_back("Date");
-	headers.push_back("Etag");
-	headers.push_back("Expect");
-	headers.push_back("Expires");
-	headers.push_back("From");
+std::string	extract_attribute(std::string req_copy, std::string terminating, char **ptr) {
+	std::size_t	length;
+	std::string	attribute;
 
-	while (iter != headers.end()) {
-		if (this->_fields.get_header()[*iter] != "")
-			++count;
-		iter++;
+	length = req_copy.find(terminating);
+	attribute = req_copy.substr(0, length);
+	(*ptr) += length + terminating.length();
+	return attribute;
+}
+
+char		*Request::parse(char *ptr) {
+	std::string	req_copy = (std::string)ptr;
+	std::size_t	idx;
+
+	switch(this->get_head()) {
+		case 0:
+			_method = extract_attribute(req_copy, " ", &ptr);
+			++_head;
+			while (*ptr == ' ')
+				ptr++;
+			break;
+		case 1:
+			_path = extract_attribute(req_copy, "\r\n", &ptr);
+			idx = _path.find(' ');
+			if (idx < _path.length()) {
+				_protocol = ft_strtrim(_path.substr(_path.find(' '), _path.length()));
+				_path = _path.substr(0, idx);
+			}
+			++_head;
+			break;
+		case 2:
+			_header.insert(std::pair<std::string, std::string>
+				(extract_attribute(req_copy, ":", &ptr), ft_strtrim(extract_attribute((std::string)ptr, "\r\n", &ptr))));
+			break;
+		case 3:
+			if (_header["Content-Length"] == "" && _header["Transfer-Encoding"] == "") {
+				++_head;
+				return ptr; 
+			}
+			_body = extract_attribute(req_copy, "\r\n\r\n", &ptr);
+			++_head;
+			break;
 	}
-	if (count != this->_fields.get_header().size())
-		return (1);
-	return (0);
+	if (((std::string)ptr).find("\r\n") == 0 && _head == 2) {
+		_head++;
+		ptr += 2;
+	}
+	return ptr;
 }
 
-void			Request::check(void) {
-	std::string met = _fields.get_method();
-	if (met != "GET" && met != "POST" && met != "DELETE")
-		throw(501);
-
-	if (_fields.get_path()[0] != '/')
-		throw(400);
-
-	if (_fields.get_protocol() != "HTTP/1.1")
-		throw(505);
-
-	if (check_header())
-		throw(400);
-
+std::string							Request::get_method(void) const {
+	return this->_method;
 }
 
-int				Request::get_code(void) const {
-	return this->_code;
+std::string							Request::get_path(void) const {
+	return this->_path;
 }
 
-ParsedRequest	Request::get_fields(void) const {
-	return this->_fields;
+std::string							Request::get_protocol(void) const {
+	return this->_protocol;
+}
+
+std::map<std::string, std::string>	Request::get_header(void) const {
+	return this->_header;
+}
+
+std::string							Request::get_body(void) const {
+	return this->_body;
+}
+
+int									Request::get_head(void) const {
+	return this->_head;
 }
 
 Request & 		Request::operator=( Request const & rhs ){
 	if (this != &rhs) {
-		this->_fields = rhs.get_fields();
-		this->_code = rhs.get_code();
+		this->_method = rhs.get_method();
+		this->_path = rhs.get_path();
+		this->_protocol = rhs.get_protocol();
+		this->_header = rhs.get_header();
+		this->_body = rhs.get_body();
+		this->_head = rhs.get_head();
 	}
 	return *this;
 }
@@ -75,12 +94,11 @@ Request::Request( Request const & src ) {
 	return ;
 }
 
-Request::Request() : _code(200) {
+Request::Request() : _head(0), _code(200) {
 }
 
-Request::Request( ParsedRequest req ) : _fields(req), _code(200) {
-	try { this->check(); }
-	catch (int code) { _code = code; std::cout << code << std::endl;};
+Request::Request(char *str) : _head(0), _code(200) {
+	this->parse(str);
 }
 
 Request::~Request() {
