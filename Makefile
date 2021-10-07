@@ -5,6 +5,8 @@ SRC = 	main.cpp\
 		srcs/utils/utils.cpp\
 		srcs/webserv/webserv.cpp\
 		srcs/server/Socket.cpp\
+		srcs/server/ActiveSocket.cpp\
+		srcs/server/PassiveSocket.cpp\
 		srcs/server/NIOSelector.cpp\
 		srcs/ipaddress/INetAddress.cpp
 

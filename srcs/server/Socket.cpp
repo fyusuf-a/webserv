@@ -1,10 +1,22 @@
 #include "../../includes/Socket.hpp"
 #include "../../includes/INetAddress.hpp"
 
-ServerSocket::ServerSocket() {
+Socket::Socket() {
 }
 
-ServerSocket::ServerSocket(short port, bool nonblocking) { //:	_port(port)  {
+Socket::Socket(const Socket& src) {
+	*this = src;
+}
+
+Socket& Socket::operator=(const Socket& src) {
+	if (this != &src) {
+		_fd = src._fd;
+		_address = src._address;
+	}
+	return (*this);
+}
+
+Socket::Socket(short port, bool nonblocking) { //:	_port(port)  {
 	_address = INetAddress(INADDR_ANY, port);
 	if ((_fd = socket(PF_INET, SOCK_STREAM, 0)) < 0)
 	{
@@ -13,12 +25,18 @@ ServerSocket::ServerSocket(short port, bool nonblocking) { //:	_port(port)  {
 		throw std::runtime_error(oss.str());
 	}
 	int yes = 1;
+#if DEBUG
+	std::cerr << "Initialized socket (address " << _address << ')' << std::endl;
+#endif
 	if (setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes) < 0)
 	{
 		std::ostringstream oss;
 		oss << "setsockopt: unexpected error while setting socket options (address: " << _address << ')';
 		throw std::runtime_error(oss.str());
 	}
+#if DEBUG
+	std::cerr << "Options set (address " << _address << ')' << std::endl;
+#endif
 	if (nonblocking)
 	{
 		if (fcntl(_fd, F_SETFL, O_NONBLOCK) < 0)
@@ -28,6 +46,9 @@ ServerSocket::ServerSocket(short port, bool nonblocking) { //:	_port(port)  {
 			throw std::runtime_error(oss.str());
 		}
 	}
+#if DEBUG
+	std::cerr << "Socket set as nonblocking (address " << _address << ')' << std::endl;
+#endif
 	struct sockaddr_in my_struct = _address.getAddress();
 	if (bind(_fd, (struct sockaddr*)&my_struct, sizeof my_struct) < 0)
 	{
@@ -35,42 +56,16 @@ ServerSocket::ServerSocket(short port, bool nonblocking) { //:	_port(port)  {
 		oss << "cannot bind socket (address: " << _address << ')';
 		throw std::runtime_error(oss.str());
 	}
-	if (::listen(_fd, SOMAXCONN) < 0)
-	{
-		std::ostringstream oss;
-		oss << "Cannot listen on socket (address: " << _address << ')';
-		throw std::runtime_error(oss.str());
-	}
-#ifdef DEBUG
-	std::cerr << "Listening on " << _address << std::endl;
+#if DEBUG
+	std::cerr << "Socket bound (address " << _address << ')' << std::endl;
 #endif
 }
 
-// Examples for address : "90,.12.110.57", "127.0.0.1", etc.
-/*ServerSocket::ServerSocket(char *address, short port) { //:	_port(port)  {
-	_address = INetAddress(INADDR_ANY, port);
-	if ((_fd = socket(PF_INET, SOCK_STREAM, 0)) < 0)
-	{
-		std::ostringstream oss;
-		oss << "Cannot initialize socket (address " << _address << ')';
-		throw std::runtime_error(oss.str());
-	}
-	// Code my own inet_pton
-	inet_pton(AF_INET, address, &(my_addr.sin_addr));
-	memset(my_addr.sin_zero, '\0', sizeof my_addr.sin_zero);
-	if (connect(_fd, (struct sockaddr*)&my_addr, sizeof my_addr) < 0)
-	{
-		std::ostringstream oss;
-		oss << "Cannot connect socket to address " << address << "on port " << port;
-		throw std::runtime_error(oss.str());
-	}
-}*/
-
-ServerSocket::~ServerSocket() {
+Socket::~Socket() {
 	close(_fd);
 }
 
-void	ServerSocket::listen() {
+void	Socket::listen() {
 	if (::listen(_fd, SOMAXCONN) < 0)
 	{
 		std::ostringstream oss;
@@ -79,7 +74,7 @@ void	ServerSocket::listen() {
 	}
 }
 
-ServerSocket*	 ServerSocket::accept() const throw (std::runtime_error)
+Socket*	 Socket::accept() const throw (std::runtime_error)
 {
 	struct sockaddr_storage		address;
 	socklen_t					addr_len;
@@ -88,7 +83,7 @@ ServerSocket*	 ServerSocket::accept() const throw (std::runtime_error)
 	int newfd = ::accept(_fd, reinterpret_cast<struct sockaddr*>(&address), &addr_len);
 	if (newfd < 0)
 		throw std::runtime_error("accept: error");
-	ServerSocket *newSocket = new ServerSocket();
+	Socket *newSocket = new Socket();
 	newSocket->_fd = newfd;
 	newSocket->_address.setPort((*reinterpret_cast<struct sockaddr_in*>(&address)).sin_port);
 #ifdef DEBUG 
@@ -97,12 +92,12 @@ ServerSocket*	 ServerSocket::accept() const throw (std::runtime_error)
 	return (newSocket);
 }
 
-ssize_t ServerSocket::send(const std::string& message, int flags) throw (std::runtime_error)
+ssize_t Socket::send(const std::string& message, int flags) throw (std::runtime_error)
 {
 	return ::send(_fd, message.c_str(), message.length(), flags);
 }
 
-ssize_t ServerSocket::send(const void *msg, int len, int flags) throw (std::runtime_error)
+ssize_t Socket::send(const void *msg, int len, int flags) throw (std::runtime_error)
 {
 	ssize_t ret = ::send(_fd, msg, len, flags);
 	if (ret < 0)
@@ -110,14 +105,14 @@ ssize_t ServerSocket::send(const void *msg, int len, int flags) throw (std::runt
 	return ret;
 }
 
-std::string ServerSocket::recv(int maxlen, int flags) throw (std::runtime_error)
+std::string Socket::recv(int maxlen, int flags) throw (std::runtime_error)
 {
 	char	tmp[maxlen];
 	ssize_t ret = recv(tmp, maxlen, flags);
 	return (std::string(tmp, ret));
 }
 
-ssize_t ServerSocket::recv(void *buf, int maxlen, int flags) throw (std::runtime_error)
+ssize_t Socket::recv(void *buf, int maxlen, int flags) throw (std::runtime_error)
 {
 	ssize_t ret = ::recv(_fd, buf, maxlen, flags);
 	if (ret < 0)
@@ -127,6 +122,22 @@ ssize_t ServerSocket::recv(void *buf, int maxlen, int flags) throw (std::runtime
 	return (ret);
 }
 
-int ServerSocket::getFd() const {
+int Socket::getFd() const {
 	return _fd;
+}
+
+INetAddress Socket::getAddress() const {
+	return _address;
+}
+
+void Socket::setAddress(const INetAddress& addr) {
+	_address = addr;
+}
+
+void Socket::setFd(const int& fd) {
+	_fd = fd;
+}
+
+void Socket::setPort(uint16_t port) {
+	_address.setPort(port);
 }

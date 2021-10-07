@@ -23,9 +23,9 @@ class INetAddress {
 		struct sockaddr_in const& getAddress() const;
 		uint32_t getPort() const;
 		void setAddress(struct sockaddr_in&);
-		void setPort(uint32_t);
+		void setPort(uint16_t);
 };
 
-std::ostream& operator<<(std::ostream&, INetAddress&);
+std::ostream& operator<<(std::ostream&, const INetAddress&);
 
 #endif

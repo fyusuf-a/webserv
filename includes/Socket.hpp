@@ -1,5 +1,5 @@
-#ifndef SERVERSOCKET_HPP
-#define SERVERSOCKET_HPP
+#ifndef SOCKET_HPP
+#define SOCKET_HPP
 
 #include "INetAddress.hpp"
 #include <iostream>
@@ -16,27 +16,27 @@
 #include <cstring>
 #include <fcntl.h>
 
-class ServerSocket { //: public std::streambuf {
+class Socket { //: public std::streambuf {
 
 public:
-
-	ServerSocket();
-	// Use socket as a server
-	ServerSocket(short port, bool nonblocking=true);
-	//ServerSocket(int fd);
-	// Use socket as a client
-	ServerSocket(char *address, short port);
-	ServerSocket(const ServerSocket&);
-	ServerSocket&	operator=(const ServerSocket&);
-	virtual 		~ServerSocket();
+	Socket();
+	Socket(short port, bool nonblocking=true);
+	Socket(const Socket&);
+	Socket&	operator=(const Socket&);
+	virtual 		~Socket();
 	void			listen();
-	ServerSocket*	accept() const throw (std::runtime_error);
+	Socket*	accept() const throw (std::runtime_error);
 	ssize_t			send(const std::string& message, int flags = 0) throw (std::runtime_error);
 	ssize_t			send(const void *msg, int len, int flags = 0) throw (std::runtime_error);
 	std::string 	recv(int maxlen, int flags = 0) throw (std::runtime_error);
 	ssize_t			recv(void *buf, int maxlen, int flags = 0) throw (std::runtime_error);
 
-	int			getFd() const;
+	int				getFd() const;
+	INetAddress 	getAddress() const;
+	void			setFd(const int&);
+	void			setAddress(const INetAddress&);
+	void			setPort(u_int16_t port);
+	//newSocket->_address.setPort((*reinterpret_cast<struct sockaddr_in*>(&address)).sin_port);
 
 protected:
 	int		_fd;
