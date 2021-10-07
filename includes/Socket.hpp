@@ -38,7 +38,7 @@ public:
 
 	int			getFd() const;
 
-private:
+protected:
 	int		_fd;
 	INetAddress	_address;
 
@@ -46,7 +46,7 @@ private:
 	//short	_port;
 	//long	_client_address;
 
-protected:
+private:
 	void	init(struct sockaddr_in &my_addr, short &port);
 };
 

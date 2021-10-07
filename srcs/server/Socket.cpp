@@ -1,4 +1,4 @@
-#include "../../includes/ServerSocket.hpp"
+#include "../../includes/Socket.hpp"
 #include "../../includes/INetAddress.hpp"
 
 ServerSocket::ServerSocket() {

@@ -4,7 +4,7 @@ SRC = 	main.cpp\
 		srcs/server/serverConfig.cpp\
 		srcs/utils/utils.cpp\
 		srcs/webserv/webserv.cpp\
-		srcs/server/ServerSocket.cpp\
+		srcs/server/Socket.cpp\
 		srcs/server/NIOSelector.cpp\
 		srcs/ipaddress/INetAddress.cpp
 
@@ -35,7 +35,7 @@ fclean : clean
 re : fclean all
 
 test : all
-	cd test && ./test_server_socket.sh
+	cd test && ./test_socket.sh
 
 .cpp.o:
 	${CC} ${CFLAGS} $(HEADERS) -c $< -o ${<:.cpp=.o}
