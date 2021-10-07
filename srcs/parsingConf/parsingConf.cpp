@@ -20,6 +20,7 @@ ParsingConf &ParsingConf::operator=(const ParsingConf &other)
     return (*this);
 }
 
+
 bool ParsingConf::is_serv_block(std::string const &line)
 {
     int i = 0;
@@ -57,51 +58,7 @@ bool ParsingConf::is_location_block(std::string const &line)
     return (true);
 }
 
-// split the conf file by ';' & "{,}"
-std::vector<std::string> ParsingConf::parsing_line(std::string line, std::vector<std::string> content)
-{
-    std::string tmp;
 
-    for (int i = 0; line[i]; i++)
-    {
-        if (line[i] == '{')
-        {
-            tmp = line.substr(0, i);
-            content.push_back(tmp);
-            content.push_back("{");
-            if (!line[i + 1])
-                return content;
-            line = &line[i + 1];
-            i = -1;
-        }
-        else if (line[i] == '}')
-        {
-            tmp = line.substr(0, i);
-
-            content.push_back(tmp);
-            content.push_back("}");
-            if (!line[i + 1])
-                return content;
-            line = &line[i + 1];
-            i = -1;
-        }
-        else if (line[i] == ';')
-        {
-            tmp = line.substr(0, i + 1);
-            content.push_back(tmp);
-            if (!line[i + 1])
-                return content;
-            line = &line[i + 1];
-            i = -1;
-        }
-        if (!line[i + 1])
-        {
-            content.push_back(line);
-            return (content);
-        }
-    }
-    return (content);
-}
 
 int ParsingConf::parse_directive(std::string const &line, std::string &directive)
 {
@@ -113,7 +70,6 @@ int ParsingConf::parse_directive(std::string const &line, std::string &directive
         directive += line[i++];
     return (i);
 }
-
 bool ParsingConf::parse_value(std::string const &line, std::string &value, int i)
 {
     if (line[line.size() - 1] != ';')
@@ -129,6 +85,8 @@ bool ParsingConf::parse_value(std::string const &line, std::string &value, int i
 
 
 
+
+// ---- [Parsing Value] ----- 
 std::vector<std::string> ParsingConf::parsing_index_value(std::string val)
 {
     std::vector<std::string> tab;
@@ -256,8 +214,28 @@ std::string ParsingConf::parsing_name_value(std::string val, std::string dir)
     }
     return (val);
 }
+uint32_t    ParsingConf::parsing_host_value(std::string val, std::string dir)
+{
+    // std::istringstream iss( "1.2.3.4" );
+    
+    uint32_t ipv4 = 0;
+    
+    // for( uint32_t i = 0; i < 4; ++i ) {
+        // uint32_t part;
+        // iss >> part;
+
+        // std::cout << "->" << part << std::endl;
+
+    // }
 
 
+    return (ipv4);
+}
+// -------------
+
+
+
+// SET ALL LOCATION AND SERVER INFOS FOR EACH BLOCK
 void  ParsingConf::setup_location_directive(std::string const &line, ServerLocation &location)
 {
     std::string directive;
@@ -296,23 +274,7 @@ void  ParsingConf::setup_location_directive(std::string const &line, ServerLocat
             location.set_body_size( parsing_digit_value(value, directive) );
     }
 }
-
-
-void ParsingConf::setup_location(ITER &start, ITER &end, Server &server)
-{
-    ServerLocation location;
-    for (; start != end;)
-    {
-        setup_location_directive(*start, location);
-        if (start != end)
-            start++;
-    }
-    server._locations.push_back(location);
-
-}
-
-
-void  ParsingConf::setup_others(std::string const &line, Server &server)
+void  ParsingConf::setup_server_directive(std::string const &line, Server &server)
 {
     std::string directive;
     std::string value;
@@ -333,7 +295,7 @@ void  ParsingConf::setup_others(std::string const &line, Server &server)
         if (directive == "listen")
             server._serverConf.set_port( parsing_digit_value(value, directive) );
         else if (directive == "host")
-            server._serverConf.set_host(value);
+            server._serverConf.set_host( parsing_host_value(value, directive) );
         else if (directive == "server_name")
             server._serverConf.set_name( parsing_name_value(value, directive) );
         else if (directive == "root")
@@ -344,6 +306,20 @@ void  ParsingConf::setup_others(std::string const &line, Server &server)
 
 }
 
+
+// 
+void ParsingConf::setup_location(ITER &start, ITER &end, Server &server)
+{
+    ServerLocation location;
+    for (; start != end;)
+    {
+        setup_location_directive(*start, location);
+        if (start != end)
+            start++;
+    }
+    server._locations.push_back(location);
+
+}
 void ParsingConf::setup_server(ITER &start, ITER &end, Servers &servers)
 {
     Server  server;
@@ -379,14 +355,17 @@ void ParsingConf::setup_server(ITER &start, ITER &end, Servers &servers)
 			}
         }
         else
-            setup_others(*start, server);
+            setup_server_directive(*start, server);
         if (start != end)
             start++;
     }
     servers.push_back(server);
-
 }
 
+
+
+
+// Call the "setup_server()" fonction for each server block 
 void ParsingConf::setup_servers(std::vector<std::string> &content, Servers &servers)
 {
     int brace = 0;
@@ -423,6 +402,54 @@ void ParsingConf::setup_servers(std::vector<std::string> &content, Servers &serv
         if (it != content.end())
             it++;
     }
+}
+
+
+
+// split the conf file by ';' & "{,}"
+std::vector<std::string> ParsingConf::parsing_line(std::string line, std::vector<std::string> content)
+{
+    std::string tmp;
+
+    for (int i = 0; line[i]; i++)
+    {
+        if (line[i] == '{')
+        {
+            tmp = line.substr(0, i);
+            content.push_back(tmp);
+            content.push_back("{");
+            if (!line[i + 1])
+                return content;
+            line = &line[i + 1];
+            i = -1;
+        }
+        else if (line[i] == '}')
+        {
+            tmp = line.substr(0, i);
+
+            content.push_back(tmp);
+            content.push_back("}");
+            if (!line[i + 1])
+                return content;
+            line = &line[i + 1];
+            i = -1;
+        }
+        else if (line[i] == ';')
+        {
+            tmp = line.substr(0, i + 1);
+            content.push_back(tmp);
+            if (!line[i + 1])
+                return content;
+            line = &line[i + 1];
+            i = -1;
+        }
+        if (!line[i + 1])
+        {
+            content.push_back(line);
+            return (content);
+        }
+    }
+    return (content);
 }
 
 int ParsingConf::parsing(std::string path, Servers &servers)
