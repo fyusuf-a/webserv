@@ -15,25 +15,18 @@ int main(int argc, char** argv)
 	}
 	PassiveSocket my_server(atoi(argv[1]), false);
 
-	std::string	received;
+	ssize_t			received;
 	ActiveSocket	*client_socket;
 	client_socket = my_server.accept();
 	while (1)
 	{
-		try
-		{
-			received = client_socket->recv(MAX_LENGTH);
-			for (unsigned int i = 0; i < received.length(); i++)
-				std::cout << (char)toupper(received[i]);
-		}
-		catch (std::runtime_error& e)
-		{
-#ifdef DEBUG
-			std::cerr << "Connection closed with " << client_socket->getAddress() << std::endl;
-#endif
-			delete client_socket;
-			break;
-		}
+			char tmp[MAX_LENGTH];
+			received = client_socket->recv(tmp, MAX_LENGTH);
+			if (received > 0)
+				for (unsigned int i = 0; i < received; i++)
+					std::cout << (char)toupper(tmp[i]);
+			if (received == 0)
+				break;
 	}
 	return (0);
 }

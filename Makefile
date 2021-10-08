@@ -11,7 +11,7 @@ SRC = 	main.cpp\
 		srcs/ipaddress/INetAddress.cpp
 
 NAME = Webserv
-HEADERS = -Iincludes
+HEADERS = -Iincludes 
 CC = g++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
 O_FILES = $(SRC:.cpp=.o)

@@ -52,8 +52,9 @@ Socket::Socket(short port, bool nonblocking) { //:	_port(port)  {
 	struct sockaddr_in my_struct = _address.getAddress();
 	if (bind(_fd, (struct sockaddr*)&my_struct, sizeof my_struct) < 0)
 	{
+		std::cerr << "fd=" << _fd << " address=" << std::endl;
 		std::ostringstream oss;
-		oss << "cannot bind socket (address: " << _address << ')';
+		oss << "cannot bind socket (address: " << _address << strerror(errno) << ')';
 		throw std::runtime_error(oss.str());
 	}
 #if DEBUG

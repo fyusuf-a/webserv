@@ -1,11 +1,12 @@
 #include "../../includes/PassiveSocket.hpp"
 #include "../../includes/INetAddress.hpp"
 #include <cstring>
+#include <stdexcept>
 
 PassiveSocket::PassiveSocket() : Socket() {
 }
 
-PassiveSocket::PassiveSocket(const PassiveSocket& src) : Socket(src) {
+PassiveSocket::PassiveSocket(const PassiveSocket& src) : Socket(src), Callback(src) {
 	*this = src;
 }
 
@@ -38,7 +39,7 @@ void	PassiveSocket::listen() {
 	}
 }
 
-ActiveSocket*	 PassiveSocket::accept() const throw (std::runtime_error)
+ActiveSocket*	 PassiveSocket::accept()
 {
 	struct sockaddr_storage		address;
 	socklen_t					addr_len;
@@ -57,4 +58,18 @@ ActiveSocket*	 PassiveSocket::accept() const throw (std::runtime_error)
 	std::cerr << "New active socket on: " << newSocket->getAddress() << std::endl;
 #endif
 	return (newSocket);
+}
+
+void			PassiveSocket::readable(int fd) {
+	(void)fd;
+	ActiveSocket* newSock = accept();
+	NIOSelector::getInstance()->add(newSock->getFd(), *newSock, READ | WRITE);
+}
+
+void			PassiveSocket::writable(int fd) {
+	(void)fd;
+}
+
+void			PassiveSocket::on_close(int fd) {
+	(void)fd;
 }

@@ -2,8 +2,18 @@
 #include <poll.h>
 #include <stdexcept>
 
-NIOSelector::NIOSelector() {
+NIOSelector::Callback::Callback() {
 }
+
+NIOSelector::Callback::Callback(const Callback& src) {
+	*this = src;
+}
+
+NIOSelector::Callback& NIOSelector::Callback::operator=(const Callback&) {
+	return *this;
+}
+
+NIOSelector::Callback::~Callback() {}
 
 NIOSelector::NIOSelector(int timeout) : _timeout(timeout) {
 }

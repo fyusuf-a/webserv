@@ -6,12 +6,14 @@
 #include <stdexcept>
 #include <vector>
 #include <poll.h>
+#include "utils/Singleton.hpp"
 
 #define WRITE	POLLIN
 #define READ	POLLOUT
 #define CLOSE	POLLUP
 
-class NIOSelector {
+class NIOSelector : public Singleton<NIOSelector> {
+	public:
 	class Callback {
 	public:
 		Callback();
@@ -32,7 +34,6 @@ class NIOSelector {
 		std::map<int, t_action>		_actions;
 		std::vector<struct pollfd>	_polled_fds;
 		int							_timeout;
-        NIOSelector();
 
     public:
         NIOSelector(int timeout = 1000);
