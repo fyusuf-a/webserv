@@ -12,7 +12,7 @@ void		CheckSyntax::body(Request & request) {
 
 	std::map<std::string, std::string>::iterator it;
 	std::string	whitespaces = " \n\r\v\t\f";
-	for (it = (*request.get_header()).begin(); it != (*request.get_header()).end(); ++it){
+	for (it = request.get_header()->begin(); it != request.get_header()->end(); ++it){
 		if (whitespaces.find_first_of(it->first.front()) != std::string::npos)
 			throw(400);
 		if (whitespaces.find_first_of(it->first.back()) != std::string::npos)

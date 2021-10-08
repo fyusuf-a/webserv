@@ -14,11 +14,11 @@ void	test_check_syntax(char *str) {
 	std::cout << str << std::endl;
 	std::cout << "------------------------" << std::endl;
 
-	while (test.get_head() != 4) {
+	while (test.get_head() < 4 && test.get_over() == true) {
+		std::cout << test.get_head() <<std::endl;
 		str = test.parse(str);
 	}
 
-	std::cout << "------------------------" << std::endl;
 	std::cout << "method: " << test.get_method() << std::endl;
 	std::cout << "path: " << test.get_path() << std::endl;
 	std::cout << "protocol: " << test.get_protocol() << std::endl;
@@ -27,7 +27,8 @@ void	test_check_syntax(char *str) {
 		std::cout << it2->first << ": " << it2->second << std::endl;
 	std::cout << "///" << std::endl;
 	std::cout << "body: " << test.get_body() << std::endl;
-	std::cout << "------------------------" << std::endl;
+	std::cout << "head: " << test.get_head() << std::endl;
+	std::cout << "over: " << test.get_over() << std::endl;
 	middlewares.push_back(&csx);
 	try {
 		for (it = middlewares.begin(); it != middlewares.end(); ++it) {
@@ -44,5 +45,8 @@ int	main(void) {
 	test_check_syntax("GET           /test.html HTTP/1.1\r\nDate: ok\r\nContent-Length: non\r\n\r\nretest: ah\r\n");
 
 	test_check_syntax("GET  n\r\nretest: ah\r\n\r\n");
+	test_check_syntax("GT           /t HTP/1.1\r\nDate: ok\r\nContent-Length: non\r\n\r\nretest: ah\r\n\r\n");
+	test_check_syntax("GET           /t HTP/1.1\r\nDate: ok\r\nContent-Length: non\r\n\r\nretest: ah\r\n\r\n");
+	test_check_syntax("");
 
 }
