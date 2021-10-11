@@ -75,7 +75,7 @@ void	Socket::listen() {
 	}
 }
 
-Socket*	 Socket::accept() const throw (std::runtime_error)
+Socket*	 Socket::accept() const //throw (std::runtime_error)
 {
 	struct sockaddr_storage		address;
 	socklen_t					addr_len;
@@ -93,12 +93,12 @@ Socket*	 Socket::accept() const throw (std::runtime_error)
 	return (newSocket);
 }
 
-ssize_t Socket::send(const std::string& message, int flags) throw (std::runtime_error)
+ssize_t Socket::send(const std::string& message, int flags) //throw (std::runtime_error)
 {
 	return ::send(_fd, message.c_str(), message.length(), flags);
 }
 
-ssize_t Socket::send(const void *msg, int len, int flags) throw (std::runtime_error)
+ssize_t Socket::send(const void *msg, int len, int flags) //throw (std::runtime_error)
 {
 	ssize_t ret = ::send(_fd, msg, len, flags);
 	if (ret < 0)
@@ -106,14 +106,14 @@ ssize_t Socket::send(const void *msg, int len, int flags) throw (std::runtime_er
 	return ret;
 }
 
-std::string Socket::recv(int maxlen, int flags) throw (std::runtime_error)
+std::string Socket::recv(int maxlen, int flags) //throw (std::runtime_error)
 {
 	char	tmp[maxlen];
 	ssize_t ret = recv(tmp, maxlen, flags);
 	return (std::string(tmp, ret));
 }
 
-ssize_t Socket::recv(void *buf, int maxlen, int flags) throw (std::runtime_error)
+ssize_t Socket::recv(void *buf, int maxlen, int flags) //throw (std::runtime_error)
 {
 	ssize_t ret = ::recv(_fd, buf, maxlen, flags);
 	if (ret < 0)

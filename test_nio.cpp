@@ -1,19 +1,21 @@
+#include "includes/ActiveSocket.hpp"
 #include "includes/NIOSelector.hpp"
-#include "includes/TCPServer.hpp"
+#include "includes/PassiveSocket.hpp"
 
-class CapitalizeServer : public Callback {
-	public:
+#define PORT1 8080
+#define PORT2 8081
 
-
-	private:
-
-
+class CapitalizeServer : public ActiveSocket {
+	void readable(int fd) {
+		ActiveSocket::readable(fd);
+		for (int i = 0; i < _write_buffer.length(); i++);
+		_write_buffer.
 
 }
 
 int main() {
-	TCPServer capitalize_server(80);
-	TCPServer prepend_lol_server(443);
+	PassiveSocket capitalize_server(PORT1);
+	PassiveSocket prepend_lol_server(PORT2);
 
 	int	fd1 = capitalize_server.getFd();
 	int	fd2 = prepend_lol_server.getFd();

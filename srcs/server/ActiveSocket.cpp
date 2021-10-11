@@ -63,13 +63,17 @@ void ActiveSocket::readable(int fd) {
 
 void ActiveSocket::writable(int fd) {
 	(void)fd;
-	size_t len = std::min<size_t>(BUFFER_LENGTH, _write_buffer.length());
+	if (_write_buffer.empty())
+		return ;
+	ssize_t sent = send(_write_buffer);
+	_write_buffer.substr(0, sent);
+	/*size_t len = std::min<size_t>(BUFFER_LENGTH, _write_buffer.length());
 
 	if (len > 0)
 	{
 		send(_write_buffer.substr(0, len), len);
 		_read_buffer = _write_buffer.substr(len);
-	}
+	}*/
 }
 
 void ActiveSocket::on_close(int fd) {

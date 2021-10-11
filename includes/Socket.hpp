@@ -25,11 +25,11 @@ public:
 	Socket&	operator=(const Socket&);
 	virtual 		~Socket();
 	void			listen();
-	Socket*	accept() const throw (std::runtime_error);
-	ssize_t			send(const std::string& message, int flags = 0) throw (std::runtime_error);
-	ssize_t			send(const void *msg, int len, int flags = 0) throw (std::runtime_error);
-	std::string 	recv(int maxlen, int flags = 0) throw (std::runtime_error);
-	ssize_t			recv(void *buf, int maxlen, int flags = 0) throw (std::runtime_error);
+	Socket*	accept() const; //throw (std::runtime_error);
+	ssize_t			send(const std::string& message, int flags = 0);
+	ssize_t			send(const void *msg, int len, int flags = 0);
+	std::string 	recv(int maxlen, int flags = 0);
+	ssize_t			recv(void *buf, int maxlen, int flags = 0);
 
 	int				getFd() const;
 	INetAddress 	getAddress() const;

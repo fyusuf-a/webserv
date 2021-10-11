@@ -5,6 +5,7 @@
 #include "NIOSelector.hpp"
 #include "Socket.hpp"
 #include <iostream>
+#include <ostream>
 #include <sstream>
 #include <cstdlib>
 #include <stdexcept>
@@ -34,9 +35,9 @@ public:
 	/*std::string 	recv(ssize_t maxlen, int flags = 0);*/
 	ssize_t			recv(void *buf, ssize_t maxlen, int flags = 0);
 
-	void			readable(int fd);
-	void			writable(int fd);
-	void			on_close(int fd);
+	virtual void	readable(int fd);
+	virtual void	writable(int fd);
+	virtual void	on_close(int fd);
 
 protected:
 	std::string	_write_buffer;

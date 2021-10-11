@@ -3,19 +3,23 @@
 #include <cstring>
 #include <stdexcept>
 
-PassiveSocket::PassiveSocket() : Socket() {
+template<typename T>
+PassiveSocket<T>::PassiveSocket() : Socket() {
 }
 
-PassiveSocket::PassiveSocket(const PassiveSocket& src) : Socket(src), Callback(src) {
+template<typename T>
+PassiveSocket<T>::PassiveSocket(const PassiveSocket& src) : Socket(src), Callback(src) {
 	*this = src;
 }
 
-PassiveSocket& PassiveSocket::operator=(const PassiveSocket& src) {
+template<typename T>
+PassiveSocket<T>& PassiveSocket<T>::operator=(const PassiveSocket& src) {
 	Socket::operator=(src);
 	return *this;
 }
 
-PassiveSocket::PassiveSocket(short port, bool nonblocking) : Socket(port, nonblocking) {
+template<typename T>
+PassiveSocket<T>::PassiveSocket(short port, bool nonblocking) : Socket(port, nonblocking) {
 	if (::listen(_fd, SOMAXCONN) < 0)
 	{
 		std::ostringstream oss;
@@ -27,10 +31,12 @@ PassiveSocket::PassiveSocket(short port, bool nonblocking) : Socket(port, nonblo
 #endif
 }
 
-PassiveSocket::~PassiveSocket() {
+template<typename T>
+PassiveSocket<T>::~PassiveSocket() {
 }
 
-void	PassiveSocket::listen() {
+template<typename T>
+void	PassiveSocket<T>::listen() {
 	if (::listen(_fd, SOMAXCONN) < 0)
 	{
 		std::ostringstream oss;
@@ -39,7 +45,8 @@ void	PassiveSocket::listen() {
 	}
 }
 
-ActiveSocket*	 PassiveSocket::accept()
+template<typename T>
+T*	 PassiveSocket<T>::accept()
 {
 	struct sockaddr_storage		address;
 	socklen_t					addr_len;
@@ -51,7 +58,7 @@ ActiveSocket*	 PassiveSocket::accept()
 		throw std::runtime_error(std::string("accept: error") 
 				+ strerror(errno));
 	}
-	ActiveSocket *newSocket = new ActiveSocket();
+	T *newSocket = new ActiveSocket();
 	newSocket->setFd(newfd);
 	newSocket->setPort((*reinterpret_cast<struct sockaddr_in*>(&address)).sin_port);
 #ifdef DEBUG 
@@ -60,16 +67,19 @@ ActiveSocket*	 PassiveSocket::accept()
 	return (newSocket);
 }
 
-void			PassiveSocket::readable(int fd) {
+template<typename T>
+void			PassiveSocket<T>::readable(int fd) {
 	(void)fd;
 	ActiveSocket* newSock = accept();
 	NIOSelector::getInstance()->add(newSock->getFd(), *newSock, READ | WRITE);
 }
 
-void			PassiveSocket::writable(int fd) {
+template<typename T>
+void			PassiveSocket<T>::writable(int fd) {
 	(void)fd;
 }
 
-void			PassiveSocket::on_close(int fd) {
+template<typename T>
+void			PassiveSocket<T>::on_close(int fd) {
 	(void)fd;
 }
