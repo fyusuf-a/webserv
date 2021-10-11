@@ -10,8 +10,9 @@ void		CheckSyntax::body(Request & request) {
 	if (request.get_protocol() != "HTTP/1.1")
 		throw(505);
 
-	std::map<std::string, std::string>::iterator it;
-	std::string	whitespaces = " \n\r\v\t\f";
+	std::map<std::string, std::string>::iterator	it;
+	std::string										whitespaces = " \n\r\v\t\f";
+	int												host = 0;
 	for (it = request.get_header()->begin(); it != request.get_header()->end(); ++it){
 		if (whitespaces.find_first_of(it->first.front()) != std::string::npos)
 			throw(400);
@@ -19,7 +20,10 @@ void		CheckSyntax::body(Request & request) {
 			throw(400);
 		if (it->first.find("\r\n") != std::string::npos)
 			throw(400);
+		if (it->first == "Host")
+			++host;
 	}
-
+	if (host != 1)
+		throw (400);
 
 }
