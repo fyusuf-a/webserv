@@ -1,6 +1,4 @@
 #include "../includes/Socket.hpp"
-#include "../includes/ActiveSocket.hpp"
-#include "../includes/PassiveSocket.hpp"
 #include <cctype>
 #include <arpa/inet.h>
 
@@ -13,10 +11,10 @@ int main(int argc, char** argv)
 		std::cerr << "No port was given as an argument" << std::endl;
 		return 1;
 	}
-	PassiveSocket my_server(atoi(argv[1]), false);
+	Socket my_server(atoi(argv[1]), false);
 
 	ssize_t			received;
-	ActiveSocket	*client_socket;
+	Socket	*client_socket;
 	client_socket = my_server.accept();
 	while (1)
 	{

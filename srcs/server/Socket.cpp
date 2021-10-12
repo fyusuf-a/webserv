@@ -1,5 +1,6 @@
 #include "../../includes/Socket.hpp"
 #include "../../includes/INetAddress.hpp"
+#include <stdexcept>
 
 Socket::Socket() {
 }
@@ -70,9 +71,12 @@ void	Socket::listen() {
 	if (::listen(_fd, SOMAXCONN) < 0)
 	{
 		std::ostringstream oss;
-		oss << "Cannot listen on " << _address;
+		oss << "Cannot listen on socket (address: " << _address << ')';
 		throw std::runtime_error(oss.str());
 	}
+#ifdef DEBUG
+	std::cerr << "Listening on " << _address << std::endl;
+#endif
 }
 
 Socket*	 Socket::accept() const //throw (std::runtime_error)
@@ -93,12 +97,12 @@ Socket*	 Socket::accept() const //throw (std::runtime_error)
 	return (newSocket);
 }
 
-ssize_t Socket::send(const std::string& message, int flags) //throw (std::runtime_error)
+ssize_t Socket::send(const std::string& message, int flags)
 {
-	return ::send(_fd, message.c_str(), message.length(), flags);
+	return send(message.c_str(), message.length(), flags);
 }
 
-ssize_t Socket::send(const void *msg, int len, int flags) //throw (std::runtime_error)
+ssize_t Socket::send(const void *msg, int len, int flags)
 {
 	ssize_t ret = ::send(_fd, msg, len, flags);
 	if (ret < 0)
@@ -106,20 +110,20 @@ ssize_t Socket::send(const void *msg, int len, int flags) //throw (std::runtime_
 	return ret;
 }
 
-std::string Socket::recv(int maxlen, int flags) //throw (std::runtime_error)
+std::string Socket::recv(int maxlen, int flags)
 {
 	char	tmp[maxlen];
 	ssize_t ret = recv(tmp, maxlen, flags);
 	return (std::string(tmp, ret));
 }
 
-ssize_t Socket::recv(void *buf, int maxlen, int flags) //throw (std::runtime_error)
+ssize_t Socket::recv(void *buf, int maxlen, int flags)
 {
 	ssize_t ret = ::recv(_fd, buf, maxlen, flags);
 	if (ret < 0)
 		throw std::runtime_error("recv: error");
 	if (ret == 0)
-		throw std::runtime_error("recv: remote host closed connection");
+		throw ConnectionClosed();
 	return (ret);
 }
 

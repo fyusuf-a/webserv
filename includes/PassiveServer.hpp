@@ -2,7 +2,6 @@
 #define PASSIVESOCKET_HPP
 
 #include "INetAddress.hpp"
-#include "ActiveSocket.hpp"
 #include "Socket.hpp"
 #include "NIOSelector.hpp"
 #include <iostream>
@@ -19,17 +18,17 @@
 #include <cstring>
 #include <fcntl.h>
 
-class PassiveSocket : public Socket, public NIOSelector::Callback {
+class PassiveServer : public NIOSelector::Callback {
 
 public:
-	PassiveSocket();
-	PassiveSocket(short port, bool nonblocking=true);
-	PassiveSocket(const PassiveSocket&);
-	PassiveSocket&	operator=(const PassiveSocket&);
-	virtual 		~PassiveSocket();
-	void			listen();
-	ActiveSocket*	accept();
+	PassiveServer();
+	PassiveServer(const PassiveServer&);
+	PassiveServer&	operator=(const PassiveServer&);
+	PassiveServer(short port, bool nonblocking=true);
+	virtual 		~PassiveServer();
 
+protected:
+	Socket			*_socket;
 	void			writable(int fd);
 	void			readable(int fd);
 	void			on_close(int fd);

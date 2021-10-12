@@ -1,44 +1,51 @@
 #include "../../includes/ActiveServer.hpp"
+#include "../../includes/NIOSelector.hpp"
 
-ActiveServer::ActiveServer() {
-	_socket = new ActiveSocket();
+ActiveServer::ActiveServer() : Callback() {
+	_socket = new Socket();
 }
 
-ActiveServer::ActiveServer(const ActiveServer& src) {
+ActiveServer::ActiveServer(const ActiveServer& src) : Callback(src) {
 	*this = src;
+}
+
+ActiveServer::ActiveServer(Socket* socket) {
+	_socket = socket;
 }
 
 ActiveServer& ActiveServer::operator=(const ActiveServer& src) {
 	if (this != &src) {
-		/* make *this and src equal */
+		Callback::operator=(src);
+		_write_buffer = std::string(src._write_buffer);
+		_read_buffer = std::string(src._read_buffer);
+		_socket = new Socket(*src._socket);
 	}
 	return (*this);
 }
 
 ActiveServer::~ActiveServer() {
+#ifdef DEBUG
+	std::cerr << "Connection closed with " << _address << std::endl;
+#endif
+	delete _socket;
 }
 
 void ActiveServer::readable(int fd) {
 	(void)fd;
 	ssize_t max_read = BUFFER_LENGTH - _read_buffer.length();
-	char tmp[max_read];
 	if (max_read > 0)
-		_read_buffer += recv(tmp, max_read);
+	{
+		char tmp[max_read];
+		_read_buffer += _socket->recv(tmp, max_read);
+	}
 }
 
 void ActiveServer::writable(int fd) {
 	(void)fd;
 	if (_write_buffer.empty())
 		return ;
-	ssize_t sent = send(_write_buffer);
+	ssize_t sent = _socket->send(_write_buffer);
 	_write_buffer.substr(0, sent);
-	/*size_t len = std::min<size_t>(BUFFER_LENGTH, _write_buffer.length());
-
-	if (len > 0)
-	{
-		send(_write_buffer.substr(0, len), len);
-		_read_buffer = _write_buffer.substr(len);
-	}*/
 }
 
 void ActiveServer::on_close(int fd) {

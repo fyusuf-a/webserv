@@ -1,25 +1,27 @@
-#ifndef ACTIVESERVER_HPPPP
-#define ACTIVESERVER_HPPPP
+#ifndef ACTIVESERVER_HPP
+#define ACTIVESERVER_HPP
 
-#include "ActiveSocket.hpp"
+#define BUFFER_LENGTH 4096
 
-class ActiveServer {
+#include "Socket.hpp"
+#include "NIOSelector.hpp"
 
-    public:
+class ActiveServer : public NIOSelector::Callback {
+
+public:
 	ActiveServer();
 	ActiveServer(const ActiveServer&);
+	ActiveServer(Socket*);
 	ActiveServer& operator=(const ActiveServer&);
 	virtual ~ActiveServer();
 
-    protected:
-	ActiveSocket	*_socket;
+protected:
+	std::string		_write_buffer;
+	std::string		_read_buffer;
+	Socket			*_socket;
 	virtual void	readable(int fd);
 	virtual void	writable(int fd);
 	virtual void	on_close(int fd);
-
-protected:
-	std::string	_write_buffer;
-	std::string	_read_buffer;
 };
 
 #endif
