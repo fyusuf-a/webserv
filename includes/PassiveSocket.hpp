@@ -19,7 +19,6 @@
 #include <cstring>
 #include <fcntl.h>
 
-template<typename DERIVED_FROM_ACTIVE_SOCKET = ActiveSocket>
 class PassiveSocket : public Socket, public NIOSelector::Callback {
 
 public:
@@ -29,7 +28,7 @@ public:
 	PassiveSocket&	operator=(const PassiveSocket&);
 	virtual 		~PassiveSocket();
 	void			listen();
-	virtual DERIVED_FROM_ACTIVE_SOCKET*	accept();
+	ActiveSocket*	accept();
 
 	void			writable(int fd);
 	void			readable(int fd);

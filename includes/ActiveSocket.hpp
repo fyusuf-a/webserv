@@ -35,13 +35,6 @@ public:
 	/*std::string 	recv(ssize_t maxlen, int flags = 0);*/
 	ssize_t			recv(void *buf, ssize_t maxlen, int flags = 0);
 
-	virtual void	readable(int fd);
-	virtual void	writable(int fd);
-	virtual void	on_close(int fd);
-
-protected:
-	std::string	_write_buffer;
-	std::string	_read_buffer;
 };
 
 #endif
