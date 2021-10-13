@@ -6,22 +6,27 @@ std::string	ft_strtrim(std::string str) {
 	return str.substr(str.find_first_not_of(" \n\r\v\t\f"), str.find_first_not_of(" \n\r\v\t\f") - str.find_last_not_of(" \n\r\v\t\f"));
 }
 
-std::string	extract_attribute(std::string req_copy, std::string terminating, char **ptr) {
+std::string	Request::extract_attribute(std::string req_copy, std::string terminating, char **ptr) {
 	std::size_t	length;
 
 	length = req_copy.find(terminating);
 	if (length == std::string::npos) {
 		(*ptr) += req_copy.length();
-		return req_copy;
+		_residual = req_copy;
+		_head--;
+		return "";
 	}
 	(*ptr) += length + terminating.length();
 	return req_copy.substr(0, length);
 }
 
 char		*Request::parse(char *ptr) {
-	std::string	req_copy = (std::string)ptr;
+	std::string	req_copy = _residual + (std::string)ptr;
 	std::size_t	idx;
+	std::string field_name;
+	std::string field_value;
 
+	_residual = "";
 	if ((std::string)ptr == "") {
 		_over = false;
 		return ptr;
@@ -43,8 +48,11 @@ char		*Request::parse(char *ptr) {
 			++_head;
 			break;
 		case 2:
-			_header->insert(std::pair<std::string, std::string>
-				(extract_attribute(req_copy, ":", &ptr), ft_strtrim(extract_attribute((std::string)ptr, "\r\n", &ptr))));
+			field_name = extract_attribute(req_copy, ":", &ptr);
+			field_value = ft_strtrim(extract_attribute((std::string)ptr, "\r\n", &ptr));
+			if (field_value == "")
+				_residual = field_name + _residual;
+			_header->insert(std::pair<std::string, std::string>(field_name, field_value));
 			break;
 		case 3:
 			++_head;

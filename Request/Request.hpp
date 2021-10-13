@@ -14,6 +14,7 @@ class Request
 		int			_head;
 		int			_code;
 		bool		_over;
+		std::string _residual;
 
 	public:
 		Request();
@@ -23,6 +24,7 @@ class Request
 		Request & operator=( Request const & rhs );
 
 		char								*parse(char *str);
+		std::string							extract_attribute(std::string req_copy, std::string terminating, char **ptr);
 		void								check(void);
 		int									check_header(void);
 		std::string							get_method(void) const;
