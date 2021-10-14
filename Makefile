@@ -6,7 +6,6 @@ SRC = 	main.cpp\
 		srcs/webserv/webserv.cpp\
 		srcs/server/Socket.cpp\
 		srcs/server/ActiveServer.cpp\
-		srcs/server/PassiveServer.cpp\
 		srcs/server/NIOSelector.cpp\
 		srcs/ipaddress/INetAddress.cpp
 
@@ -38,6 +37,7 @@ re : fclean all
 
 test : all
 	cd test && ./test_socket.sh
+	cd test && ./test_nioselector.sh
 
 .cpp.o:
 	${CC} ${CFLAGS} $(HEADERS) -c $< -o ${<:.cpp=.o}
