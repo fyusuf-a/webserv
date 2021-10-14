@@ -25,9 +25,13 @@ ActiveServer& ActiveServer::operator=(const ActiveServer& src) {
 
 ActiveServer::~ActiveServer() {
 #ifdef DEBUG
-	std::cerr << "Connection closed with " << _address << std::endl;
+	std::cerr << "Connection closed with " << _socket->getAddress() << std::endl;
 #endif
 	delete _socket;
+}
+
+Socket *ActiveServer::getSocket() {
+	return _socket;
 }
 
 void ActiveServer::readable(int fd) {
@@ -35,8 +39,16 @@ void ActiveServer::readable(int fd) {
 	ssize_t max_read = BUFFER_LENGTH - _read_buffer.length();
 	if (max_read > 0)
 	{
-		char tmp[max_read];
-		_read_buffer += _socket->recv(tmp, max_read);
+		try {
+			_read_buffer += _socket->recv(max_read);
+		}
+		catch (Socket::ConnectionClosed& e) {
+			on_close(fd);
+		}
+		catch (std::exception& e) {
+			std::cerr << "An error occured while using recv" << std::endl;
+			on_close(fd);
+		}
 	}
 }
 
@@ -44,11 +56,18 @@ void ActiveServer::writable(int fd) {
 	(void)fd;
 	if (_write_buffer.empty())
 		return ;
-	ssize_t sent = _socket->send(_write_buffer);
-	_write_buffer.substr(0, sent);
+	try {
+		ssize_t sent = _socket->send(_write_buffer);
+		_write_buffer = _write_buffer.substr(sent);
+	}
+	catch (std::exception& e) {
+		std::cerr << "An error occured while using send" << std::endl;
+		on_close(fd);
+	}
 }
 
 void ActiveServer::on_close(int fd) {
+	(void)fd;
 	NIOSelector::getInstance()->remove(fd);
 	delete (this);
 }

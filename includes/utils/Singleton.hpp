@@ -9,7 +9,10 @@ protected:
 public:
 	static T* getInstance() {
 		if (_singleton == NULL)
+		{
+			std::cerr << "singleton was null" << std::endl;
 			_singleton = new T();
+		}
 		return _singleton;
 	}
 };

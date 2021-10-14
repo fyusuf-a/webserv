@@ -1,10 +1,3 @@
-#include "../../includes/Socket.hpp"
-#include "../../includes/PassiveServer.hpp"
-#include "../../includes/ActiveServer.hpp"
-#include "../../includes/INetAddress.hpp"
-#include <cstring>
-#include <stdexcept>
-
 template<typename T>
 PassiveServer<T>::PassiveServer() : Callback() {
 	_socket = new Socket();
@@ -28,6 +21,7 @@ template<typename T>
 PassiveServer<T>::PassiveServer(short port, bool nonblocking) {
 	_socket = new Socket(port, nonblocking);
 	_socket->listen();
+	NIOSelector::getInstance()->add(_socket->getFd(), *this, READ);
 }
 
 template<typename T>
@@ -38,8 +32,11 @@ PassiveServer<T>::~PassiveServer() {
 template<typename T>
 void			PassiveServer<T>::readable(int fd) {
 	(void)fd;
+#ifdef DEBUG
+	std::cerr << "New connection on passive server" << std::endl;
+#endif
 	T* newActiveServer = new T(_socket->accept());
-	NIOSelector::getInstance()->add(newActiveServer->getSocket->getFd(), 
+	NIOSelector::getInstance()->add(newActiveServer->getSocket()->getFd(), 
 			*newActiveServer, READ | WRITE);
 }
 

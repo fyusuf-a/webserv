@@ -13,18 +13,26 @@ int main(int argc, char** argv)
 	}
 	Socket my_server(atoi(argv[1]), false);
 
+	my_server.listen();
+
 	ssize_t			received;
 	Socket	*client_socket;
 	client_socket = my_server.accept();
 	while (1)
 	{
 			char tmp[MAX_LENGTH];
-			received = client_socket->recv(tmp, MAX_LENGTH);
-			if (received > 0)
+			try {
+				received = client_socket->recv(tmp, MAX_LENGTH);
 				for (unsigned int i = 0; i < received; i++)
 					std::cout << (char)toupper(tmp[i]);
-			if (received == 0)
+			}
+			catch (Socket::ConnectionClosed& e) {
 				break;
+			}
+			catch (std::exception& e) {
+				std::cerr << e.what() << std::endl;
+				break;
+			}
 	}
 	return (0);
 }

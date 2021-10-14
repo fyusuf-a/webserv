@@ -3,6 +3,7 @@
 
 #include "INetAddress.hpp"
 #include "Socket.hpp"
+#include "ActiveServer.hpp"
 #include "NIOSelector.hpp"
 #include <iostream>
 #include <sstream>
@@ -17,7 +18,9 @@
 #include <unistd.h>
 #include <cstring>
 #include <fcntl.h>
+#include <stdexcept>
 
+template<typename T>
 class PassiveServer : public NIOSelector::Callback {
 
 public:
@@ -33,5 +36,7 @@ protected:
 	void			readable(int fd);
 	void			on_close(int fd);
 };
+
+#include "../templates/PassiveServer.tpp"
 
 #endif

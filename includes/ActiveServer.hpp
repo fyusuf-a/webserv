@@ -14,6 +14,7 @@ public:
 	ActiveServer(Socket*);
 	ActiveServer& operator=(const ActiveServer&);
 	virtual ~ActiveServer();
+	Socket			*getSocket();
 
 protected:
 	std::string		_write_buffer;

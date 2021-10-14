@@ -1,5 +1,6 @@
 #include "../../includes/Socket.hpp"
 #include "../../includes/INetAddress.hpp"
+#include <cstring>
 #include <stdexcept>
 
 Socket::Socket() {
@@ -46,16 +47,15 @@ Socket::Socket(short port, bool nonblocking) { //:	_port(port)  {
 			oss << "cannot set socket to be not blocking (address: " << _address << ')';
 			throw std::runtime_error(oss.str());
 		}
+		#if DEBUG
+			std::cerr << "Socket set as nonblocking (address " << _address << ')' << std::endl;
+		#endif
 	}
-#if DEBUG
-	std::cerr << "Socket set as nonblocking (address " << _address << ')' << std::endl;
-#endif
 	struct sockaddr_in my_struct = _address.getAddress();
 	if (bind(_fd, (struct sockaddr*)&my_struct, sizeof my_struct) < 0)
 	{
-		std::cerr << "fd=" << _fd << " address=" << std::endl;
 		std::ostringstream oss;
-		oss << "cannot bind socket (address: " << _address << strerror(errno) << ')';
+		oss << "cannot bind socket (address: " << _address << ')';
 		throw std::runtime_error(oss.str());
 	}
 #if DEBUG
