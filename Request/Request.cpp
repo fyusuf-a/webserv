@@ -6,40 +6,48 @@ std::string	ft_strtrim(std::string str) {
 	return str.substr(str.find_first_not_of(" \n\r\v\t\f"), str.find_first_not_of(" \n\r\v\t\f") - str.find_last_not_of(" \n\r\v\t\f"));
 }
 
-std::string	Request::extract_attribute(std::string req_copy, std::string terminating, char **ptr) {
+std::string	Request::extract_attribute(std::string req_copy, std::string terminating, char **ptr, std::size_t residual_offset) {
 	std::size_t	length;
 
 	length = req_copy.find(terminating);
 	if (length == std::string::npos) {
-		(*ptr) += req_copy.length();
-		_residual = req_copy;
-		_head--;
+		_over = false;
+		(*ptr) += req_copy.length() - residual_offset;
+		if (_residual == "")
+			_residual = req_copy;
+		if (_head != 2)
+			_head--;
 		return "";
 	}
-	(*ptr) += length + terminating.length();
+	(*ptr) += length + terminating.length() - residual_offset;
 	return req_copy.substr(0, length);
 }
 
 char		*Request::parse(char *ptr) {
 	std::string	req_copy = _residual + (std::string)ptr;
+	std::size_t	residual_offset = _residual.length();
 	std::size_t	idx;
 	std::string field_name;
 	std::string field_value;
 
+	_over = true;
 	_residual = "";
 	if ((std::string)ptr == "") {
-		_over = false;
+		if (_head == 3)
+			++_head;
+		else
+			_over = false;
 		return ptr;
 	}
 	switch(this->get_head()) {
 		case 0:
-			_method = extract_attribute(req_copy, " ", &ptr);
+			_method = extract_attribute(req_copy, " ", &ptr, residual_offset);
 			++_head;
 			while (*ptr == ' ')
 				ptr++;
 			break;
 		case 1:
-			_path = extract_attribute(req_copy, "\r\n", &ptr);
+			_path = extract_attribute(req_copy, "\r\n", &ptr, residual_offset);
 			idx = _path.find(' ');
 			if (idx < _path.length()) {
 				_protocol = ft_strtrim(_path.substr(_path.find(' '), _path.length()));
@@ -48,19 +56,21 @@ char		*Request::parse(char *ptr) {
 			++_head;
 			break;
 		case 2:
-			field_name = extract_attribute(req_copy, ":", &ptr);
-			field_value = ft_strtrim(extract_attribute((std::string)ptr, "\r\n", &ptr));
-			if (field_value == "")
-				_residual = field_name + _residual;
-			_header->insert(std::pair<std::string, std::string>(field_name, field_value));
+			field_name = extract_attribute(req_copy, ":", &ptr, residual_offset / 2);
+			field_value = ft_strtrim(extract_attribute(req_copy.substr(field_name.length() + 1, req_copy.length()), "\r\n", &ptr, (residual_offset + 1) / 2));
+			if (_residual != "")
+				_residual = field_name + ":" + _residual;
+			else
+				_header->insert(std::pair<std::string, std::string>(field_name, field_value));
 			break;
 		case 3:
 			++_head;
 			if ((*_header)["Content-Length"] == "" && (*_header)["Transfer-Encoding"] == "")
 				return ptr; 
-			if (req_copy.find("\r\n\r\n") == std::string::npos)
+			if (req_copy.find("\r\n\r\n") == std::string::npos){
 				_over = false;
-			_body = extract_attribute(req_copy, "\r\n\r\n", &ptr);
+			}
+			_body = extract_attribute(req_copy, "\r\n\r\n", &ptr, residual_offset);
 			break;
 	}
 	if (((std::string)ptr).find("\r\n") == 0 && _head == 2) {
@@ -72,6 +82,10 @@ char		*Request::parse(char *ptr) {
 
 void								Request::set_code(int code) {
 	this->_code = code;
+}
+
+void								Request::set_over(bool over) {
+	this->_over = over;
 }
 
 int									Request::get_code(void) const {
@@ -96,6 +110,10 @@ std::map<std::string, std::string>	*Request::get_header(void) const {
 
 std::string							Request::get_body(void) const {
 	return this->_body;
+}
+
+std::string							Request::get_residual(void) const {
+	return this->_residual;
 }
 
 int									Request::get_head(void) const {

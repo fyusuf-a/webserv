@@ -24,7 +24,7 @@ class Request
 		Request & operator=( Request const & rhs );
 
 		char								*parse(char *str);
-		std::string							extract_attribute(std::string req_copy, std::string terminating, char **ptr);
+		std::string							extract_attribute(std::string req_copy, std::string terminating, char **ptr, std::size_t residual_offset);
 		void								check(void);
 		int									check_header(void);
 		std::string							get_method(void) const;
@@ -32,10 +32,12 @@ class Request
 		std::string							get_protocol(void) const;
 		std::map<std::string, std::string>	*get_header(void) const;
 		std::string							get_body(void) const;
+		std::string							get_residual(void) const;
 		int									get_head(void) const;
 		int									get_code(void) const;
 		bool								get_over(void) const;
 		void								set_code(int code);
+		void								set_over(bool over);
 };
 
 #endif
