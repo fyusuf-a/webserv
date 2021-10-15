@@ -1,0 +1,5 @@
+*a.out*
+*.o
+*core
+Webserv
+.DS_Store
