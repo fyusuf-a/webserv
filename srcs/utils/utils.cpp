@@ -5,7 +5,7 @@ namespace Utils
 {
     bool is_space(char c)
     {
-        if ((c >= 9 && c <= 13) || c == 32)
+        if ((c >= 9 && c <= 13) || c == 32 || c == '\t')
             return (true);
         return (false);
     }
@@ -60,7 +60,7 @@ namespace Utils
     bool is_digits(std::string const &str)
     {
         for (int i =  0; str[i]; i++)
-            if (!is_digit(str[i]))
+            if (!is_digit(str[i]) && str[i] != '-')
                 return (false);
         return (true);
     }
@@ -72,4 +72,23 @@ namespace Utils
         while (!str.empty() && Utils::is_space(*str.rbegin()))
             str.erase(str.size() - 1);
     }
+    bool is_comentary(std::string &str)
+    {
+        size_t i = str.find("#", 0);
+
+        if (i == 0)
+        {
+            return (true);
+        }
+        if (i != std::string::npos)
+        {
+            str.erase(i, str.size());
+
+            return (false);
+        }
+        else
+            return (false);
+        return (true);
+    }
 }
+
