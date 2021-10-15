@@ -2,6 +2,8 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sstream>
+
 
 class conf
 {
@@ -29,16 +31,21 @@ void setup_server(test &ser)
 
 void go()
 {
-                std::vector<test> tab;
-                test server;
+    uint32_t result = 0;
 
-                setup_server(server);
+    std::istringstream iss("1");
 
-                std::cout << server._conf.get() << std::endl;
-                tab.push_back(server);
-                std::cout << tab[0]._conf.get() << std::endl;
+        uint32_t tmp;
 
-}
+        iss >> tmp;
+        
+        result |= tmp << (8 * 3);
+
+      std::cout << result << std::endl;
+}    
+
+
+
 
 int main()
 {
