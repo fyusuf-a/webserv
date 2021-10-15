@@ -44,11 +44,11 @@ void INetAddress::setAddress(struct sockaddr_in &addr) {
 	_address = addr;
 }
 
-void INetAddress::setPort(uint32_t port) {
+void INetAddress::setPort(uint16_t port) {
 	_address.sin_port = port;
 }
 
-std::ostream& operator<<(std::ostream& os, INetAddress& addr) {
+std::ostream& operator<<(std::ostream& os, const INetAddress& addr) {
 	struct sockaddr_in	my_addr = addr.getAddress();
 	uint32_t			ip = my_addr.sin_addr.s_addr;
 
