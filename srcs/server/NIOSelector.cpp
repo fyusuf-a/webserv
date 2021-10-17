@@ -90,7 +90,7 @@ void	NIOSelector::poll() {
 			remove(fd);
 			continue;
 		}
-		else if (_polled_fds[i].revents & (POLLHUP | POLLRDHUP))
+		else if (_polled_fds[i].revents & POLLHUP)
 		{
 			std::cerr << "Peer closed the connection" << std::endl;
 			_actions[fd].callback->on_close(fd);
