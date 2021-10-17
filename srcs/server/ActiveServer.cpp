@@ -29,7 +29,7 @@ ActiveServer::~ActiveServer() {
 #ifdef DEBUG
 	std::cerr << "Connection closed with " << _socket->getAddress() << std::endl;
 #endif
-	//NIOSelector::getInstance()->remove(_socket->getFd());
+	NIOSelector::getInstance()->remove(_socket->getFd());
 	delete _socket;
 }
 
