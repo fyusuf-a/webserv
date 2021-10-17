@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include "utils.hpp"
 
 class ServerLocation
 {
@@ -38,19 +39,21 @@ class ServerLocation
         void      set_auth_basic(std::string const &val);
         void      set_body_size(int val);
 
-        std::vector<std::string> const   &get_index(void);
-        std::vector<std::string> const   &get_methods(void);
-        std::string const   &get_cgi_ext(void);
-        std::string const   &get_cgi_bin(void);
-        std::string const   &get_language(void);
-        std::string const   &get_auth_basic_file();
-        std::string const   &get_auto_index(void);
-        std::string const   &get_auth_basic(void);
-        int                 get_body_size(void);
+        std::vector<std::string> const   &get_index(void) const;
+        std::vector<std::string> const   &get_methods(void) const;
+        std::string const   &get_cgi_ext(void) const;
+        std::string const   &get_cgi_bin(void) const;
+        std::string const   &get_language(void) const;
+        std::string const   &get_auth_basic_file() const;
+        std::string const   &get_auto_index(void) const;
+        std::string const   &get_auth_basic(void) const;
+        int                 get_body_size(void) const;
 
 
         void test(void);
 
 };
+
+std::ostream& operator<<(std::ostream&, const ServerLocation&);
 
 #endif

@@ -5,14 +5,13 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <cstdlib>
+#include <stdlib.h>
 
 #include "utils.hpp"
 #include "server.hpp"
 
 #define ITER std::vector<std::string>::iterator
 #define Servers std::vector<Server>
-#define uint32_t unsigned
 
 class ParsingConf
 {
