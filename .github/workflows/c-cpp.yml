@@ -2,7 +2,7 @@ name: C/C++ CI
 
 on:
   push:
-    branches: [ main, NIOSelector ]
+    branches: [ main, integration_parsing ]
   pull_request:
     branches: [ main ]
 
