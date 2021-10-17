@@ -9,8 +9,9 @@ class ServerConfig
 {
 
     private:
-        std::string					_host;
+        uint32_t     			    _host;
 		std::string					_name;
+		std::string					_error;
 		std::string					_server_root;
 		int							_port;
 
@@ -23,14 +24,17 @@ class ServerConfig
         ServerConfig &operator=(const ServerConfig &other);
 
         void            set_port(const int port);
-        void            set_host(std::string const &ip);;
+        void            set_host(const uint32_t host);;
         void            set_name(std::string const &name);;
         void            set_root(std::string const &path);
+        void            set_error(std::string const &error);
 
         int             get_port(void);
-        std::string    const &get_host(void);
+        uint32_t        get_host(void);
         std::string    const &get_name(void);
         std::string    const &get_root(void);
+        std::string    const &get_error(void);
+
 
         void test(void);
 
