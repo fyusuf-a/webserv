@@ -4,8 +4,8 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <stdint.h>
 
-typedef unsigned uint32_t;
 
 class ServerConfig
 {

@@ -20,7 +20,7 @@ class Socket { //: public std::streambuf {
 
 public:
 	class ConnectionClosed : public std::exception {
-		const char* what() {
+		const char* what() const throw() {
 			return "Connection Closed";
 		}
 	};
