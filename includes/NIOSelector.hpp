@@ -45,8 +45,7 @@ class NIOSelector : public Singleton<NIOSelector> {
 		void	updateOps(int fd, short operations=READ | WRITE);
 		void	removeOps(int fd, short operations=READ | WRITE);
 		void	remove(int fd);
-		void	poll() throw (std::runtime_error);
+		void	poll();
 };
 
 #endif
-

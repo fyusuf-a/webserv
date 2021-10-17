@@ -57,25 +57,25 @@ void	NIOSelector::updateOps(int fd, short operations) {
 	if (_actions.find(fd) != _actions.end())
 		_polled_fds[_actions[fd].index].events = operations;
 	else
-		std::cerr << "fd " << fd << " does not exist in map." << std::endl;
+		std::cerr << "fd " << fd << " does not exist in map. (updateOps)" << std::endl;
 }
 
 void	NIOSelector::removeOps(int fd, short operations) {
 	if (_actions.find(fd) != _actions.end())
 		_polled_fds[_actions[fd].index].events &= ~operations;
 	else
-		std::cerr << "fd " << fd << " does not exist in map." << std::endl;
+		std::cerr << "fd " << fd << " does not exist in map. (removeOps)" << std::endl;
 }
 
 void	NIOSelector::remove(int fd) {
 	if (_actions.find(fd) != _actions.end())
 		_polled_fds.erase(_polled_fds.begin() + _actions[fd].index);
 	else
-		std::cerr << "fd " << fd << " does not exist in map." << std::endl;
+		std::cerr << "fd " << fd << " does not exist in map. (remove)" << std::endl;
 	_actions.erase(fd);
 }
 
-void	NIOSelector::poll() throw (std::runtime_error) {
+void	NIOSelector::poll() {
 	int ret = ::poll(_polled_fds.data(), _polled_fds.size(), _timeout);
 	int fd;
 
@@ -100,7 +100,7 @@ void	NIOSelector::poll() throw (std::runtime_error) {
 		if (_polled_fds[i].revents & (POLLIN | POLLPRI))
 			_actions[fd].callback->readable(fd);
 		if (_actions.find(fd) != _actions.end()
-				&&_polled_fds[i].revents & POLLOUT)
+				&& _polled_fds[i].revents & POLLOUT)
 			_actions[fd].callback->writable(fd);
 		//if (_polled_fds[i].revents & POLLOUT)
 	}

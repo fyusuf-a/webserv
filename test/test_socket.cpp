@@ -34,5 +34,6 @@ int main(int argc, char** argv)
 				break;
 			}
 	}
+	delete client_socket;
 	return (0);
 }

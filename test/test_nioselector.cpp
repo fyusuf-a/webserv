@@ -15,13 +15,17 @@ class toUppercaseActive : public ActiveServer {
 	toUppercaseActive(Socket* socket) : ActiveServer(socket) {
 	}
 	void readable(int fd) {
-		ActiveServer::readable(fd);
-		size_t write_len = _write_buffer.length();
-		size_t read_len = _read_buffer.length();
-		_write_buffer += _read_buffer;
-		for (size_t i = write_len; i < write_len + read_len; i++)
-			_write_buffer[i] = toupper(_write_buffer[i]);
-		_read_buffer = "";
+		try {
+			ActiveServer::readable(fd);
+			size_t write_len = _write_buffer.length();
+			size_t read_len = _read_buffer.length();
+			_write_buffer += _read_buffer;
+			for (size_t i = write_len; i < write_len + read_len; i++)
+				_write_buffer[i] = toupper(_write_buffer[i]);
+			_read_buffer = "";
+		}
+		catch(std::exception &e) {
+		}
 	}
 };
 
@@ -31,13 +35,17 @@ class toLowercaseActive : public ActiveServer {
 	toLowercaseActive(Socket* socket) : ActiveServer(socket) {
 	}
 	void readable(int fd) {
-		ActiveServer::readable(fd);
-		size_t write_len = _write_buffer.length();
-		size_t read_len = _read_buffer.length();
-		_write_buffer += _read_buffer;
-		for (size_t i = write_len; i < write_len + read_len; i++)
-			_write_buffer[i] = tolower(_write_buffer[i]);
-		_read_buffer = "";
+		try {
+			ActiveServer::readable(fd);
+			size_t write_len = _write_buffer.length();
+			size_t read_len = _read_buffer.length();
+			_write_buffer += _read_buffer;
+			for (size_t i = write_len; i < write_len + read_len; i++)
+				_write_buffer[i] = tolower(_write_buffer[i]);
+			_read_buffer = "";
+		}
+		catch(std::exception &e) {
+		}
 	}
 };
 

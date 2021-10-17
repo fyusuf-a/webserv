@@ -3,6 +3,7 @@
 
 ActiveServer::ActiveServer() : Callback() {
 	_socket = new Socket();
+	NIOSelector::getInstance()->add(_socket->getFd(), *this, READ | WRITE);
 }
 
 ActiveServer::ActiveServer(const ActiveServer& src) : Callback(src) {
@@ -11,6 +12,7 @@ ActiveServer::ActiveServer(const ActiveServer& src) : Callback(src) {
 
 ActiveServer::ActiveServer(Socket* socket) {
 	_socket = socket;
+	NIOSelector::getInstance()->add(_socket->getFd(), *this, READ | WRITE);
 }
 
 ActiveServer& ActiveServer::operator=(const ActiveServer& src) {
@@ -27,6 +29,7 @@ ActiveServer::~ActiveServer() {
 #ifdef DEBUG
 	std::cerr << "Connection closed with " << _socket->getAddress() << std::endl;
 #endif
+	//NIOSelector::getInstance()->remove(_socket->getFd());
 	delete _socket;
 }
 
@@ -44,10 +47,12 @@ void ActiveServer::readable(int fd) {
 		}
 		catch (Socket::ConnectionClosed& e) {
 			on_close(fd);
+			throw (e);
 		}
 		catch (std::exception& e) {
 			std::cerr << "An error occured while using recv" << std::endl;
 			on_close(fd);
+			throw (e);
 		}
 	}
 }
@@ -68,6 +73,5 @@ void ActiveServer::writable(int fd) {
 
 void ActiveServer::on_close(int fd) {
 	(void)fd;
-	NIOSelector::getInstance()->remove(fd);
 	delete (this);
 }

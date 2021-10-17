@@ -1,6 +1,7 @@
 template<typename T>
 PassiveServer<T>::PassiveServer() : Callback() {
 	_socket = new Socket();
+	NIOSelector::getInstance()->add(_socket->getFd(), *this, READ);
 }
 
 template<typename T>
@@ -26,6 +27,7 @@ PassiveServer<T>::PassiveServer(short port, bool nonblocking) {
 
 template<typename T>
 PassiveServer<T>::~PassiveServer() {
+	NIOSelector::getInstance()->remove(_socket->getFd());
 	delete _socket;
 }
 
@@ -35,9 +37,7 @@ void			PassiveServer<T>::readable(int fd) {
 #ifdef DEBUG
 	std::cerr << "New connection on passive server" << std::endl;
 #endif
-	T* newActiveServer = new T(_socket->accept());
-	NIOSelector::getInstance()->add(newActiveServer->getSocket()->getFd(), 
-			*newActiveServer, READ | WRITE);
+	new T(_socket->accept());
 }
 
 template<typename T>
