@@ -43,7 +43,7 @@ namespace Utils
         found = str.find(val);
         if (found != std::string::npos)
         {
-            for (int i = val.size(); i != str.size(); i++)
+            for (size_t i = val.size(); i != str.size(); i++)
                 if (!Utils::is_space(str[i]))
                     return (false);
             str = val;

@@ -80,7 +80,7 @@ std::vector<std::string> ParsingConf::parsing_index_value(std::string val)
 {
     std::vector<std::string> tab;
 
-    for (int i = 0; i < val.size(); )
+    for (size_t i = 0; i < val.size(); )
     {
         std::string tmp;
 
@@ -145,7 +145,7 @@ std::string ParsingConf::parsing_bool_value(std::string str, std::string dir)
 }
 std::string ParsingConf::parsing_path_value(std::string str, std::string dir)
 {
-    int i = 0;
+    size_t i = 0;
     std::string path;
 
     Utils::ft_trim(str);
@@ -159,7 +159,7 @@ std::string ParsingConf::parsing_path_value(std::string str, std::string dir)
 }
 std::string ParsingConf::parsing_cgi_ext_value(std::string str, std::string dir)
 {
-    int i = 0;
+    size_t i = 0;
     std::string extention;
 
     for (; i < str.size() && !Utils::is_space(str[i]); i++)
@@ -175,12 +175,12 @@ int ParsingConf::parsing_digit_value(std::string val, std::string dir)
     if (!Utils::is_digits(val))
         throw MyException("Directive: '" +  dir + "' : Expected - [1 digit parameter]");
     
-    value = std::atoi(val.c_str());
+    value = ::atoi(val.c_str());
     
     if (value < 0 || value > 65535)
         throw MyException("Directive: '" +  dir + "' : Expected - [1 digit parameter]" );
 
-    return ( std::atoi(val.c_str()) );
+    return ( ::atoi(val.c_str()) );
 }
 std::string ParsingConf::parsing_name_value(std::string val, std::string dir)
 {

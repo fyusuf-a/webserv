@@ -5,6 +5,8 @@
 #include <iostream>
 #include <fstream>
 
+typedef unsigned uint32_t;
+
 class ServerConfig
 {
 
