@@ -23,18 +23,17 @@ class WebServ
 
     public:
         WebServ();
-
         WebServ(const WebServ &other);
-
         ~WebServ();
-
         WebServ &operator=(const WebServ &other);
-
         void init(std::string path);
+		Servers const& get_servers() const;
+
 
 
 
 };
 
+std::ostream& operator<<(std::ostream& os, const WebServ& webserv);
 
 #endif

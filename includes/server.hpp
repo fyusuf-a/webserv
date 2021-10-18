@@ -23,6 +23,10 @@ class Server
         ~Server();
         Server &operator=(const Server &other);
 
+		ServerConfig const& get_server_conf() const;
+		Locations const& get_locations() const;
 };
+
+std::ostream& operator<<(std::ostream& os, const Server& server);
 
 #endif

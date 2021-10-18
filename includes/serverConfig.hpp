@@ -31,11 +31,11 @@ class ServerConfig
         void            set_root(std::string const &path);
         void            set_error(std::string const &error);
 
-        int             get_port(void);
-        uint32_t        get_host(void);
-        std::string    const &get_name(void);
-        std::string    const &get_root(void);
-        std::string    const &get_error(void);
+        int             get_port(void) const;
+        uint32_t        get_host(void) const;
+        std::string    const &get_name(void) const;
+        std::string    const &get_root(void) const;
+        std::string    const &get_error(void) const;
 
 
         void test(void);
@@ -44,5 +44,7 @@ class ServerConfig
 
 
 };
+
+std::ostream& operator<<(std::ostream& os, const ServerConfig& config);
 
 #endif

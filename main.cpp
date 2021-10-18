@@ -15,6 +15,8 @@ int main(int ac, char **av)
     webserv.init(av[1]);
   else
     webserv.init(DEFAULT_PATH);
+
+  std::cout << webserv;
   return (0);
 }
 

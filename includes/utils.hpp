@@ -35,5 +35,14 @@ struct MyException : public std::exception
    const char* what() const throw() { return s.c_str(); }
 };
 
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const std::vector<T>& vec) {
+	size_t	len = vec.size();
+	for (size_t i = 0; i < len; i++)
+		os << vec[i] << (i == len - 1 ? "" : " ");
+	return os;
+}
+
+
 
 #endif

@@ -31,3 +31,11 @@ void WebServ::init(std::string path)
 
 
 }
+
+Servers const& WebServ::get_servers() const {
+	return _servers;
+}
+
+std::ostream& operator<<(std::ostream& os, const WebServ& webserv) {
+	return os << webserv.get_servers();
+}

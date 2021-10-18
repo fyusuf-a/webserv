@@ -62,4 +62,3 @@ std::ostream& operator<<(std::ostream& os, const INetAddress& addr) {
 	os << ':' << ntohs(my_addr.sin_port);
 	return os;
 }
-
