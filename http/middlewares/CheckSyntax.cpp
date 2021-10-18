@@ -1,6 +1,7 @@
 #include "Middlewares.hpp"
 
-void		CheckSyntax::body(Request & request) {
+void		CheckSyntax::body(Request & request, Response & response) {
+	(void)response;
 	std::string met = request.get_method();
 
 	if (met != "GET" && met != "POST" && met != "DELETE")
@@ -20,7 +21,7 @@ void		CheckSyntax::body(Request & request) {
 			throw(400);
 		if (it->first.find("\r\n") != std::string::npos)
 			throw(400);
-		if (it->first == "Host")
+		if (it->first == "Host" )
 			++host;
 	}
 	if (host != 1)

@@ -12,9 +12,9 @@ class Request
 		std::map<std::string, std::string> *_header;
 		std::string _body;
 		int			_head;
-		int			_code;
 		bool		_over;
 		std::string _residual;
+		std::string	_field_name;
 
 	public:
 		Request();
@@ -25,7 +25,7 @@ class Request
 
 		char								*parse(char *str);
 		std::string							extract_attribute(std::string req_copy, std::string terminating, char **ptr, std::size_t residual_offset);
-		void								check(void);
+		void								manage_head(char **ptr);
 		int									check_header(void);
 		std::string							get_method(void) const;
 		std::string							get_path(void) const;
@@ -34,9 +34,7 @@ class Request
 		std::string							get_body(void) const;
 		std::string							get_residual(void) const;
 		int									get_head(void) const;
-		int									get_code(void) const;
 		bool								get_over(void) const;
-		void								set_code(int code);
 		void								set_over(bool over);
 };
 

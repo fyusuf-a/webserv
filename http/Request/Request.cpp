@@ -15,25 +15,36 @@ std::string	Request::extract_attribute(std::string req_copy, std::string termina
 		(*ptr) += req_copy.length() - residual_offset;
 		if (_residual == "")
 			_residual = req_copy;
-		if (_head != 2)
-			_head--;
 		return "";
 	}
 	(*ptr) += length + terminating.length() - residual_offset;
 	return req_copy.substr(0, length);
 }
 
+void		Request::manage_head(char **ptr) {
+	while (_head < 2 && **ptr == ' ')
+		(*ptr)++;
+	if (_head == 4) {
+		if (((std::string)*ptr).find("\r\n") == 0) {
+			(*ptr) += 2;
+			_head++;
+		}
+		else if (_over)
+			_head--;
+	}
+	else if (_over)
+		++_head;
+}
+
 char		*Request::parse(char *ptr) {
 	std::string	req_copy = _residual + (std::string)ptr;
 	std::size_t	residual_offset = _residual.length();
-	std::size_t	idx;
-	std::string field_name;
 	std::string field_value;
 
 	_over = true;
 	_residual = "";
 	if ((std::string)ptr == "") {
-		if (_head == 3)
+		if (_head == 5)
 			++_head;
 		else
 			_over = false;
@@ -42,54 +53,44 @@ char		*Request::parse(char *ptr) {
 	switch(this->get_head()) {
 		case 0:
 			_method = extract_attribute(req_copy, " ", &ptr, residual_offset);
-			++_head;
-			while (*ptr == ' ')
-				ptr++;
 			break;
 		case 1:
-			_path = extract_attribute(req_copy, "\r\n", &ptr, residual_offset);
-			idx = _path.find(' ');
-			if (idx < _path.length()) {
-				_protocol = ft_strtrim(_path.substr(_path.find(' '), _path.length()));
-				_path = _path.substr(0, idx);
-			}
-			++_head;
+			_path = extract_attribute(req_copy, " ", &ptr, residual_offset);
 			break;
 		case 2:
-			field_name = extract_attribute(req_copy, ":", &ptr, residual_offset / 2);
-			field_value = ft_strtrim(extract_attribute(req_copy.substr(field_name.length() + 1, req_copy.length()), "\r\n", &ptr, (residual_offset + 1) / 2));
-			if (_residual != "")
-				_residual = field_name + ":" + _residual;
-			else
-				_header->insert(std::pair<std::string, std::string>(field_name, field_value));
+			_protocol = extract_attribute(req_copy, "\r\n", &ptr, residual_offset);
+			_protocol = ft_strtrim(_protocol);
 			break;
 		case 3:
+//			if (ft_strtrim(req_copy).find("\r\n") == 0) {
+
+//			}
+//			else
+			_field_name = extract_attribute(req_copy, ":", &ptr, residual_offset);
+			break;
+		case 4:
+			field_value = ft_strtrim(extract_attribute(req_copy, "\r\n", &ptr, residual_offset));
+			if (field_value != "") {
+				_header->insert(std::pair<std::string, std::string>(_field_name, field_value));
+			}
+			break;
+		case 5:
 			++_head;
 			if ((*_header)["Content-Length"] == "" && (*_header)["Transfer-Encoding"] == "")
 				return ptr; 
 			if (req_copy.find("\r\n\r\n") == std::string::npos){
 				_over = false;
+				--_head;
 			}
 			_body = extract_attribute(req_copy, "\r\n\r\n", &ptr, residual_offset);
-			break;
+			return ptr;
 	}
-	if (((std::string)ptr).find("\r\n") == 0 && _head == 2) {
-		_head++;
-		ptr += 2;
-	}
+	manage_head(&ptr);
 	return ptr;
-}
-
-void								Request::set_code(int code) {
-	this->_code = code;
 }
 
 void								Request::set_over(bool over) {
 	this->_over = over;
-}
-
-int									Request::get_code(void) const {
-	return this->_code;
 }
 
 std::string							Request::get_method(void) const {
@@ -141,11 +142,11 @@ Request::Request( Request const & src ) {
 	return ;
 }
 
-Request::Request() : _head(0), _code(200), _over(true) {
+Request::Request() : _head(0), _over(true) {
 	_header = new std::map<std::string, std::string>;
 }
 
-Request::Request(char *str) : _head(0), _code(200), _over(true) {
+Request::Request(char *str) : _head(0), _over(true) {
 	_header = new std::map<std::string, std::string>;
 	this->parse(str);
 }
