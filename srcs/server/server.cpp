@@ -1,6 +1,6 @@
 #include "../../includes/server.hpp"
 
-Server::Server() : _serverConf() {}
+Server::Server(){}
 
 Server::Server(const Server &other) : _serverConf(other._serverConf), _locations(other._locations) {}
 Server::~Server(){}

@@ -18,12 +18,21 @@ namespace Utils
     bool is_digit(char const c);
 
     void ft_trim(std::string &str);
+    bool is_comentary(std::string &str);
 
 
 
 
 
 
+};
+
+struct MyException : public std::exception
+{
+   std::string s;
+   MyException(std::string ss) : s(ss) {}
+   ~MyException() throw () {}
+   const char* what() const throw() { return s.c_str(); }
 };
 
 

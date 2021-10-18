@@ -18,6 +18,8 @@ class ServerLocation
 		std::string			    	_auth_basic;
 		std::string				    _auth_basic_file;
 		int							_body_size;
+		std::string				    _test;
+
 
 
         
@@ -38,13 +40,14 @@ class ServerLocation
         void      set_auth_basic(std::string const &val);
         void      set_body_size(int val);
 
+        std::string const                &get_location_path(void);
         std::vector<std::string> const   &get_index(void);
         std::vector<std::string> const   &get_methods(void);
-        std::string const   &get_cgi_ext(void);
-        std::string const   &get_cgi_bin(void);
-        std::string const   &get_language(void);
-        std::string const   &get_auth_basic_file();
-        std::string const   &get_auto_index(void);
+        std::string const                &get_cgi_ext(void);
+        std::string const                &get_cgi_bin(void);
+        std::string const                &get_language(void);
+        std::string const                &get_auth_basic_file();
+        std::string const                &get_auto_index(void);
         std::string const   &get_auth_basic(void);
         int                 get_body_size(void);
 

@@ -11,7 +11,7 @@ SRC = 	main.cpp\
 NAME = Webserv
 HEADERS = includes
 CC = g++
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -std=c++98 #-fsanitize=address
 O_FILES = $(SRC:.cpp=.o)
 
 
