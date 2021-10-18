@@ -27,7 +27,8 @@ void WebServ::init(std::string path)
     // std::cout << "->" << _servers[0]._serverConf.get_name() << std::endl; 
     // std::cout << "->" << _servers[0]._locations[0].get_location_path() << std::endl; 
     // std::cout << "->" << _servers[0]._locations[1].get_location_path() << std::endl; 
-    // std::cout << "->" << _servers[0]._locations[0].get_cgi_bin() << std::endl; 
+    std::cout << "->" << _servers[0]._locations[0].get_cgi_bin() << std::endl; 
+    std::cout << "->" << _servers[0]._locations[0].get_cgi_ext() << std::endl; 
 
 
 
