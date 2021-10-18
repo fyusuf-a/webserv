@@ -4,6 +4,8 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <stdint.h>
+
 
 class ServerConfig
 {

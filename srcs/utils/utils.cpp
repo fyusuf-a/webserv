@@ -43,7 +43,7 @@ namespace Utils
         found = str.find(val);
         if (found != std::string::npos)
         {
-            for (int i = val.size(); i != str.size(); i++)
+            for (size_t i = val.size(); i != str.size(); i++)
                 if (!Utils::is_space(str[i]))
                     return (false);
             str = val;
@@ -90,5 +90,15 @@ namespace Utils
             return (false);
         return (true);
     }
+
+	template<typename T>
+	std::ostream& operator<<(std::ostream& os, std::vector<T> vect) {
+		size_t len = vect.size();
+		os << "[";
+		for(int i = 0; i < len; i++) {
+			os << vect[i] << (i != len - 1 ? "," : "");
+		}
+		os << "]";
+	}
 }
 

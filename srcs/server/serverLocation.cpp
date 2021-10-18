@@ -28,12 +28,17 @@ void    ServerLocation::set_auth_basic(std::string const &val){this->_auth_basic
 void    ServerLocation::set_auth_basic_file(std::string const &path){ this->_auth_basic_file = path; }
 void    ServerLocation::set_body_size(int val){ this->_body_size = val; }
 
-std::vector<std::string> const   &ServerLocation::get_index(void){ return (this->_index); }
-std::vector<std::string> const   &ServerLocation::get_methods(void){ return (this->_methods); }
-std::string const   &ServerLocation::get_cgi_ext(void){ return (this->_cgi_ext); }
-std::string const   &ServerLocation::get_cgi_bin(void){ return (this->_cgi_bin); }
-std::string const   &ServerLocation::get_language(void){ return (this->_language); }
-std::string const   &ServerLocation::get_auto_index(void){ return (this->_auto_index); }
-std::string const   &ServerLocation::get_auth_basic(void){ return (this->_auth_basic); }
-std::string const   &ServerLocation::get_auth_basic_file(void){ return (this->_auth_basic_file); }
-int                 ServerLocation::get_body_size(void){ return (this->_body_size); }
+std::vector<std::string> const   &ServerLocation::get_index(void) const{ return (this->_index); }
+std::vector<std::string> const   &ServerLocation::get_methods(void) const{ return (this->_methods); }
+std::string const   &ServerLocation::get_cgi_ext(void) const{ return (this->_cgi_ext); }
+std::string const   &ServerLocation::get_cgi_bin(void) const{ return (this->_cgi_bin); }
+std::string const   &ServerLocation::get_language(void) const{ return (this->_language); }
+std::string const   &ServerLocation::get_auto_index(void) const{ return (this->_auto_index); }
+std::string const   &ServerLocation::get_auth_basic(void) const{ return (this->_auth_basic); }
+std::string const   &ServerLocation::get_auth_basic_file(void) const{ return (this->_auth_basic_file); }
+int                 ServerLocation::get_body_size(void) const{ return (this->_body_size); }
+
+/*std::ostream& operator<<(std::ostream& os, const ServerLocation& location) {
+	os << "index: " << std::endl;
+	os <<  location.get_index() << std::endl;
+}*/

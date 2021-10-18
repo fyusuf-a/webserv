@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: Tests
 
 on:
   push:
@@ -13,5 +13,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: make
-      run: make
+    - name: Installation
+      run: sudo apt update && sudo apt install -y netcat make valgrind
+    - name: Tests
+      run: make test
