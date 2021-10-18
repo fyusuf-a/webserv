@@ -219,35 +219,7 @@ uint32_t    ParsingConf::parsing_host_value(std::string val, std::string dir)
     }
     return (result);
 }    
-
-uint32_t    ParsingConf::parsing_host_value(std::string val, std::string dir)
-{
-    uint32_t result = 0;
-
-    std::istringstream iss(val);
-
-    for (int i = 0; i < 4; ++i)
-    {
-        uint32_t tmp;
-
-        iss >> tmp;
-        
-        if (iss.fail() || tmp > 255)
-            throw MyException("Directive: '" +  dir + "' : invalid IP adress - Must be [0 - 255]");
-
-        result |= tmp << (8  * (3 - i));
-
-        if (i < 3)
-        {
-            char c;
-
-            iss >> c;
-            if (iss.fail() || c != '.')
-                throw MyException("Directive: '" +  dir + "' : IP must have '.' delimiter");
-        }
-    }
-    return (result);
-}    
+  
 
 
 // SET ALL LOCATION AND SERVER INFOS FOR EACH BLOCK

@@ -95,7 +95,7 @@ namespace Utils
 	std::ostream& operator<<(std::ostream& os, std::vector<T> vect) {
 		size_t len = vect.size();
 		os << "[";
-		for(int i = 0; i < len; i++) {
+		for(size_t i = 0; i < len; i++) {
 			os << vect[i] << (i != len - 1 ? "," : "");
 		}
 		os << "]";
