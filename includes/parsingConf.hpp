@@ -31,7 +31,7 @@ class ParsingConf
         void    setup_location_directive(std::string const &line, ServerLocation &location);
         void    setup_server_directive(std::string const &line, Server &server);
 
-        void    setup_location(ITER &start, ITER &end, Server &server);
+        void    setup_location(ITER &start, ITER &end, Server &server, std::string test);
         void    setup_server(ITER &start, ITER &end, Servers &servers);
 
         void    setup_servers(std::vector<std::string> &content, Servers &servers);
@@ -47,11 +47,12 @@ class ParsingConf
         std::string                 parsing_path_value(std::string val, std::string dir);
         std::string                 parsing_cgi_ext_value(std::string val, std::string dir);
         std::string                 parsing_name_value(std::string val, std::string dir);
+        std::string                 parsing_location_path(std::string val);
         uint32_t                    parsing_host_value(std::string val, std::string dir);
         int                         parsing_digit_value(std::string val, std::string dir);
 
         void                         parsing(std::string path, Servers &servers);
-        std::vector<std::string>    parsing_line(std::string line, std::vector<std::string> content);
+        std::vector<std::string>     parsing_line(std::string line, std::vector<std::string> content);
 };
 
 #endif

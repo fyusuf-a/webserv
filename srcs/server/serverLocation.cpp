@@ -2,12 +2,12 @@
 
 
 ServerLocation::ServerLocation() :
-_cgi_ext(""), _cgi_bin(""), _language(""), _auto_index(""), _auth_basic("") , _auth_basic_file(""), _body_size(-1), _test("test"){}
+_cgi_ext(""), _cgi_bin(""), _language(""), _auto_index(""), _auth_basic("") , _auth_basic_file(""), _body_size(-1), _location_path("test"){}
 
 ServerLocation::ServerLocation(const ServerLocation &other) :
 _index(other._index), _methods(other._methods), _cgi_ext(other._cgi_ext),
 _cgi_bin(other._cgi_ext), _language(other._language), _auto_index(other._auto_index),
-_auth_basic(other._auth_basic) , _auth_basic_file(other._auth_basic_file), _body_size(other._body_size), _test(other._test){}
+_auth_basic(other._auth_basic) , _auth_basic_file(other._auth_basic_file), _body_size(other._body_size), _location_path(other._location_path){}
 
 ServerLocation::~ServerLocation(){}
     
@@ -26,6 +26,7 @@ void    ServerLocation::set_language(std::string const &language){ this->_langua
 void    ServerLocation::set_auto_index(std::string const &val){ this->_auto_index = val; }
 void    ServerLocation::set_auth_basic(std::string const &val){this->_auth_basic = val; }
 void    ServerLocation::set_auth_basic_file(std::string const &path){ this->_auth_basic_file = path; }
+void    ServerLocation::set_location_path(std::string const &path){ this->_location_path = path; }
 void    ServerLocation::set_body_size(int val){ this->_body_size = val; }
 
 std::vector<std::string> const   &ServerLocation::get_index(void) const{ return (this->_index); }
@@ -36,7 +37,11 @@ std::string const   &ServerLocation::get_language(void) const{ return (this->_la
 std::string const   &ServerLocation::get_auto_index(void) const{ return (this->_auto_index); }
 std::string const   &ServerLocation::get_auth_basic(void) const{ return (this->_auth_basic); }
 std::string const   &ServerLocation::get_auth_basic_file(void) const{ return (this->_auth_basic_file); }
+std::string const   &ServerLocation::get_location_path(void) const{ return (this->_location_path); }
 int                 ServerLocation::get_body_size(void) const{ return (this->_body_size); }
+
+
+
 
 /*std::ostream& operator<<(std::ostream& os, const ServerLocation& location) {
 	os << "index: " << std::endl;

@@ -19,7 +19,7 @@ class ServerLocation
 		std::string			    	_auth_basic;
 		std::string				    _auth_basic_file;
 		int							_body_size;
-		std::string				    _test;
+		std::string				    _location_path;
 
 
 
@@ -40,6 +40,8 @@ class ServerLocation
         void      set_auto_index(std::string const &val);
         void      set_auth_basic(std::string const &val);
         void      set_body_size(int val);
+        void      set_location_path(std::string const &val);
+
 
         std::vector<std::string> const   &get_index(void) const;
         std::vector<std::string> const   &get_methods(void) const;
@@ -50,9 +52,10 @@ class ServerLocation
         std::string const   &get_auto_index(void) const;
         std::string const   &get_auth_basic(void) const;
         int                 get_body_size(void) const;
+        std::string const   &get_location_path(void) const;
 
 
-        void test(void);
+
 
 };
 

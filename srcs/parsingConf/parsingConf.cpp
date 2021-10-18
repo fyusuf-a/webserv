@@ -42,12 +42,8 @@ bool ParsingConf::is_location_block(std::string const &line)
         i += 8;
     else
         return (false);
-    while (line[i])
-    {
-        if (!Utils::is_space(line[i]))
-            throw MyException("Location block line : Expected - [location]");
-        i++;
-    }
+    if (line.size() > 8 && !Utils::is_space(line[8]))
+            throw MyException("Location block line : Expected - Space between 'location' and 'path location'");
     return (true);
 }
 
@@ -218,7 +214,14 @@ uint32_t    ParsingConf::parsing_host_value(std::string val, std::string dir)
         }
     }
     return (result);
-}    
+}  
+std::string ParsingConf::parsing_location_path(std::string line)
+{
+
+    std::string location_path = parsing_path_value(&line[8], "location");
+    return (location_path);
+}
+
   
 
 
@@ -289,7 +292,7 @@ void  ParsingConf::setup_server_directive(std::string const &line, Server &serve
 
 
 
-void ParsingConf::setup_location(ITER &start, ITER &end, Server &server)
+void ParsingConf::setup_location(ITER &start, ITER &end, Server &server, std::string location_path)
 {
     ServerLocation location;
 
@@ -302,6 +305,9 @@ void ParsingConf::setup_location(ITER &start, ITER &end, Server &server)
         if (start != end)
             start++;
     }
+
+    location.set_location_path(location_path);
+
     server._locations.push_back(location);
 }
 void ParsingConf::setup_server(ITER &start, ITER &end, Servers &servers)
@@ -312,9 +318,10 @@ void ParsingConf::setup_server(ITER &start, ITER &end, Servers &servers)
     {
         if (is_serv_block(*start))
             throw MyException("Directive: 'server' : Not allowed here");
-
+    
         if (is_location_block(*start))
         {
+            std::string location_path = parsing_location_path(*start);
             start++;
 
 			if ((*start).find('{') != std::string::npos)
@@ -331,7 +338,7 @@ void ParsingConf::setup_server(ITER &start, ITER &end, Servers &servers)
                 start++;
             }
             if (brace == 0)
-                setup_location(block_start, --start, server);
+                setup_location(block_start, --start, server, location_path);
             else
                 throw MyException("ParsingConfuration parsing failure: missing \"}\"");
         }
