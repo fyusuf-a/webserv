@@ -14,7 +14,6 @@ ParsingConf &ParsingConf::operator=(const ParsingConf &other)
 }
 
 
-
 bool ParsingConf::is_serv_block(std::string const &line)
 {
     int i = 0;
@@ -51,7 +50,6 @@ bool ParsingConf::is_location_block(std::string const &line)
     }
     return (true);
 }
-
 
 
 
@@ -150,6 +148,8 @@ std::string ParsingConf::parsing_path_value(std::string str, std::string dir)
     int i = 0;
     std::string path;
 
+    Utils::ft_trim(str);
+
     for (; i < str.size() && !Utils::is_space(str[i]); i++)
         path += str[i];
 
@@ -191,6 +191,34 @@ std::string ParsingConf::parsing_name_value(std::string val, std::string dir)
     }
     return (val);
 }
+uint32_t    ParsingConf::parsing_host_value(std::string val, std::string dir)
+{
+    uint32_t result = 0;
+
+    std::istringstream iss(val);
+
+    for (int i = 0; i < 4; ++i)
+    {
+        uint32_t tmp;
+
+        iss >> tmp;
+        
+        if (iss.fail() || tmp > 255)
+            throw MyException("Directive: '" +  dir + "' : invalid IP adress - Must be [0 - 255]");
+
+        result |= tmp << (8  * (3 - i));
+
+        if (i < 3)
+        {
+            char c;
+
+            iss >> c;
+            if (iss.fail() || c != '.')
+                throw MyException("Directive: '" +  dir + "' : IP must have '.' delimiter");
+        }
+    }
+    return (result);
+}    
 
 uint32_t    ParsingConf::parsing_host_value(std::string val, std::string dir)
 {
