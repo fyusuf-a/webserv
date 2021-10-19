@@ -1,3 +1,4 @@
+#include "includes/IPAddress.hpp"
 #include "includes/webserv.hpp"
 #define DEFAULT_PATH "conf/nginx.conf"
 #define SERVER_PORT 500
@@ -8,6 +9,10 @@
 
 int main(int ac, char **av)
 {
+	std::string str = "222.16.12.256";
+	IPAddress ip(str);
+
+	std::cout << ip << std::endl;
 
   WebServ webserv;
 

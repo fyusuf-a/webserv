@@ -27,7 +27,8 @@ public:
 	PassiveServer();
 	PassiveServer(const PassiveServer&);
 	PassiveServer&	operator=(const PassiveServer&);
-	PassiveServer(short port, bool nonblocking=true);
+	PassiveServer(const INetAddress& address, bool nonblocking=true);
+	PassiveServer(uint32_t ip, uint16_t port, bool nonblocking=true);
 	virtual 		~PassiveServer();
 
 protected:

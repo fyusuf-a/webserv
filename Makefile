@@ -8,6 +8,7 @@ SRC = 	main.cpp\
 	srcs/server/Socket.cpp\
 	srcs/server/ActiveServer.cpp\
 	srcs/server/NIOSelector.cpp\
+	srcs/ipaddress/IPAddress.cpp\
 	srcs/ipaddress/INetAddress.cpp
 
 NAME = Webserv

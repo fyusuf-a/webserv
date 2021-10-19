@@ -21,6 +21,9 @@ namespace Utils
     bool is_comentary(std::string &str);
 
 
+    // bool is_set(std::string value);
+    template <typename T>
+    bool is_set(std::vector<T> value);
 
 
 

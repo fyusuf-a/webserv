@@ -1,4 +1,5 @@
 #include "../includes/Socket.hpp"
+#include "../includes/IPAddress.hpp"
 #include <cctype>
 #include <arpa/inet.h>
 
@@ -11,7 +12,9 @@ int main(int argc, char** argv)
 		std::cerr << "No port was given as an argument" << std::endl;
 		return 1;
 	}
-	Socket my_server(atoi(argv[1]), false);
+
+	IPAddress ip("0.0.0.0");
+	Socket my_server(ip, atoi(argv[1]), false);
 
 	my_server.listen();
 

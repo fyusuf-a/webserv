@@ -42,12 +42,8 @@ bool ParsingConf::is_location_block(std::string const &line)
         i += 8;
     else
         return (false);
-    while (line[i])
-    {
-        if (!Utils::is_space(line[i]))
-            throw MyException("Location block line : Expected - [location]");
-        i++;
-    }
+    if (line.size() > 8 && !Utils::is_space(line[8]))
+            throw MyException("Location block line : Expected - Space between 'location' and 'path location'");
     return (true);
 }
 
@@ -57,9 +53,7 @@ int ParsingConf::parse_directive(std::string const &line, std::string &directive
 {
     int i = 0;
 
-    while (line[i] && Utils::is_space(line[i]))
-        i++;
-    while (line[i] && !Utils::is_space(line[i]))
+    while (line[i] && !Utils::is_space(line[i]) && line[i] != ';')
         directive += line[i++];
     return (i);
 }
@@ -154,7 +148,7 @@ std::string ParsingConf::parsing_path_value(std::string str, std::string dir)
         path += str[i];
 
     if (i != str.size())
-        throw MyException("Directive: '" +  dir + "'  Expected - [my/path/example.test]");
+        throw MyException("Directive: '" +  dir + "'  invalid modifier '" + path + "'");
     return (path);
 }
 std::string ParsingConf::parsing_cgi_ext_value(std::string str, std::string dir)
@@ -218,7 +212,15 @@ uint32_t    ParsingConf::parsing_host_value(std::string val, std::string dir)
         }
     }
     return (result);
-}    
+}  
+std::string ParsingConf::parsing_location_path(std::string line)
+{
+
+    std::string location_path = parsing_path_value(&line[8], "location");
+    return (location_path);
+}
+
+  
 
 
 // SET ALL LOCATION AND SERVER INFOS FOR EACH BLOCK
@@ -236,23 +238,26 @@ void  ParsingConf::setup_location_directive(std::string const &line, ServerLocat
 
     parse_value(line, value, i);
 
-    if (directive == "index" /*&& Utils::is_set()*/)
+    if (value.empty())
+        throw MyException("Directive: '" +  directive + "' : invalid number of arguments");
+
+    else if (directive == "index" /*&& Utils::is_set()*/) // dupli
         location.set_index( parsing_index_value(value) );
-    else if (directive == "methods")
+    else if (directive == "methods") // dont dupli
         location.set_methods( parsing_methods_value(value, directive) );
-    else if (directive == "cgi_extension")
+    else if (directive == "cgi_extension") // dont dupli
         location.set_cgi_ext( parsing_cgi_ext_value(value, directive) );
-    else if (directive == "cgi_bin")
+    else if (directive == "cgi_bin") // dont dupli
         location.set_cgi_bin( parsing_path_value(value, directive) );
     else if (directive == "language") // language a faire
-        location.set_language(value); // ----------------
-    else if (directive == "autoindex")
+        location.set_language(value); 
+    else if (directive == "autoindex")  // dont dupli
         location.set_auto_index( parsing_bool_value(value, directive) );
-    else if (directive == "auth_basic")
+    else if (directive == "auth_basic")  // dont dupli
         location.set_auth_basic( parsing_bool_value(value, directive) );
-    else if (directive == "auth_basic_user_file")
+    else if (directive == "auth_basic_user_file")  // dont dupli
         location.set_auth_basic_file( parsing_path_value(value, directive) );
-    else if (directive == "client_max_body_size")
+    else if (directive == "client_max_body_size")  // dont dupli
         location.set_body_size( parsing_digit_value(value, directive) );
 }
 void  ParsingConf::setup_server_directive(std::string const &line, Server &server)
@@ -264,31 +269,28 @@ void  ParsingConf::setup_server_directive(std::string const &line, Server &serve
     if (Utils::is_valid_directive_location(directive) && directive != "index")
         throw MyException("Directive: '" +  directive + "' : only Allowed in location block");
 
-    else if (!Utils::is_valid_directive(directive))
+    if (!Utils::is_valid_directive(directive))
         throw MyException("Directive: '" +  directive + "' : Unknow");
 
-    else if (!parse_value(line, value, i))
-        throw MyException("Directive: '" +  directive + "' : Invalid parameter");
-        
-    else
-    {
-        if (directive == "listen")
-            server._serverConf.set_port( parsing_digit_value(value, directive) );
-        else if (directive == "host")
-            server._serverConf.set_host( parsing_host_value(value, directive) );
-        else if (directive == "server_name")
-            server._serverConf.set_name( parsing_name_value(value, directive) );
-        else if (directive == "root")
-            server._serverConf.set_root( parsing_path_value(value, directive) );
-        else if (directive == "error")
-            server._serverConf.set_error( parsing_path_value(value, directive) );
-    }
+    parse_value(line, value, i);
 
+    if (value.empty())
+        throw MyException("Directive: '" +  directive + "' : invalid number of arguments");
+    else if (directive == "listen") // dont dupli
+        server._serverConf.set_port( parsing_digit_value(value, directive) );
+    else if (directive == "host") // dont dupli
+        server._serverConf.set_host( parsing_host_value(value, directive) );
+    else if (directive == "server_name") // dont dupli
+        server._serverConf.set_name( parsing_name_value(value, directive) );
+    else if (directive == "root") // dupli
+        server._serverConf.set_root( parsing_path_value(value, directive) );
+    else if (directive == "error")  // dont dupli
+        server._serverConf.set_error( parsing_path_value(value, directive) );
 }
 
 
 
-void ParsingConf::setup_location(ITER &start, ITER &end, Server &server)
+void ParsingConf::setup_location(ITER &start, ITER &end, Server &server, std::string location_path)
 {
     ServerLocation location;
 
@@ -301,6 +303,9 @@ void ParsingConf::setup_location(ITER &start, ITER &end, Server &server)
         if (start != end)
             start++;
     }
+
+    location.set_location_path(location_path);
+
     server._locations.push_back(location);
 }
 void ParsingConf::setup_server(ITER &start, ITER &end, Servers &servers)
@@ -311,9 +316,10 @@ void ParsingConf::setup_server(ITER &start, ITER &end, Servers &servers)
     {
         if (is_serv_block(*start))
             throw MyException("Directive: 'server' : Not allowed here");
-
+    
         if (is_location_block(*start))
         {
+            std::string location_path = parsing_location_path(*start);
             start++;
 
 			if ((*start).find('{') != std::string::npos)
@@ -330,7 +336,7 @@ void ParsingConf::setup_server(ITER &start, ITER &end, Servers &servers)
                 start++;
             }
             if (brace == 0)
-                setup_location(block_start, --start, server);
+                setup_location(block_start, --start, server, location_path);
             else
                 throw MyException("ParsingConfuration parsing failure: missing \"}\"");
         }
@@ -419,6 +425,7 @@ std::vector<std::string> ParsingConf::parsing_line(std::string line, std::vector
         {
             tmp = line.substr(0, i + 1);
             content.push_back(tmp);
+
             if (!line[i + 1])
                 return content;
             line = &line[i + 1];
@@ -452,7 +459,6 @@ void ParsingConf::parsing(std::string path, Servers &servers)
         for (ITER it = content.begin(); it != content.end();)
         {
             Utils::ft_trim(*it);
-
             if (Utils::is_comentary(*it) || (Utils::is_spaces(*it) && (*it).empty()))
                 content.erase(it);
             else

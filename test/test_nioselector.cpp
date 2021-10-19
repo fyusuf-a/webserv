@@ -54,8 +54,8 @@ int main(int argc, char** argv)
 	(void)argc;
 	(void)argv;
 	NIOSelector* nio_selector = NIOSelector::getInstance(100);
-	PassiveServer<toUppercaseActive> upper_server(PORT1, false);
-	PassiveServer<toLowercaseActive> lower_server(PORT2, false);
+	PassiveServer<toUppercaseActive> upper_server(0, PORT1, false);
+	PassiveServer<toLowercaseActive> lower_server(0,PORT2, false);
 
 	while (1)
 		nio_selector->poll();

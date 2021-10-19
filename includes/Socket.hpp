@@ -2,6 +2,7 @@
 #define SOCKET_HPP
 
 #include "INetAddress.hpp"
+#include "IPAddress.hpp"
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
@@ -27,7 +28,8 @@ public:
 
 	Socket();
 	// Throws a std::runtime_error if initialization went wrong
-	Socket(short port, bool nonblocking=true);
+	Socket(const INetAddress& address, bool nonblocking=true);
+	Socket(const IPAddress& ip, uint16_t port, bool nonblocking=true);
 	Socket(const Socket&);
 	Socket&	operator=(const Socket&);
 	virtual 		~Socket();
