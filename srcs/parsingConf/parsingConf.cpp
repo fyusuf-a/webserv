@@ -1,5 +1,7 @@
 #include "../../includes/parsingConf.hpp"
 
+// checker pour plusieur root 
+
 ParsingConf::ParsingConf(){}
 
 ParsingConf::ParsingConf(const ParsingConf &other){(void)other;}
@@ -188,12 +190,15 @@ int ParsingConf::parsing_digit_value(std::string val, std::string dir)
     int value;
 
     if (!Utils::is_digits(val))
-        throw MyException("Directive: '" +  dir + "' : Expected - [1 digit parameter]");
+        throw MyException("Directive: '" +  dir + "' : Expected - [ digit value ]");
     
     value = ::atoi(val.c_str());
     
-    if (value < 0 || value > 65535)
-        throw MyException("Directive: '" +  dir + "' : Expected - [1 digit parameter]" );
+    if (((value < 0 || value > 65535) && dir == "listen"))
+        throw MyException("Directive: '" +  dir + "' : Expected - [ 0 - 65535 ]" );
+
+    else if (value < 0 && dir == "client_max_body_size")
+        throw MyException("Directive: '" +  dir + "' : Expected - [ positive number ]" );
 
     return ( ::atoi(val.c_str()) );
 }

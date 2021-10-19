@@ -19,7 +19,7 @@ void WebServ::init(std::string path)
     }
     catch(MyException& caught)
     {
-        std::cout<<"[ERROR] " << caught.what() << std::endl;
+        std::cout << "[ERROR] " << caught.what() << std::endl;
         return ;
 
     }
