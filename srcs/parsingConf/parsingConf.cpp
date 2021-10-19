@@ -14,6 +14,27 @@ ParsingConf &ParsingConf::operator=(const ParsingConf &other)
 }
 
 
+bool is_set(std::vector<std::string> value, std::string directive)
+{
+    if (!value.empty())
+        throw MyException("Directive: '" +  directive + "' : duplicate symbols");
+    return (true);
+}
+bool is_set(std::string value, std::string directive)
+{
+    if (!value.empty())
+        throw MyException("Directive: '" +  directive + "' : duplicate symbols");
+    return (true);
+}
+bool is_set(int value, std::string directive)
+{
+    if ((value != -1 && directive == "client_max_body_size") || (value != 80 && directive == "listen"))
+        throw MyException("Directive: '" +  directive + "' : duplicate symbols");
+    return (true);
+}
+
+
+
 bool ParsingConf::is_serv_block(std::string const &line)
 {
     int i = 0;
@@ -220,7 +241,6 @@ std::string ParsingConf::parsing_location_path(std::string line)
     return (location_path);
 }
 
-  
 
 
 // SET ALL LOCATION AND SERVER INFOS FOR EACH BLOCK
@@ -241,24 +261,32 @@ void  ParsingConf::setup_location_directive(std::string const &line, ServerLocat
     if (value.empty())
         throw MyException("Directive: '" +  directive + "' : invalid number of arguments");
 
-    else if (directive == "index" /*&& Utils::is_set()*/) // dupli
+    else if ( directive == "index" && is_set(location.get_index(), directive) )
         location.set_index( parsing_index_value(value) );
-    else if (directive == "methods") // dont dupli
+
+    else if (directive == "methods" && is_set(location.get_methods(), directive) )
         location.set_methods( parsing_methods_value(value, directive) );
-    else if (directive == "cgi_extension") // dont dupli
+
+    else if (directive == "cgi_extension" && is_set(location.get_cgi_ext(), directive) )
         location.set_cgi_ext( parsing_cgi_ext_value(value, directive) );
-    else if (directive == "cgi_bin") // dont dupli
+
+    else if (directive == "cgi_bin" && is_set(location.get_cgi_bin(), directive) )
         location.set_cgi_bin( parsing_path_value(value, directive) );
-    else if (directive == "language") // language a faire
-        location.set_language(value); 
-    else if (directive == "autoindex")  // dont dupli
+
+    else if (directive == "autoindex" && is_set(location.get_auto_index(), directive) )
         location.set_auto_index( parsing_bool_value(value, directive) );
-    else if (directive == "auth_basic")  // dont dupli
+
+    else if (directive == "auth_basic" && is_set(location.get_auth_basic(), directive) )
         location.set_auth_basic( parsing_bool_value(value, directive) );
-    else if (directive == "auth_basic_user_file")  // dont dupli
+
+    else if (directive == "auth_basic_user_file" && is_set(location.get_auth_basic_file(), directive) )
         location.set_auth_basic_file( parsing_path_value(value, directive) );
-    else if (directive == "client_max_body_size")  // dont dupli
+
+    else if (directive == "client_max_body_size" && is_set(location.get_body_size(), directive) )
         location.set_body_size( parsing_digit_value(value, directive) );
+
+    // else if (directive == "language" && is_set(location.get_index(), directive) )
+        // location.set_language(value); 
 }
 void  ParsingConf::setup_server_directive(std::string const &line, Server &server)
 {
@@ -276,15 +304,20 @@ void  ParsingConf::setup_server_directive(std::string const &line, Server &serve
 
     if (value.empty())
         throw MyException("Directive: '" +  directive + "' : invalid number of arguments");
-    else if (directive == "listen") // dont dupli
+
+    else if (directive == "listen" && is_set(server._serverConf.get_port(), directive) ) // dont dupli
         server._serverConf.set_port( parsing_digit_value(value, directive) );
-    else if (directive == "host") // dont dupli
+
+    else if (directive == "host" && is_set(server._serverConf.get_host(), directive) ) // dont dupli
         server._serverConf.set_host( parsing_host_value(value, directive) );
-    else if (directive == "server_name") // dont dupli
+
+    else if (directive == "server_name" && is_set(server._serverConf.get_name(), directive) ) // dont dupli
         server._serverConf.set_name( parsing_name_value(value, directive) );
-    else if (directive == "root") // dupli
+
+    else if (directive == "root" && is_set(server._serverConf.get_root(), directive) ) // dupli
         server._serverConf.set_root( parsing_path_value(value, directive) );
-    else if (directive == "error")  // dont dupli
+
+    else if (directive == "error" && is_set(server._serverConf.get_error(), directive) )  // dont dupli
         server._serverConf.set_error( parsing_path_value(value, directive) );
 }
 
@@ -452,6 +485,7 @@ void ParsingConf::parsing(std::string path, Servers &servers)
     {
         while (std::getline(fd, line))
             content = parsing_line(line, content);
+
         if (content.empty())
             throw MyException("[ERROR] File: Empty");
 

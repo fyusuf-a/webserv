@@ -5,53 +5,63 @@
 #include <sstream>
 
 
+class go
+{
+    public:
+        int n;
+
+    go() : n(1){std::cout << "constructor " << std::endl;};
+    go(go const &o){std::cout << "copy constructor " << std::endl;}
+    ~go(){std::cout << "destructor " << std::endl;};
+
+    int get(void){return this->n;}
+    void set(int n){this->n = n;}
+};
+
 class conf
 {
     public:
 
-    int nb;
+        std::vector<std::string> t;
+        go tt;
 
-    conf() : nb(0){};
-        int get(void){return nb;}
-    void set(int n){this->nb = n;}
+    conf()  {std::cout << "before  " << std::endl;};
+    conf(conf const &o){std::cout << "here " << std::endl;}
+
+    std::vector<std::string> get(void){return this->t;}
+    void set(std::vector<std::string> n){this->t = n;}
 };
 
-class test
+bool is_set(std::vector<std::string> value)
 {
-    public:
-        conf _conf;
-    test() : _conf(){};
+    if (value.empty())
+    {
+        std::cout << "lalala" << std::endl;
+        return (false);
+    }
+    return (true);
 
-};
-
-void setup_server(test &ser)
-{
-    ser._conf.set(19);
 }
-
-void go()
-{
-    uint32_t result = 0;
-
-    std::istringstream iss("1");
-
-        uint32_t tmp;
-
-        iss >> tmp;
-        
-        result |= tmp << (8 * 3);
-
-      std::cout << result << std::endl;
-}    
-
 
 
 
 int main()
 {
-    std::string str = "post, get  , get";
+    conf test;
+    std::vector<std::string> t;
+    
+    t.push_back("bonjour");
 
-    std::string st = str.substr(5, 11);
-    std::cout << st << std::endl;
+    test.set(t );
+
+    if (is_set(test.get()) )
+        std::cout << "prout " <<std::endl;
+    else
+        std::cout << "bonjr" <<std::endl;
+
+
+
+
+
     return 0;
 }
