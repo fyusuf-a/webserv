@@ -4,7 +4,8 @@ g++ -g -D DEBUG -I../includes -Wall -Werror -Wextra --std=c++98 ../srcs/server/S
 	../srcs/server/ActiveServer.cpp
 PORT1=8080
 PORT2=8081
-valgrind --suppressions=memcheck.log --show-leak-kinds=all --leak-check=no --error-exitcode=1 ./a.out & sleep 4
+#valgrind --suppressions=memcheck.log --show-leak-kinds=all --leak-check=no --error-exitcode=1 ./a.out & sleep 4
+./a.out & sleep 4
 echo -n "s" | nc -w1 localhost $PORT1 > my_test.txt ; echo -n "N" | nc -w1 localhost $PORT2 >> my_test.txt
 if [ "$(cat my_test.txt | wc -c)" -ne "2" ]; then
 	exit 1

@@ -20,7 +20,9 @@ PassiveServer<T>& PassiveServer<T>::operator=(const PassiveServer& src) {
 
 template<typename T>
 PassiveServer<T>::PassiveServer(const INetAddress& address, bool nonblocking) {
+	std::cerr << address << std::endl;
 	_socket = new Socket(address, nonblocking);
+	std::cerr << "the fd lol " << _socket->getFd() << std::endl;
 	_socket->listen();
 	NIOSelector::getInstance()->add(_socket->getFd(), *this, READ);
 }

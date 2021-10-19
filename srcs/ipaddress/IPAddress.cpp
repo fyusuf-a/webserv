@@ -44,16 +44,16 @@ IPAddress& IPAddress::operator=(const IPAddress& src) {
 IPAddress::~IPAddress() {
 }
 
-uint32_t IPAddress::getAddress() const {
+uint32_t IPAddress::getIP() const {
 	return _address;
 }
 
-void IPAddress::setAddress(uint32_t addr) {
+void IPAddress::setIP(uint32_t addr) {
 	_address = addr;
 }
 
 std::ostream& operator<<(std::ostream& os, const IPAddress& addr) {
-	uint32_t ip = addr.getAddress();
+	uint32_t ip = addr.getIP();
 	for (int i = 0; i < 4; i++)
 	{
 		os << ip % 0x100;

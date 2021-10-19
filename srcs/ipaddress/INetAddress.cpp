@@ -3,7 +3,7 @@
 #include <ostream>
 #include <sys/socket.h>
 
-INetAddress::INetAddress() : _port(0) {
+INetAddress::INetAddress() : _address(0), _port(0) {
 	/*_address.sin_family = AF_INET;
 	_address.sin_port = 0;
 	_address.sin_addr.s_addr = 0;
@@ -59,12 +59,13 @@ void INetAddress::to_sockaddr_in(struct sockaddr_in* structure) {
 		return;
 	structure->sin_family = AF_INET;
 	structure->sin_port = htons(_port);
-	structure->sin_addr.s_addr = htonl(_address.getAddress());
-	memset(structure->sin_zero, 0, sizeof structure->sin_zero);
+	structure->sin_addr.s_addr = htonl(_address.getIP());
+	//std::cerr << "ip is " << structure->sin_port << " port is " << structure->sin_port << std::endl;
+	memset(structure->sin_zero, 0, sizeof(structure->sin_zero));
 }
 
 std::ostream& operator<<(std::ostream& os, const INetAddress& addr) {
-	//struct sockaddr_in	my_addr = addr.getAddress();
+	//struct sockaddr_in	my_addr = addr.getIP();
 	//uint32_t			ip = my_addr.sin_addr.s_addr;
 
 	/*for (int i = 0; i < 4; i++)

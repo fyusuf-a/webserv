@@ -21,8 +21,8 @@ class IPAddress {
 		IPAddress(const IPAddress&);
 		IPAddress& operator=(const IPAddress&);
         virtual ~IPAddress();
-		uint32_t getAddress() const;
-		void setAddress(uint32_t);
+		uint32_t getIP() const;
+		void setIP(uint32_t);
 };
 
 std::ostream& operator<<(std::ostream&, const IPAddress&);

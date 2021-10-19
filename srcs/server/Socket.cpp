@@ -11,6 +11,7 @@ Socket::Socket(const Socket& src) {
 }
 
 Socket& Socket::operator=(const Socket& src) {
+	std::cerr << "operator=" << std::endl;
 	if (this != &src) {
 		_fd = src._fd;
 		_address = src._address;
@@ -19,7 +20,6 @@ Socket& Socket::operator=(const Socket& src) {
 }
 
 Socket::Socket(const IPAddress& ip, uint16_t port, bool nonblocking) { //:	_port(port)  {
-	std::cerr << "Socket on " << ip << ":" << port << std::endl;
 	_address = INetAddress(ip, port);
 	if ((_fd = socket(PF_INET, SOCK_STREAM, 0)) < 0)
 	{
@@ -64,6 +64,7 @@ Socket::Socket(const IPAddress& ip, uint16_t port, bool nonblocking) { //:	_port
 #if DEBUG
 	std::cerr << "Socket bound (address " << _address << ')' << std::endl;
 #endif
+	std::cerr << "the fd in constructor ! " << _fd << std::endl;
 }
 
 Socket::Socket(const INetAddress& address, bool nonblocking) {
