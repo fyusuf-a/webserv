@@ -26,7 +26,7 @@ class Request
 		char								*parse(char *str);
 		std::string							extract_attribute(std::string req_copy, std::string terminating, char **ptr, std::size_t residual_offset);
 		void								manage_head(char **ptr);
-		int									check_header(void);
+		void								checkIncompleteRequest(void) const;
 		std::string							get_method(void) const;
 		std::string							get_path(void) const;
 		std::string							get_protocol(void) const;

@@ -1,6 +1,8 @@
 SRC = 	test.cpp\
 		middlewares/CheckSyntax.cpp\
 		Request/Request.cpp\
+		Request/requestParsing.cpp\
+		Request/checkIncompleteRequest.cpp\
 		Response/Response.cpp
 
 INC = 	includes

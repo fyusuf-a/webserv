@@ -87,6 +87,10 @@ void	request_parsing_testing(char *str, bool nouveau, std::list<Request *> & req
 	}
 	if (clean)
 		requests.clear();
+	else {
+		try {requests.back()->checkIncompleteRequest();}
+		catch (int error) { std::cout << error << std::endl; }
+	}
 }
 
 
@@ -109,12 +113,12 @@ void	rpt(void) {
 	request_parsing_testing((char *)"nHost:ok", false, requests, false);
 	request_parsing_testing((char *)"\r\n\r\n", false, requests, true);
 	request_parsing_testing((char *)"G", true, requests, false);
-	request_parsing_testing((char *)"ET", false, requests, false);
-	request_parsing_testing((char *)" /", false, requests, false);
+	request_parsing_testing((char *)"ET ", false, requests, false);
+	request_parsing_testing((char *)" l/", false, requests, false);
 	request_parsing_testing((char *)"p.com HTTP/1.", false, requests, false);
 	request_parsing_testing((char *)"1\r\nHost:ok", false, requests, false);
 	request_parsing_testing((char *)"\r\n\r\n", false, requests, true);
-	request_parsing_testing((char *)"GET           /test.html HTTP/1.1\r\nHost: ok\r\nContent-Length: non\r\n \r\n", true, requests, true);
+	request_parsing_testing((char *)"GET           /test.html HTTP/1.1\r\nHost: \r\nContent-Length: non\r\n \r\n\r\n", true, requests, true);
 	request_parsing_testing((char *)"GET /lp HTT.1", true, requests, false);
 
 }
