@@ -9,11 +9,7 @@
 
 int main(int ac, char **av)
 {
-	std::string str = "222.16.12.256";
 	std::string path = ac == 2 ? av[1] : DEFAULT_PATH;
-	IPAddress ip(str);
-
-	std::cout << ip << std::endl;
 
  	WebServ webserv(path);
 

@@ -38,7 +38,7 @@ void WebServ::init(const std::string& path)
 
 }
 
-Servers const& WebServ::get_servers() const {
+ServerBlocks const& WebServ::get_servers() const {
 	return _servers;
 }
 

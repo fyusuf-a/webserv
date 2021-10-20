@@ -8,10 +8,10 @@
 #include <stdlib.h>
 
 #include "utils.hpp"
-#include "server.hpp"
+#include "serverBlock.hpp"
 
 #define ITER std::vector<std::string>::iterator
-#define Servers std::vector<Server>
+#define ServerBlocks std::vector<ServerBlock>
 
 class ParsingConf
 {
@@ -29,12 +29,12 @@ class ParsingConf
         bool    is_serv_block(std::string const &line);
 
         void    setup_location_directive(std::string const &line, ServerLocation &location);
-        void    setup_server_directive(std::string const &line, Server &server);
+        void    setup_server_directive(std::string const &line, ServerBlock &server);
 
-        void    setup_location(ITER &start, ITER &end, Server &server, std::string test);
-        void    setup_server(ITER &start, ITER &end, Servers &servers);
+        void    setup_location(ITER &start, ITER &end, ServerBlock &server, std::string test);
+        void    setup_server(ITER &start, ITER &end, ServerBlocks &servers);
 
-        void    setup_servers(std::vector<std::string> &content, Servers &servers);
+        void    setup_servers(std::vector<std::string> &content, ServerBlocks &servers);
 
 
         int     parse_directive(std::string const &line, std::string &directive);
@@ -51,7 +51,7 @@ class ParsingConf
         uint32_t                    parsing_host_value(std::string val, std::string dir);
         int                         parsing_digit_value(std::string val, std::string dir);
 
-        void                         parsing(std::string path, Servers &servers);
+        void                         parsing(std::string path, ServerBlocks &servers);
         std::vector<std::string>     parsing_line(std::string line, std::vector<std::string> content);
 };
 

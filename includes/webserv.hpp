@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include "parsingConf.hpp"
-#include "server.hpp"
+#include "serverBlock.hpp"
 
 
 
@@ -19,7 +19,7 @@ class WebServ
 
     private:
         ParsingConf  _conf;
-        Servers      _servers;
+        ServerBlocks      _servers;
         void init(const std::string& path);
 
     public:
@@ -28,7 +28,7 @@ class WebServ
         WebServ(const std::string& path);
         ~WebServ();
         WebServ &operator=(const WebServ &other);
-		Servers const& get_servers() const;
+		ServerBlocks const& get_servers() const;
 
 
 

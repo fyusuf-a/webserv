@@ -1,5 +1,5 @@
-#ifndef PASSIVESOCKET_HPP
-#define PASSIVESOCKET_HPP
+#ifndef PASSIVESERVER_HPP
+#define PASSIVESERVER_HPP
 
 #include "INetAddress.hpp"
 #include "Socket.hpp"
