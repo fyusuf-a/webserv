@@ -21,15 +21,15 @@
 #include <stdexcept>
 
 template<typename T>
-class PassiveServer : public NIOSelector::Callback {
+class PassiveHTTP : public NIOSelector::Callback {
 
 public:
-	PassiveServer();
-	PassiveServer(const PassiveServer&);
-	PassiveServer&	operator=(const PassiveServer&);
-	PassiveServer(const INetAddress& address, bool nonblocking=true);
-	PassiveServer(uint32_t ip, uint16_t port, bool nonblocking=true);
-	virtual 		~PassiveServer();
+	PassiveHTTP();
+	PassiveHTTP(const PassiveHTTP&);
+	PassiveHTTP&	operator=(const PassiveHTTP&);
+	PassiveHTTP(const INetAddress& address, bool nonblocking=true);
+	PassiveHTTP(uint32_t ip, uint16_t port, bool nonblocking=true);
+	virtual 		~PassiveHTTP();
 
 protected:
 	Socket			*_socket;
@@ -41,6 +41,6 @@ private:
 	void init(const INetAddress& address, bool nonblocking);
 };
 
-#include "../srcs/server/PassiveServer.tpp"
+#include "../templates/PassiveHTTP.tpp"
 
 #endif

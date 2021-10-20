@@ -10,19 +10,15 @@
 int main(int ac, char **av)
 {
 	std::string str = "222.16.12.256";
+	std::string path = ac == 2 ? av[1] : DEFAULT_PATH;
 	IPAddress ip(str);
 
 	std::cout << ip << std::endl;
 
-  WebServ webserv;
+ 	WebServ webserv(path);
 
-  if (ac == 2)
-    webserv.init(av[1]);
-  else
-    webserv.init(DEFAULT_PATH);
-
-  std::cout << webserv;
-  return (0);
+ 	std::cout << webserv;
+ 	return (0);
 }
 
 // char *test(const unsigned char *input, size_t len)

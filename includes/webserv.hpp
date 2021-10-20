@@ -20,13 +20,14 @@ class WebServ
     private:
         ParsingConf  _conf;
         Servers      _servers;
+        void init(const std::string& path);
 
     public:
         WebServ();
         WebServ(const WebServ &other);
+        WebServ(const std::string& path);
         ~WebServ();
         WebServ &operator=(const WebServ &other);
-        void init(std::string path);
 		Servers const& get_servers() const;
 
 

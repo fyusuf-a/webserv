@@ -4,6 +4,10 @@ WebServ::WebServ() : _conf(){};
 
 WebServ::WebServ(const WebServ &other){(void)other;};
 
+WebServ::WebServ(const std::string&path){
+	init(path);
+};
+
 WebServ::~WebServ(){};
 
 WebServ &WebServ::operator=(const WebServ &other){(void)other;return *this;}
@@ -11,7 +15,7 @@ WebServ &WebServ::operator=(const WebServ &other){(void)other;return *this;}
 
 
 
-void WebServ::init(std::string path)
+void WebServ::init(const std::string& path)
 {
     try 
     {
