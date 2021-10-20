@@ -11,7 +11,6 @@ Socket::Socket(const Socket& src) {
 }
 
 Socket& Socket::operator=(const Socket& src) {
-	std::cerr << "operator=" << std::endl;
 	if (this != &src) {
 		_fd = src._fd;
 		_address = src._address;
@@ -19,7 +18,7 @@ Socket& Socket::operator=(const Socket& src) {
 	return (*this);
 }
 
-Socket::Socket(const IPAddress& ip, uint16_t port, bool nonblocking) { //:	_port(port)  {
+void Socket::init(const IPAddress& ip, uint16_t port, bool nonblocking) {
 	_address = INetAddress(ip, port);
 	if ((_fd = socket(PF_INET, SOCK_STREAM, 0)) < 0)
 	{
@@ -54,7 +53,6 @@ Socket::Socket(const IPAddress& ip, uint16_t port, bool nonblocking) { //:	_port
 	}
 	struct sockaddr_in my_struct;
 	_address.to_sockaddr_in(&my_struct);
-	//= _address.getAddress();
 	if (bind(_fd, (struct sockaddr*)&my_struct, sizeof my_struct) < 0)
 	{
 		std::ostringstream oss;
@@ -64,11 +62,14 @@ Socket::Socket(const IPAddress& ip, uint16_t port, bool nonblocking) { //:	_port
 #if DEBUG
 	std::cerr << "Socket bound (address " << _address << ')' << std::endl;
 #endif
-	std::cerr << "the fd in constructor ! " << _fd << std::endl;
+}
+
+Socket::Socket(const IPAddress& ip, uint16_t port, bool nonblocking) { //:	_port(port)  {
+	init(ip, port, nonblocking);
 }
 
 Socket::Socket(const INetAddress& address, bool nonblocking) {
-	Socket(address.getAddress(), address.getPort(), nonblocking);
+	init(address.getAddress(), address.getPort(), nonblocking);
 }
 
 Socket::~Socket() {

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-g++ -g -D DEBUG -I../includes -Wall -Werror -Wextra --std=c++98 ../srcs/server/Socket.cpp ../srcs/ipaddress/INetAddress.cpp ./test_nioselector.cpp ../srcs/server/NIOSelector.cpp ../srcs/ipaddress/IPAddress.cpp\
+g++ -g3 -D DEBUG -I../includes -Wall -Werror -Wextra --std=c++98 ../srcs/server/Socket.cpp ../srcs/ipaddress/INetAddress.cpp ./test_nioselector.cpp ../srcs/server/NIOSelector.cpp ../srcs/ipaddress/IPAddress.cpp\
 	../srcs/server/ActiveServer.cpp
 PORT1=8080
 PORT2=8081
@@ -17,5 +17,5 @@ if [ ! $(cat my_test.txt | grep S) ]; then
 	exit 1
 fi
 kill $!
-rm my_test.txt
+#rm my_test.txt
 exit 0

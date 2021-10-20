@@ -56,12 +56,12 @@ public:
 	void			setAddress(const INetAddress&);
 	void			setPort(u_int16_t port);
 
-protected:
+public:
 	int		_fd;
 	INetAddress	_address;
 
 private:
-	void	init(struct sockaddr_in &my_addr, short &port);
+	void	init(const IPAddress& ip, uint16_t port, bool nonblocking);
 };
 
 #endif

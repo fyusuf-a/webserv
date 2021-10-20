@@ -36,6 +36,9 @@ protected:
 	void			writable(int fd);
 	void			readable(int fd);
 	void			on_close(int fd);
+
+private:
+	void init(const INetAddress& address, bool nonblocking);
 };
 
 #include "../templates/PassiveServer.tpp"
