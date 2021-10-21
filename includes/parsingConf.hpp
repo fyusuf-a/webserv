@@ -43,13 +43,14 @@ class ParsingConf
 
         std::vector<std::string>    parsing_index_value(std::string val);
         std::vector<std::string>    parsing_methods_value(std::string val, std::string dir);
-        std::string                 parsing_bool_value(std::string val, std::string dir);
         std::string                 parsing_path_value(std::string val, std::string dir);
         std::string                 parsing_cgi_ext_value(std::string val, std::string dir);
         std::string                 parsing_name_value(std::string val, std::string dir);
         std::string                 parsing_location_path(std::string val);
-        uint32_t                    parsing_host_value(std::string val, std::string dir);
-        int                         parsing_digit_value(std::string val, std::string dir);
+        std::string                 parsing_host_value(std::string val, std::string dir);
+        uint16_t                    parsing_port_value(std::string val, std::string dir);
+        size_t                      parsing_body_size_value(std::string val, std::string dir);
+        int                         parsing_bool_value(std::string val, std::string dir);
 
         void                         parsing(std::string path, Servers &servers);
         std::vector<std::string>     parsing_line(std::string line, std::vector<std::string> content);

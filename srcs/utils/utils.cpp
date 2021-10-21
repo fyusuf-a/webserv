@@ -25,14 +25,14 @@ namespace Utils
     bool is_valid_directive_location(std::string const &dir)
     {
         if (dir == "index" || dir == "methods" || dir == "cgi_extension"
-        || dir == "cgi_bin" || dir == "language" || dir == "autoindex"
+        || dir == "cgi_bin" || dir == "language" || dir == "autoindex" || dir == "root"
         || dir == "client_max_body_size" || dir == "auth_basic" || dir == "auth_basic_user_file")
             return (true);
         return (false);
     }
     bool is_valid_methods(std::string const &dir)
     {
-        if (dir == "get" || dir == "post" || dir == "delete")
+        if (dir == "GET" || dir == "POST" || dir == "DELETE")
             return (true);
         return (false);
     }
