@@ -41,6 +41,8 @@ private:
 	void init(const INetAddress& address, bool nonblocking);
 };
 
+#ifndef PASSIVESERVER_TPP
 #include "../srcs/server/PassiveServer.tpp"
+#endif
 
 #endif

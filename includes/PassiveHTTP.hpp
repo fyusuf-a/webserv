@@ -6,7 +6,7 @@
 #include "ActiveServer.hpp"
 #include "PassiveServer.hpp"
 #include "NIOSelector.hpp"
-#include "server.hpp"
+#include "serverBlock.hpp"
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
@@ -29,21 +29,17 @@ public:
 	PassiveHTTP();
 	PassiveHTTP(const PassiveHTTP&);
 	PassiveHTTP&	operator=(const PassiveHTTP&);
-	PassiveHTTP(const INetAddress& address, bool nonblocking=true);
-	PassiveHTTP(uint32_t ip, uint16_t port, bool nonblocking=true);
+	PassiveHTTP(const INetAddress& address, const ServerBlock& server_block, bool nonblocking=true);
+	PassiveHTTP(uint32_t ip, uint16_t port, const ServerBlock& server_block, bool nonblocking=true);
 	virtual 		~PassiveHTTP();
 
 protected:
-	Server			*server_conf;
-	Socket			*_socket;
-	void			writable(int fd);
-	void			readable(int fd);
-	void			on_close(int fd);
-
-private:
-	void init(const INetAddress& address, bool nonblocking);
+	ServerBlock			_server_block;
+	void				readable(int fd);
 };
 
-#include "../srcs/server/PassiveHTTP.tpp"
+#ifndef PASSIVESERVER_TPP
+	#include "../srcs/server/PassiveHTTP.tpp"
+#endif
 
 #endif

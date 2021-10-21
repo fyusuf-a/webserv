@@ -17,7 +17,7 @@
 class WebServ
 {
 
-    private:
+    public:
         ParsingConf  _conf;
         ServerBlocks      _servers;
         void init(const std::string& path);

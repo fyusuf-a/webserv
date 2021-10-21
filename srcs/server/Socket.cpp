@@ -23,7 +23,7 @@ void Socket::init(const IPAddress& ip, uint16_t port, bool nonblocking) {
 	if ((_fd = socket(PF_INET, SOCK_STREAM, 0)) < 0)
 	{
 		std::ostringstream oss;
-		oss << "Cannot initialize socket (address " << _address << ')';
+		oss << "Cannot initialize socket (address " << ip << ":" << port << ')';
 		throw std::runtime_error(oss.str());
 	}
 	int yes = 1;
@@ -61,6 +61,10 @@ void Socket::init(const IPAddress& ip, uint16_t port, bool nonblocking) {
 	}
 #if DEBUG
 	std::cerr << "Socket bound (address " << _address << ')' << std::endl;
+	//get name
+	struct sockaddr addr;
+	::getsockname(_fd, &addr, sizeof(addr));
+	std::cerr << (static_cast<sockaddr_in>addr).sin_addr.s_addr;
 #endif
 }
 

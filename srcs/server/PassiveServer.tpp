@@ -1,3 +1,8 @@
+#ifndef PASSIVESERVER_TPP
+#define PASSIVESERVER_TPP
+
+#include "PassiveServer.hpp"
+
 template<typename T>
 PassiveServer<T>::PassiveServer() : Callback() {
 	_socket = new Socket();
@@ -59,3 +64,5 @@ template<typename T>
 void			PassiveServer<T>::on_close(int fd) {
 	(void)fd;
 }
+
+#endif
