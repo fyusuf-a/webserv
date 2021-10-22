@@ -15,9 +15,9 @@ void		CheckSyntax::body(Request & request, Response & response) {
 	std::string										whitespaces = " \n\r\v\t\f";
 	int												host = 0;
 	for (it = request.get_header()->begin(); it != request.get_header()->end(); ++it){
-		if (whitespaces.find_first_of(it->first.front()) != std::string::npos)
+		if (whitespaces.find_first_of(it->first[0]) != std::string::npos)
 			throw(400);
-		if (whitespaces.find_first_of(it->first.back()) != std::string::npos)
+		if (whitespaces.find_first_of(it->first[it->first.length()]) != std::string::npos)
 			throw(400);
 		if (it->first.find("\r\n") != std::string::npos)
 			throw(400);

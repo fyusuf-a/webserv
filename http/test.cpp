@@ -85,8 +85,11 @@ void	request_parsing_testing(char *str, bool nouveau, std::list<Request *> & req
 			std::cout << "RESIDUAL: " << (*it)->get_residual() << std::endl;
 		}
 	}
-	if (clean)
+	if (clean) {
+		for (it = requests.begin(); it != requests.end(); ++it)
+			delete *it;
 		requests.clear();
+	}
 	else {
 		try {requests.back()->checkIncompleteRequest();}
 		catch (int error) { std::cout << error << std::endl; }
