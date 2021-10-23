@@ -29,8 +29,7 @@ IPAddress::IPAddress(const std::string& str) {
 		throw std::invalid_argument("Invalid IP address");
 	_address = 0;
 	for (int i = 0; i < 4; i++)
-		_address = 0x100 * _address + byte[i];
-	_address = htonl(_address);
+		_address = 0x100 * _address + byte[3 - i];
 }
 	
 

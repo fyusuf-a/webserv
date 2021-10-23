@@ -59,7 +59,7 @@ void INetAddress::to_sockaddr_in(struct sockaddr_in* structure) {
 		return;
 	structure->sin_family = AF_INET;
 	structure->sin_port = htons(_port);
-	structure->sin_addr.s_addr = htonl(_address.getIP());
+	structure->sin_addr.s_addr = _address.getIP();
 	//std::cerr << "ip is " << structure->sin_port << " port is " << structure->sin_port << std::endl;
 	memset(structure->sin_zero, 0, sizeof(structure->sin_zero));
 }

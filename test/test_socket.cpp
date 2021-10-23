@@ -13,7 +13,7 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	IPAddress ip("0.0.0.0");
+	IPAddress ip("127.0.0.1");
 	Socket my_server(ip, atoi(argv[1]), false);
 
 	my_server.listen();

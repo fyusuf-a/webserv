@@ -61,10 +61,6 @@ void Socket::init(const IPAddress& ip, uint16_t port, bool nonblocking) {
 	}
 #if DEBUG
 	std::cerr << "Socket bound (address " << _address << ')' << std::endl;
-	//get name
-	struct sockaddr addr;
-	::getsockname(_fd, &addr, sizeof(addr));
-	std::cerr << (static_cast<sockaddr_in>addr).sin_addr.s_addr;
 #endif
 }
 
