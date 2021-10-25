@@ -38,7 +38,7 @@ protected:
 	void				readable(int fd);
 };
 
-#ifndef PASSIVESERVER_TPP
+#ifndef PASSIVEHTTP_TPP
 	#include "../srcs/server/PassiveHTTP.tpp"
 #endif
 

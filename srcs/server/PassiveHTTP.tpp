@@ -1,12 +1,11 @@
-#ifndef PASSIVESERVER_TPP
-#define PASSIVESERVER_TPP
+#ifndef PASSIVEHTTP_TPP
+#define PASSIVEHTTP_TPP
 
 #include "../includes/Socket.hpp"
 #include "../includes/ActiveServer.hpp"
 #include "../includes/PassiveServer.hpp"
+#include "../includes/PassiveHTTP.hpp"
 #include "../includes/NIOSelector.hpp"
-#include "PassiveServer.hpp"
-#include "PassiveHTTP.hpp"
 #include "serverBlock.hpp"
 #include <cctype>
 #include <arpa/inet.h>
@@ -36,7 +35,7 @@ PassiveHTTP<T>::PassiveHTTP(const INetAddress& address, const ServerBlock& serve
 }
 
 template<typename T>
-PassiveHTTP<T>::PassiveHTTP(uint32_t ip, uint16_t port, const ServerBlock& server_block, bool nonblocking) : PassiveServer<T>(ip, port, nonblocking){
+PassiveHTTP<T>::PassiveHTTP(uint32_t ip, uint16_t port, const ServerBlock& server_block, bool nonblocking) : PassiveServer<T>(ip, port, nonblocking) {
 	_server_block = ServerBlock(server_block);
 }
 
@@ -44,16 +43,11 @@ template<typename T> PassiveHTTP<T>::~PassiveHTTP() {
 }
 
 template<typename T> void PassiveHTTP<T>::readable(int fd) {
-	try {
-		ActiveServer::readable(fd);
-		size_t write_len = _write_buffer.length(); size_t read_len = _read_buffer.length();
-		_write_buffer += _read_buffer;
-		for (size_t i = write_len; i < write_len + read_len; i++)
-			_write_buffer[i] = F(_write_buffer[i]);
-		_read_buffer = "";
-	}
-	catch(std::exception &e) {
-	}
+	(void)fd;
+#ifdef DEBUG
+	std::cerr << "New connection on passive HTTP server" << std::endl;
+#endif
+	new T(this->_socket->accept());
 }
 
 #endif

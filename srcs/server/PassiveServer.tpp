@@ -1,7 +1,7 @@
 #ifndef PASSIVESERVER_TPP
 #define PASSIVESERVER_TPP
 
-#include "PassiveServer.hpp"
+#include "../../includes/PassiveServer.hpp"
 
 template<typename T>
 PassiveServer<T>::PassiveServer() : Callback() {
