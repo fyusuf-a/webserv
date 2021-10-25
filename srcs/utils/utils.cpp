@@ -92,13 +92,15 @@ namespace Utils
     }
 
 	template<typename T>
-	std::ostream& operator<<(std::ostream& os, std::vector<T> vect) {
+	std::ostream& operator<<(std::ostream& os, std::vector<T> vect) 
+    {
 		size_t len = vect.size();
 		os << "[";
 		for(size_t i = 0; i < len; i++) {
 			os << vect[i] << (i != len - 1 ? "," : "");
 		}
 		os << "]";
+        return (1);
 	}
 
     template <typename T>

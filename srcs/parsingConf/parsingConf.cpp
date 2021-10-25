@@ -189,7 +189,8 @@ std::string ParsingConf::parsing_cgi_ext_value(std::string str, std::string dir)
 }
 uint16_t ParsingConf::parsing_port_value(std::string val, std::string dir)
 {
-    uint16_t value;
+    int      value;
+    uint16_t result;
 
     if (!Utils::is_digits(val))
         throw MyException("Directive: '" +  dir + "' : Expected - [ digit value ]");
@@ -198,8 +199,8 @@ uint16_t ParsingConf::parsing_port_value(std::string val, std::string dir)
     
     if (value < 0 || value > 65535)
         throw MyException("Directive: '" +  dir + "' : Expected - [ 0 - 65535 ]" );
-
-    return ( ::atoi(val.c_str()) );
+    result = value;
+    return ( result );
 }
 size_t ParsingConf::parsing_body_size_value(std::string val, std::string dir)
 {
@@ -210,10 +211,7 @@ size_t ParsingConf::parsing_body_size_value(std::string val, std::string dir)
     
     value = ::atoi(val.c_str());
     
-    if (value < 0)
-        throw MyException("Directive: '" +  dir + "' : Expected - [ positive number ]" );
-
-    return ( ::atoi(val.c_str()) );
+    return (value );
 }
 std::string ParsingConf::parsing_name_value(std::string val, std::string dir)
 {
