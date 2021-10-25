@@ -23,7 +23,7 @@ $(NAME) : $(O_FILES)
 	$(CC) $(CFLAGS) $(HEADERS) $(O_FILES) -o $(NAME)
 	@echo "\033[33;32mCompilation...\t""\033[33;31mDONE 🙃\033[0m"
 
-debug: CFLAGS += -g3 -fsanitize=address
+debug: CFLAGS += -g3
 debug: CFLAGS += -D DEBUG
 debug: all
 
