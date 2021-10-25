@@ -1,7 +1,8 @@
 SRC = 	main.cpp\
-		srcs/config/config.cpp\
+		srcs/parsingConf/parsingConf.cpp\
 		srcs/server/server.cpp\
 		srcs/server/serverConfig.cpp\
+		srcs/server/serverLocation.cpp\
 		srcs/utils/utils.cpp\
 		srcs/webserv/webserv.cpp\
 		srcs/server/Socket.cpp\

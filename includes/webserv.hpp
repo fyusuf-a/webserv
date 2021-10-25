@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-#include "config.hpp"
+#include "parsingConf.hpp"
 #include "server.hpp"
 
 
@@ -18,7 +18,7 @@ class WebServ
 {
 
     private:
-        Config       _conf;
+        ParsingConf  _conf;
         Servers      _servers;
 
     public:
