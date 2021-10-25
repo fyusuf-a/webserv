@@ -1,4 +1,7 @@
 #include "../../includes/webserv.hpp"
+#include "../../includes/PassiveHTTP.hpp"
+#include "ActiveServer.hpp"
+#include "serverBlock.hpp"
 
 WebServ::WebServ() : _conf(){};
 
@@ -34,8 +37,11 @@ void WebServ::init(const std::string& path)
     //std::cout << "->" << _servers[0]._locations[0].get_cgi_bin() << std::endl; 
     //std::cout << "->" << _servers[0]._locations[0].get_cgi_ext() << std::endl; 
 
-
-
+	for (std::vector<ServerBlock>::iterator it = _servers.begin(); it != _servers.end(); it++)
+	{
+		ServerConfig const& conf = it->get_server_conf();
+		new PassiveHTTP<ActiveServer>(conf.get_host(), (uint16_t)conf.get_port(), *it, true);
+	}
 }
 
 ServerBlocks const& WebServ::get_servers() const {

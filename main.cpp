@@ -1,5 +1,7 @@
 #include "includes/IPAddress.hpp"
 #include "includes/webserv.hpp"
+#include "includes/webserv.hpp"
+#include "includes/NIOSelector.hpp"
 #define DEFAULT_PATH "conf/nginx.conf"
 #define SERVER_PORT 500
 #define INVALID_SOCKET -1
@@ -13,7 +15,11 @@ int main(int ac, char **av)
 
  	WebServ webserv(path);
 
- 	std::cout << webserv;
+	while (1) {
+		NIOSelector::getInstance()->poll();
+	}
+
+ 	//std::cout << webserv;
  	return (0);
 }
 
