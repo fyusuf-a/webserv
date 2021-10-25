@@ -100,7 +100,7 @@ namespace Utils
 			os << vect[i] << (i != len - 1 ? "," : "");
 		}
 		os << "]";
-        return (1);
+		return os;
 	}
 
     template <typename T>
