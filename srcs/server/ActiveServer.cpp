@@ -47,12 +47,10 @@ void ActiveServer::readable(int fd) {
 		}
 		catch (Socket::ConnectionClosed& e) {
 			on_close(fd);
-			throw (e);
 		}
 		catch (std::exception& e) {
 			std::cerr << "An error occured while using recv" << std::endl;
 			on_close(fd);
-			throw (e);
 		}
 	}
 }

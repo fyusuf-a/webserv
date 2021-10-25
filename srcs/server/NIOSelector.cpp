@@ -68,8 +68,16 @@ void	NIOSelector::removeOps(int fd, short operations) {
 }
 
 void	NIOSelector::remove(int fd) {
-	if (_actions.find(fd) != _actions.end())
+	std::map<int, t_action>::const_iterator match = _actions.find(fd);
+	if (match != _actions.end())
+	{
 		_polled_fds.erase(_polled_fds.begin() + _actions[fd].index);
+		for (std::map<int, t_action>::iterator it = _actions.begin(); it != _actions.end(); it++)
+		{
+			if (it->second.index >= _actions[fd].index)
+				it->second.index--;
+		}
+	}
 	else
 		std::cerr << "fd " << fd << " does not exist in map. (remove)" << std::endl;
 	_actions.erase(fd);
@@ -87,14 +95,12 @@ void	NIOSelector::poll() {
 		{
 			std::cerr << "An error has occured" << std::endl;
 			_actions[fd].callback->on_close(fd);
-			remove(fd);
 			continue;
 		}
 		else if (_polled_fds[i].revents & POLLHUP)
 		{
 			std::cerr << "Peer closed the connection" << std::endl;
 			_actions[fd].callback->on_close(fd);
-			remove(fd);
 			continue;
 		}
 		if (_polled_fds[i].revents & (POLLIN | POLLPRI))
@@ -102,6 +108,5 @@ void	NIOSelector::poll() {
 		if (_actions.find(fd) != _actions.end()
 				&& _polled_fds[i].revents & POLLOUT)
 			_actions[fd].callback->writable(fd);
-		//if (_polled_fds[i].revents & POLLOUT)
 	}
 }
