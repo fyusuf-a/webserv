@@ -51,14 +51,15 @@ void IPAddress::setIP(uint32_t addr) {
 	_address = addr;
 }
 
+static void print_ip(std::ostream& os, uint32_t ip, int again) {
+	if (again == 0)
+		return ;
+	print_ip(os, ip / 0x100, again - 1);
+	os << ip % 0x100 << (again < 4 ? "." : "");
+}
+
 std::ostream& operator<<(std::ostream& os, const IPAddress& addr) {
 	uint32_t ip = addr.getIP();
-	for (int i = 0; i < 4; i++)
-	{
-		os << ip % 0x100;
-		ip /= 0x100;
-		if (i != 3)
-			os << '.';
-	}
+	print_ip(os, ip, 4);
 	return os;
 }
