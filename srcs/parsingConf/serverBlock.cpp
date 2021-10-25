@@ -8,9 +8,12 @@ ServerBlock::~ServerBlock(){}
     
 ServerBlock &ServerBlock::operator=(const ServerBlock &other)
 {
-    if (this != &other)
-        *this = other;
-    return (*this);
+	if (this != &other)
+	{
+		_serverConf = other._serverConf;
+		_locations = other._locations;
+	}
+	return (*this);
 }
 
 ServerConfig const& ServerBlock::get_server_conf() const {

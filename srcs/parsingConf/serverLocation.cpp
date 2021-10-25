@@ -14,7 +14,18 @@ ServerLocation::~ServerLocation(){}
 ServerLocation &ServerLocation::operator=(const ServerLocation &other)
 {
     if (this != &other)
-        *this = other;
+	{
+		_index = other._index;
+		_methods = other._methods;
+		_cgi_ext = other._cgi_ext;
+		_cgi_bin = other._cgi_bin;
+		_language = other._language;
+		_auto_index = other._auto_index;
+		_auth_basic = other._auth_basic;
+		_auth_basic_file = other._auth_basic_file;
+		_body_size = other._body_size;
+		_location_path = other._location_path;
+	}
     return (*this);
 }
 

@@ -9,7 +9,13 @@ ServerConfig::~ServerConfig(){}
 ServerConfig &ServerConfig::operator=(const ServerConfig &other)
 {
     if (this != &other)
-        *this = other;
+	{
+		_host = other._host;
+		_name = other._name;
+		_error = other._error;
+		_server_root = other._server_root;
+		_port = other._port;
+	}
     return (*this);
 }
 
