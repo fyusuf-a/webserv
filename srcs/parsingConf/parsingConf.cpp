@@ -1,5 +1,7 @@
 #include "../../includes/parsingConf.hpp"
 
+// checker pour plusieur root 
+
 ParsingConf::ParsingConf(){}
 
 ParsingConf::ParsingConf(const ParsingConf &other){(void)other;}
@@ -12,6 +14,27 @@ ParsingConf &ParsingConf::operator=(const ParsingConf &other)
     {}
     return (*this);
 }
+
+
+bool is_set(std::vector<std::string> value, std::string directive)
+{
+    if (!value.empty())
+        throw MyException("Directive: '" +  directive + "' : duplicate symbols");
+    return (true);
+}
+bool is_set(std::string value, std::string directive)
+{
+    if (!value.empty())
+        throw MyException("Directive: '" +  directive + "' : duplicate symbols");
+    return (true);
+}
+bool is_set(int value, std::string directive)
+{
+    if ((value != -1 && directive == "client_max_body_size") || (value != 80 && directive == "listen") || (value && directive == "host"))
+        throw MyException("Directive: '" +  directive + "' : duplicate symbols");
+    return (true);
+}
+
 
 
 bool ParsingConf::is_serv_block(std::string const &line)
@@ -106,7 +129,7 @@ std::vector<std::string> ParsingConf::parsing_methods_value(std::string val, std
         if (!str.empty() && str[0] != ',')
             methods.push_back(str);
         else
-            throw MyException("Directive: '" +  dir + "' : Expected - [get,post , delete]'");
+            throw MyException("Directive: '" +  dir + "' : Expected - [GET,POST , DELETE]'");
         start = found + 1;
         found = val.find(",", start);
         len = found - start;
@@ -117,25 +140,27 @@ std::vector<std::string> ParsingConf::parsing_methods_value(std::string val, std
     if (!str.empty() && str[0] != ',')
         methods.push_back(str);
     else
-            throw MyException("Directive: '" +  dir + "' : Expected - [get,post , delete]'");
+            throw MyException("Directive: '" +  dir + "' : Expected - [GET,POST , DELETE]'");
     // check if it's valid methods
     for (start = 0; start != methods.size(); )
     {
         Utils::ft_trim(methods[start]);
-        if (Utils::is_valid(methods[start], "get") || Utils::is_valid(methods[start], "post") || Utils::is_valid(methods[start], "delete"))
+        if (Utils::is_valid(methods[start], "GET") || Utils::is_valid(methods[start], "POST") || Utils::is_valid(methods[start], "DELETE"))
             start++;
         else
-            throw MyException("Directive: '" +  dir + "' : Expected - [get,post , delete]'");
+            throw MyException("Directive: '" +  dir + "' : Expected - [GET,POST , DELETE]'");
     }
     return (methods);
 }
-std::string ParsingConf::parsing_bool_value(std::string str, std::string dir)
+int ParsingConf::parsing_bool_value(std::string str, std::string dir)
 {
-    if (Utils::is_valid(str, "on") || Utils::is_valid(str, "off"))
-        return (str);
+    if (Utils::is_valid(str, "on"))
+        return (1);
+    else if (Utils::is_valid(str, "off"))
+        return (0);
     else 
         throw MyException("Directive: '" +  dir + "'  : Expected - [on | off]'");
-    return (NULL);
+    return (0);
 }
 std::string ParsingConf::parsing_path_value(std::string str, std::string dir)
 {
@@ -162,19 +187,31 @@ std::string ParsingConf::parsing_cgi_ext_value(std::string str, std::string dir)
         throw MyException("Directive: '" +  dir + "'  Expected - [test.php]");
     return (extention);
 }
-int ParsingConf::parsing_digit_value(std::string val, std::string dir)
+uint16_t ParsingConf::parsing_port_value(std::string val, std::string dir)
 {
-    int value;
+    int      value;
+    uint16_t result;
 
     if (!Utils::is_digits(val))
-        throw MyException("Directive: '" +  dir + "' : Expected - [1 digit parameter]");
+        throw MyException("Directive: '" +  dir + "' : Expected - [ digit value ]");
     
     value = ::atoi(val.c_str());
     
     if (value < 0 || value > 65535)
-        throw MyException("Directive: '" +  dir + "' : Expected - [1 digit parameter]" );
+        throw MyException("Directive: '" +  dir + "' : Expected - [ 0 - 65535 ]" );
+    result = value;
+    return ( result );
+}
+size_t ParsingConf::parsing_body_size_value(std::string val, std::string dir)
+{
+    size_t value;
 
-    return ( ::atoi(val.c_str()) );
+    if (!Utils::is_digits(val))
+        throw MyException("Directive: '" +  dir + "' : Expected - [ digit value ]");
+    
+    value = ::atoi(val.c_str());
+    
+    return (value );
 }
 std::string ParsingConf::parsing_name_value(std::string val, std::string dir)
 {
@@ -185,34 +222,15 @@ std::string ParsingConf::parsing_name_value(std::string val, std::string dir)
     }
     return (val);
 }
-uint32_t    ParsingConf::parsing_host_value(std::string val, std::string dir)
+std::string    ParsingConf::parsing_host_value(std::string val, std::string dir)
 {
-    uint32_t result = 0;
-
-    std::istringstream iss(val);
-
-    for (int i = 0; i < 4; ++i)
+    for (size_t i = 0; i < val.size() ; i++)
     {
-        uint32_t tmp;
-
-        iss >> tmp;
-        
-        if (iss.fail() || tmp > 255)
-            throw MyException("Directive: '" +  dir + "' : invalid IP adress - Must be [0 - 255]");
-
-        result |= tmp << (8  * (3 - i));
-
-        if (i < 3)
-        {
-            char c;
-
-            iss >> c;
-            if (iss.fail() || c != '.')
-                throw MyException("Directive: '" +  dir + "' : IP must have '.' delimiter");
-        }
+        if (Utils::is_space(val[i]) || (!Utils::is_digit(val[i]) && val[i] != '.'))
+            throw MyException("Directive: '" +  dir + "' : invalid IP adress - Must be [0.0.0.0 - 255.255.255.255]");
     }
-    return (result);
-}  
+    return (val);
+}
 std::string ParsingConf::parsing_location_path(std::string line)
 {
 
@@ -220,7 +238,6 @@ std::string ParsingConf::parsing_location_path(std::string line)
     return (location_path);
 }
 
-  
 
 
 // SET ALL LOCATION AND SERVER INFOS FOR EACH BLOCK
@@ -230,7 +247,7 @@ void  ParsingConf::setup_location_directive(std::string const &line, ServerLocat
     std::string value;
 
     int i = parse_directive(line, directive);
-    if (Utils::is_valid_directive(directive) && directive != "index")
+    if (Utils::is_valid_directive(directive) && directive != "index" && directive != "root")
         throw MyException("Directive: '" +  directive + "' : Only allowed in server block");
 
     if (!Utils::is_valid_directive_location(directive))
@@ -241,24 +258,35 @@ void  ParsingConf::setup_location_directive(std::string const &line, ServerLocat
     if (value.empty())
         throw MyException("Directive: '" +  directive + "' : invalid number of arguments");
 
-    else if (directive == "index" /*&& Utils::is_set()*/) // dupli
+    else if ( directive == "index" && is_set(location.get_index(), directive) )
         location.set_index( parsing_index_value(value) );
-    else if (directive == "methods") // dont dupli
+
+    else if ( directive == "root" && is_set(location.get_root(), directive) )
+        location.set_root( parsing_path_value(value, directive) );
+
+    else if (directive == "methods" && is_set(location.get_methods(), directive) )
         location.set_methods( parsing_methods_value(value, directive) );
-    else if (directive == "cgi_extension") // dont dupli
+
+    else if (directive == "cgi_extension" && is_set(location.get_cgi_ext(), directive) )
         location.set_cgi_ext( parsing_cgi_ext_value(value, directive) );
-    else if (directive == "cgi_bin") // dont dupli
+
+    else if (directive == "cgi_bin" && is_set(location.get_cgi_bin(), directive) )
         location.set_cgi_bin( parsing_path_value(value, directive) );
-    else if (directive == "language") // language a faire
-        location.set_language(value); 
-    else if (directive == "autoindex")  // dont dupli
+
+    else if (directive == "autoindex" && is_set(location.get_auto_index(), directive) )
         location.set_auto_index( parsing_bool_value(value, directive) );
-    else if (directive == "auth_basic")  // dont dupli
+
+    else if (directive == "auth_basic" && is_set(location.get_auth_basic(), directive) )
         location.set_auth_basic( parsing_bool_value(value, directive) );
-    else if (directive == "auth_basic_user_file")  // dont dupli
+
+    else if (directive == "auth_basic_user_file" && is_set(location.get_auth_basic_file(), directive) )
         location.set_auth_basic_file( parsing_path_value(value, directive) );
-    else if (directive == "client_max_body_size")  // dont dupli
-        location.set_body_size( parsing_digit_value(value, directive) );
+
+    else if (directive == "client_max_body_size" && is_set(location.get_body_size(), directive) )
+        location.set_body_size( parsing_body_size_value(value, directive) );
+
+    // else if (directive == "language" && is_set(location.get_index(), directive) )
+        // location.set_language(value); 
 }
 void  ParsingConf::setup_server_directive(std::string const &line, ServerBlock &server)
 {
@@ -266,7 +294,7 @@ void  ParsingConf::setup_server_directive(std::string const &line, ServerBlock &
     std::string value;
 
     int i = parse_directive(line, directive);
-    if (Utils::is_valid_directive_location(directive) && directive != "index")
+    if (Utils::is_valid_directive_location(directive) && directive != "index" && directive != "root")
         throw MyException("Directive: '" +  directive + "' : only Allowed in location block");
 
     if (!Utils::is_valid_directive(directive))
@@ -276,15 +304,25 @@ void  ParsingConf::setup_server_directive(std::string const &line, ServerBlock &
 
     if (value.empty())
         throw MyException("Directive: '" +  directive + "' : invalid number of arguments");
-    else if (directive == "listen") // dont dupli
-        server._serverConf.set_port( parsing_digit_value(value, directive) );
-    else if (directive == "host") // dont dupli
-        server._serverConf.set_host( parsing_host_value(value, directive) );
-    else if (directive == "server_name") // dont dupli
+
+    else if (directive == "listen" && is_set(server._serverConf.get_port(), directive) )
+        server._serverConf.set_port( parsing_port_value(value, directive) );
+
+    else if (directive == "host" && is_set(server._serverConf.get_ip_already_set(), directive) )
+    {
+        //std::cerr << "value to parse " << value << std::endl;
+        server._serverConf.set_host(IPAddress(value));
+        //server._serverConf.set_host( parsing_host_value(value, directive) );
+        // !!! catch preceding function's exceptions
+        server._serverConf.set_ip_already_set(true);
+    }
+    else if (directive == "server_name" && is_set(server._serverConf.get_name(), directive) )
         server._serverConf.set_name( parsing_name_value(value, directive) );
-    else if (directive == "root") // dupli
+
+    else if (directive == "root" && is_set(server._serverConf.get_root(), directive) )
         server._serverConf.set_root( parsing_path_value(value, directive) );
-    else if (directive == "error")  // dont dupli
+
+    else if (directive == "error" && is_set(server._serverConf.get_error(), directive) )
         server._serverConf.set_error( parsing_path_value(value, directive) );
 }
 
@@ -452,6 +490,7 @@ void ParsingConf::parsing(std::string path, ServerBlocks &servers)
     {
         while (std::getline(fd, line))
             content = parsing_line(line, content);
+
         if (content.empty())
             throw MyException("[ERROR] File: Empty");
 
@@ -468,3 +507,9 @@ void ParsingConf::parsing(std::string path, ServerBlocks &servers)
         this->setup_servers(content, servers);
     }
 }
+
+
+// port on uint16_t
+// methods en majuscule
+// auto index en bool
+// size_t for body size

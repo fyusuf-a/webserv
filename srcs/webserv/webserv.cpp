@@ -20,27 +20,14 @@ WebServ &WebServ::operator=(const WebServ &other){(void)other;return *this;}
 
 void WebServ::init(const std::string& path)
 {
-    try 
-    {
-        _conf.parsing(path, this->_servers);
-    }
-    catch(MyException& caught)
-    {
-        std::cout<<"[ERROR] " << caught.what() << std::endl;
-    }
-    // std::cout << "->" << _servers[0]._serverConf.get_host() << std::endl; 
-    // std::cout << "->" << _servers[0]._serverConf.get_error() << std::endl; 
-    
-    // std::cout << "->" << _servers[0]._serverConf.get_name() << std::endl; 
-    // std::cout << "->" << _servers[0]._locations[0].get_location_path() << std::endl; 
-    // std::cout << "->" << _servers[0]._locations[1].get_location_path() << std::endl; 
-    //std::cout << "->" << _servers[0]._locations[0].get_cgi_bin() << std::endl; 
-    //std::cout << "->" << _servers[0]._locations[0].get_cgi_ext() << std::endl; 
+
+    _conf.parsing(path, this->_servers);
 
 	for (std::vector<ServerBlock>::iterator it = _servers.begin(); it != _servers.end(); it++)
 	{
 		ServerConfig const& conf = it->get_server_conf();
-		new PassiveHTTP<ActiveServer>(conf.get_host(), (uint16_t)conf.get_port(), *it, true);
+        INetAddress interface(conf.get_host(), conf.get_port());
+		new PassiveHTTP<ActiveServer>(interface, *it, true);
 	}
 }
 

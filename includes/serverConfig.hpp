@@ -5,17 +5,20 @@
 #include <iostream>
 #include <fstream>
 #include <stdint.h>
+#include "IPAddress.hpp"
 
 
 class ServerConfig
 {
 
     private:
-        uint32_t     			    _host;
+        IPAddress  			    _host;
 		std::string					_name;
 		std::string					_error;
 		std::string					_server_root;
-		int							_port;
+		uint16_t                	_port;
+                bool                            _ip_already_set;
+
 
         
 
@@ -25,17 +28,22 @@ class ServerConfig
         ~ServerConfig();
         ServerConfig &operator=(const ServerConfig &other);
 
-        void            set_port(const int port);
-        void            set_host(const uint32_t host);;
+        void            set_port(const uint16_t port);
+        void            set_host(const IPAddress& host);
         void            set_name(std::string const &name);;
         void            set_root(std::string const &path);
         void            set_error(std::string const &error);
+        void            set_ip_already_set(bool error);
 
-        int             get_port(void) const;
-        uint32_t        get_host(void) const;
+        uint16_t       get_port(void) const;
+        IPAddress      const &get_host(void) const;
         std::string    const &get_name(void) const;
         std::string    const &get_root(void) const;
         std::string    const &get_error(void) const;
+        bool           get_ip_already_set(void) const;
+
+void set_host(std::string const &n);
+
 
 
         void test(void);

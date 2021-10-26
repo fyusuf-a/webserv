@@ -13,7 +13,18 @@ int main(int ac, char **av)
 {
 	std::string path = ac == 2 ? av[1] : DEFAULT_PATH;
 
- 	WebServ webserv(path);
+	try {
+ 		WebServ webserv(path);
+    }
+    catch(MyException& caught)
+    {
+        std::cout << "[ERROR] " << caught.what() << std::endl;
+        exit(EXIT_FAILURE) ;
+    }
+	catch(std::invalid_argument& caught) {
+		std::cout << "[ERROR] " << caught.what() << std::endl;
+		exit(EXIT_FAILURE);
+	}
 
 	while (1) {
 		NIOSelector::getInstance()->poll();
