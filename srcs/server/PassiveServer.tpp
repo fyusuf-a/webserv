@@ -1,3 +1,8 @@
+#ifndef PASSIVESERVER_TPP
+#define PASSIVESERVER_TPP
+
+#include "../../includes/PassiveServer.hpp"
+
 template<typename T>
 PassiveServer<T>::PassiveServer() : Callback() {
 	_socket = new Socket();
@@ -19,14 +24,24 @@ PassiveServer<T>& PassiveServer<T>::operator=(const PassiveServer& src) {
 }
 
 template<typename T>
-PassiveServer<T>::PassiveServer(short port, bool nonblocking) {
-	_socket = new Socket(port, nonblocking);
+void PassiveServer<T>::init(const INetAddress& address, bool nonblocking) {
+	_socket = new Socket(address, nonblocking);
 	_socket->listen();
 	NIOSelector::getInstance()->add(_socket->getFd(), *this, READ);
 }
 
 template<typename T>
-PassiveServer<T>::~PassiveServer() {
+PassiveServer<T>::PassiveServer(const INetAddress& address, bool nonblocking) {
+	init(address, nonblocking);
+}
+
+template<typename T>
+PassiveServer<T>::PassiveServer(uint32_t ip, uint16_t port, bool nonblocking) {
+	INetAddress address(ip, port);
+	init(address, nonblocking);
+}
+
+template<typename T> PassiveServer<T>::~PassiveServer() {
 	NIOSelector::getInstance()->remove(_socket->getFd());
 	delete _socket;
 }
@@ -49,3 +64,5 @@ template<typename T>
 void			PassiveServer<T>::on_close(int fd) {
 	(void)fd;
 }
+
+#endif

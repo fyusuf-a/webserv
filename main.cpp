@@ -1,4 +1,7 @@
+#include "includes/IPAddress.hpp"
 #include "includes/webserv.hpp"
+#include "includes/webserv.hpp"
+#include "includes/NIOSelector.hpp"
 #define DEFAULT_PATH "conf/nginx.conf"
 #define SERVER_PORT 500
 #define INVALID_SOCKET -1
@@ -8,14 +11,27 @@
 
 int main(int ac, char **av)
 {
+	std::string path = ac == 2 ? av[1] : DEFAULT_PATH;
 
-  WebServ webserv;
+	try {
+ 		WebServ webserv(path);
+    }
+    catch(MyException& caught)
+    {
+        std::cout << "[ERROR] " << caught.what() << std::endl;
+        exit(EXIT_FAILURE) ;
+    }
+	catch(std::invalid_argument& caught) {
+		std::cout << "[ERROR] " << caught.what() << std::endl;
+		exit(EXIT_FAILURE);
+	}
 
-  if (ac == 2)
-    webserv.init(av[1]);
-  else
-    webserv.init(DEFAULT_PATH);
-  return (0);
+	while (1) {
+		NIOSelector::getInstance()->poll();
+	}
+
+ 	//std::cout << webserv;
+ 	return (0);
 }
 
 // char *test(const unsigned char *input, size_t len)

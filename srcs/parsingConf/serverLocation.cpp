@@ -14,7 +14,18 @@ ServerLocation::~ServerLocation(){}
 ServerLocation &ServerLocation::operator=(const ServerLocation &other)
 {
     if (this != &other)
-        *this = other;
+	{
+		_index = other._index;
+		_methods = other._methods;
+		_cgi_ext = other._cgi_ext;
+		_cgi_bin = other._cgi_bin;
+		_language = other._language;
+		_auto_index = other._auto_index;
+		_auth_basic = other._auth_basic;
+		_auth_basic_file = other._auth_basic_file;
+		_body_size = other._body_size;
+		_location_path = other._location_path;
+	}
     return (*this);
 }
 
@@ -45,7 +56,25 @@ size_t                            ServerLocation::get_body_size(void) const{ ret
 
 
 
-/*std::ostream& operator<<(std::ostream& os, const ServerLocation& location) {
-	os << "index: " << std::endl;
-	os <<  location.get_index() << std::endl;
-}*/
+std::ostream& operator<<(std::ostream& os, const ServerLocation& location) {
+	os << "location" << std::endl << "{" << std::endl;
+	if (!location.get_index().empty())
+		os << "index\t" <<  location.get_index() << ";" << std::endl;
+	if (!location.get_auto_index())
+		os << "autoindex\t" << location.get_auto_index() << ";" << std::endl;
+	if (!location.get_methods().empty())
+		os << "methods\t" << location.get_methods() << ";" << std::endl;
+	if (!location.get_cgi_ext().empty())
+		os << "cgi_extension\t" << location.get_cgi_ext() << ";" << std::endl;
+	if (!location.get_cgi_bin().empty())
+		os << "cgi_bin\t" << location.get_cgi_bin() << std::endl;
+	os << "client_max_body_size\t" << location.get_body_size() << ";" << std::endl;
+	if (!location.get_auth_basic())
+		os << "auth_basic\t" << location.get_auth_basic() << ";" << std::endl;
+	if (!location.get_auth_basic_file().empty())
+		os << "auth_basic_user_file\t" << location.get_auth_basic_file() << ";" << std::endl;
+	if (!location.get_language().empty())
+		os << "language\t" << location.get_language() << ";" << std::endl;
+	os << "}" << std::endl;
+	return os;
+}

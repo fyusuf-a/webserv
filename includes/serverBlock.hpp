@@ -10,7 +10,7 @@
 #define Locations std::vector<ServerLocation>
 
 
-class Server
+class ServerBlock
 {
 
     public:
@@ -18,11 +18,15 @@ class Server
         Locations           _locations;
 
     public:
-        Server();
-        Server(const Server &other);
-        ~Server();
-        Server &operator=(const Server &other);
+        ServerBlock();
+        ServerBlock(const ServerBlock &other);
+        ~ServerBlock();
+        ServerBlock &operator=(const ServerBlock &other);
 
+		ServerConfig const& get_server_conf() const;
+		Locations const& get_locations() const;
 };
+
+std::ostream& operator<<(std::ostream& os, const ServerBlock& server);
 
 #endif

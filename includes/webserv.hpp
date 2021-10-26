@@ -10,31 +10,31 @@
 #include <stdlib.h>
 #include <iostream>
 #include "parsingConf.hpp"
-#include "server.hpp"
+#include "serverBlock.hpp"
 
 
 
 class WebServ
 {
 
-    private:
+    public:
         ParsingConf  _conf;
-        Servers      _servers;
+        ServerBlocks      _servers;
+        void init(const std::string& path);
 
     public:
         WebServ();
-
         WebServ(const WebServ &other);
-
+        WebServ(const std::string& path);
         ~WebServ();
-
         WebServ &operator=(const WebServ &other);
+		ServerBlocks const& get_servers() const;
 
-        void init(std::string path);
 
 
 
 };
 
+std::ostream& operator<<(std::ostream& os, const WebServ& webserv);
 
 #endif

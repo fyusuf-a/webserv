@@ -30,7 +30,7 @@ bool is_set(std::string value, std::string directive)
 }
 bool is_set(int value, std::string directive)
 {
-    if ((value != -1 && directive == "client_max_body_size") || (value != 80 && directive == "listen"))
+    if ((value != -1 && directive == "client_max_body_size") || (value != 80 && directive == "listen") || (value && directive == "host"))
         throw MyException("Directive: '" +  directive + "' : duplicate symbols");
     return (true);
 }
@@ -50,7 +50,7 @@ bool ParsingConf::is_serv_block(std::string const &line)
     while (line[i])
     {
         if (!Utils::is_space(line[i]))
-            throw MyException("Server block line : Expected - [server]");
+            throw MyException("ServerBlock block line : Expected - [server]");
         i++;
     }
     return (true);
@@ -288,7 +288,7 @@ void  ParsingConf::setup_location_directive(std::string const &line, ServerLocat
     // else if (directive == "language" && is_set(location.get_index(), directive) )
         // location.set_language(value); 
 }
-void  ParsingConf::setup_server_directive(std::string const &line, Server &server)
+void  ParsingConf::setup_server_directive(std::string const &line, ServerBlock &server)
 {
     std::string directive;
     std::string value;
@@ -308,9 +308,14 @@ void  ParsingConf::setup_server_directive(std::string const &line, Server &serve
     else if (directive == "listen" && is_set(server._serverConf.get_port(), directive) )
         server._serverConf.set_port( parsing_port_value(value, directive) );
 
-    else if (directive == "host" && is_set(server._serverConf.get_host(), directive) )
-        server._serverConf.set_host( parsing_host_value(value, directive) );
-
+    else if (directive == "host" && is_set(server._serverConf.get_ip_already_set(), directive) )
+    {
+        //std::cerr << "value to parse " << value << std::endl;
+        server._serverConf.set_host(IPAddress(value));
+        //server._serverConf.set_host( parsing_host_value(value, directive) );
+        // !!! catch preceding function's exceptions
+        server._serverConf.set_ip_already_set(true);
+    }
     else if (directive == "server_name" && is_set(server._serverConf.get_name(), directive) )
         server._serverConf.set_name( parsing_name_value(value, directive) );
 
@@ -323,7 +328,7 @@ void  ParsingConf::setup_server_directive(std::string const &line, Server &serve
 
 
 
-void ParsingConf::setup_location(ITER &start, ITER &end, Server &server, std::string location_path)
+void ParsingConf::setup_location(ITER &start, ITER &end, ServerBlock &server, std::string location_path)
 {
     ServerLocation location;
 
@@ -341,9 +346,10 @@ void ParsingConf::setup_location(ITER &start, ITER &end, Server &server, std::st
 
     server._locations.push_back(location);
 }
-void ParsingConf::setup_server(ITER &start, ITER &end, Servers &servers)
+void ParsingConf::setup_server(ITER &start, ITER &end, ServerBlocks &servers)
 {
-    Server  server;
+    ServerBlock  server;
+
     for (int brace = 0; start != end;)
     {
         if (is_serv_block(*start))
@@ -384,7 +390,7 @@ void ParsingConf::setup_server(ITER &start, ITER &end, Servers &servers)
 
 
 // Call the "setup_server()" fonction for each server block 
-void ParsingConf::setup_servers(std::vector<std::string> &content, Servers &servers)
+void ParsingConf::setup_servers(std::vector<std::string> &content, ServerBlocks &servers)
 {
     int brace = 0;
     for (ITER it = content.begin(); it != content.end();)
@@ -472,7 +478,7 @@ std::vector<std::string> ParsingConf::parsing_line(std::string line, std::vector
     return (content);
 }
 
-void ParsingConf::parsing(std::string path, Servers &servers)
+void ParsingConf::parsing(std::string path, ServerBlocks &servers)
 {
     std::string                 line;
     std::vector<std::string>    content;
