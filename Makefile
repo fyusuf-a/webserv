@@ -1,14 +1,15 @@
 SRC = 	main.cpp\
-		srcs/parsingConf/parsingConf.cpp\
-		srcs/server/server.cpp\
-		srcs/server/serverConfig.cpp\
-		srcs/server/serverLocation.cpp\
-		srcs/utils/utils.cpp\
-		srcs/webserv/webserv.cpp\
-		srcs/server/Socket.cpp\
-		srcs/server/ActiveServer.cpp\
-		srcs/server/NIOSelector.cpp\
-		srcs/ipaddress/INetAddress.cpp
+	srcs/parsingConf/parsingConf.cpp\
+	srcs/parsingConf/serverBlock.cpp\
+	srcs/parsingConf/serverConfig.cpp\
+	srcs/parsingConf/serverLocation.cpp\
+	srcs/utils/utils.cpp\
+	srcs/webserv/webserv.cpp\
+	srcs/server/Socket.cpp\
+	srcs/server/ActiveServer.cpp\
+	srcs/server/NIOSelector.cpp\
+	srcs/ipaddress/IPAddress.cpp\
+	srcs/ipaddress/INetAddress.cpp
 
 NAME = Webserv
 HEADERS = -Iincludes 
@@ -22,7 +23,7 @@ $(NAME) : $(O_FILES)
 	$(CC) $(CFLAGS) $(HEADERS) $(O_FILES) -o $(NAME)
 	@echo "\033[33;32mCompilation...\t""\033[33;31mDONE 🙃\033[0m"
 
-debug: CFLAGS += -g3 -fsanitize=address
+debug: CFLAGS += -g3
 debug: CFLAGS += -D DEBUG
 debug: all
 

@@ -18,12 +18,12 @@ Socket& Socket::operator=(const Socket& src) {
 	return (*this);
 }
 
-Socket::Socket(short port, bool nonblocking) { //:	_port(port)  {
-	_address = INetAddress(INADDR_ANY, port);
+void Socket::init(const IPAddress& ip, uint16_t port, bool nonblocking) {
+	_address = INetAddress(ip, port);
 	if ((_fd = socket(PF_INET, SOCK_STREAM, 0)) < 0)
 	{
 		std::ostringstream oss;
-		oss << "Cannot initialize socket (address " << _address << ')';
+		oss << "Cannot initialize socket (address " << ip << ":" << port << ')';
 		throw std::runtime_error(oss.str());
 	}
 	int yes = 1;
@@ -51,7 +51,8 @@ Socket::Socket(short port, bool nonblocking) { //:	_port(port)  {
 			std::cerr << "Socket set as nonblocking (address " << _address << ')' << std::endl;
 		#endif
 	}
-	struct sockaddr_in my_struct = _address.getAddress();
+	struct sockaddr_in my_struct;
+	_address.to_sockaddr_in(&my_struct);
 	if (bind(_fd, (struct sockaddr*)&my_struct, sizeof my_struct) < 0)
 	{
 		std::ostringstream oss;
@@ -61,6 +62,14 @@ Socket::Socket(short port, bool nonblocking) { //:	_port(port)  {
 #if DEBUG
 	std::cerr << "Socket bound (address " << _address << ')' << std::endl;
 #endif
+}
+
+Socket::Socket(const IPAddress& ip, uint16_t port, bool nonblocking) { //:	_port(port)  {
+	init(ip, port, nonblocking);
+}
+
+Socket::Socket(const INetAddress& address, bool nonblocking) {
+	init(address.getAddress(), address.getPort(), nonblocking);
 }
 
 Socket::~Socket() {

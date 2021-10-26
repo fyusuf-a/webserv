@@ -1,5 +1,5 @@
-#ifndef PASSIVESOCKET_HPP
-#define PASSIVESOCKET_HPP
+#ifndef PASSIVESERVER_HPP
+#define PASSIVESERVER_HPP
 
 #include "INetAddress.hpp"
 #include "Socket.hpp"
@@ -27,7 +27,8 @@ public:
 	PassiveServer();
 	PassiveServer(const PassiveServer&);
 	PassiveServer&	operator=(const PassiveServer&);
-	PassiveServer(short port, bool nonblocking=true);
+	PassiveServer(const INetAddress& address, bool nonblocking=true);
+	PassiveServer(uint32_t ip, uint16_t port, bool nonblocking=true);
 	virtual 		~PassiveServer();
 
 protected:
@@ -35,8 +36,13 @@ protected:
 	void			writable(int fd);
 	void			readable(int fd);
 	void			on_close(int fd);
+
+private:
+	void init(const INetAddress& address, bool nonblocking);
 };
 
-#include "../templates/PassiveServer.tpp"
+#ifndef PASSIVESERVER_TPP
+#include "../srcs/server/PassiveServer.tpp"
+#endif
 
 #endif

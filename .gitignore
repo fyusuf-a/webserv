@@ -4,3 +4,4 @@
 *.txt
 Webserv
 .DS_Store
+.vscode
