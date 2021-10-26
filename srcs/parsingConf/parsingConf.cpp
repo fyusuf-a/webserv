@@ -507,9 +507,3 @@ void ParsingConf::parsing(std::string path, ServerBlocks &servers)
         this->setup_servers(content, servers);
     }
 }
-
-
-// port on uint16_t
-// methods en majuscule
-// auto index en bool
-// size_t for body size

@@ -36,5 +36,11 @@ ServerBlocks const& WebServ::get_servers() const {
 }
 
 std::ostream& operator<<(std::ostream& os, const WebServ& webserv) {
-	return os << webserv.get_servers();
+
+    ServerBlocks servers = webserv.get_servers();
+	for(std::vector<ServerBlock>::const_iterator i = servers.begin()
+			;i != servers.end(); i++) {
+		os << *i;
+	}
+    return os;
 }
