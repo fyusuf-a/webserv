@@ -27,7 +27,7 @@ void WebServ::init(std::string path)
     std::cout << "cgi_ext ->" << _servers[0]._locations[0].get_cgi_ext() << std::endl;
     std::cout << "roooot ->" << _servers[0]._locations[0].get_root() << std::endl; 
 
-std::vector<std::string> tmp = _servers[0]._locations[0].get_methods();
+std::vector<std::string> tmp = _servers[0]._locations[0].get_index();
     for (size_t i = 0; i < tmp.size();i++)
         std::cout << tmp[i] << std::endl;
 
