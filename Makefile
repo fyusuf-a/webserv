@@ -40,6 +40,7 @@ re : fclean all
 test : all
 	cd test && ./test_socket.sh
 	cd test && ./test_nioselector.sh
+	cd test && ./test_parsing.sh
 
 .cpp.o:
 	${CC} ${CFLAGS} $(HEADERS) -c $< -o ${<:.cpp=.o}

@@ -60,27 +60,25 @@ std::ostream& operator<<(std::ostream& os, const ServerLocation& location) {
 	os << "location" << std::endl << "{" << std::endl;
 	if (!location.get_index().empty())
 		os << "index\t" <<  location.get_index() << ";" << std::endl;
-	if (!location.get_auto_index())
-	{
-		std::string val = "false";
-		if (location.get_auto_index())
-			val = "true";
-		os << "autoindex\t" << val << ";" << std::endl;
-	}
+	
+	std::string val = "off";
+	if (location.get_auto_index())
+		val = "on";
+	os << "autoindex\t" << val << ";" << std::endl;
+	
 	if (!location.get_methods().empty())
 		os << "methods\t" << location.get_methods() << ";" << std::endl;
 	if (!location.get_cgi_ext().empty())
 		os << "cgi_extension\t" << location.get_cgi_ext() << ";" << std::endl;
 	if (!location.get_cgi_bin().empty())
-		os << "cgi_bin\t" << location.get_cgi_bin() << std::endl;
+		os << "cgi_bin\t" << location.get_cgi_bin() << ";" << std::endl;
 	os << "client_max_body_size\t" << location.get_body_size() << ";" << std::endl;
-	if (!location.get_auth_basic())
-	{
-		std::string val = "false";
-		if (location.get_auto_index())
-			val = "true";
-		os << "auth_basic\t" << val << ";" << std::endl;
-	}
+		
+	val = "off";
+	if (location.get_auto_index())
+		val = "on";
+	os << "auth_basic\t" << val << ";" << std::endl;
+
 	if (!location.get_auth_basic_file().empty())
 		os << "auth_basic_user_file\t" << location.get_auth_basic_file() << ";" << std::endl;
 	if (!location.get_language().empty())

@@ -2,7 +2,7 @@
 #include "includes/webserv.hpp"
 #include "includes/webserv.hpp"
 #include "includes/NIOSelector.hpp"
-#define DEFAULT_PATH "conf/nginx.conf"
+#define DEFAULT_PATH "conf/is_good.conf"
 #define SERVER_PORT 500
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1

@@ -1,5 +1,5 @@
-#include "includes/webserv.hpp"
-#define DEFAULT_PATH "conf/nginx.conf"
+#include "../includes/webserv.hpp"
+#define DEFAULT_PATH "../conf/is_good.conf"
 #define SERVER_PORT 500
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
@@ -9,14 +9,27 @@
 int main(int ac, char **av)
 {
 
-    WebServ webserv;
+    WebServ webserv1;
+    WebServ webserv2;
 
     try 
     {
         if (ac == 2)
-            webserv.init(av[1]);
-        else
-            webserv.init(DEFAULT_PATH);
+        {
+            std::fstream               fd(av[1]);
+
+
+            if (!fd.is_open() && !fd.good())
+                throw MyException("[ERROR] File: Can't open File !");
+
+            webserv1.init(DEFAULT_PATH);
+
+            fd << webserv1;
+
+            webserv2.init(av[1]);
+
+			std::cout << webserv2;
+        }
     }
 
     catch(MyException& caught)
