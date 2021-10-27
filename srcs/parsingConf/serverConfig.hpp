@@ -5,7 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdint.h>
-#include "IPAddress.hpp"
+#include "../ipaddress/IPAddress.hpp"
 
 
 class ServerConfig

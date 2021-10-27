@@ -1,4 +1,4 @@
-#include "../../includes/INetAddress.hpp"
+#include "INetAddress.hpp"
 #include <exception>
 #include <ostream>
 #include <sys/socket.h>

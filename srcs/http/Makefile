@@ -10,12 +10,6 @@ INC = 	includes
 NAME = test
 CC = g++
 CFLAGS = -Wall -Wextra -std=c++98 -fsanitize=address -g
-O_FILES = $(SRC:.c=.o)
-
-
-.PHONY: clean fclean re
-
-all : $(NAME)
 
 
 $(NAME) : $(O_FILES)

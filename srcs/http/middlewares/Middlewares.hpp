@@ -1,8 +1,8 @@
 #ifndef MIDDLEWARES_HPP
 # define MIDDLEWARES_HPP
 # include <iostream>
-# include "Request.hpp"
-# include "Response.hpp"
+# include "../Request/Request.hpp"
+# include "../Response/Response.hpp"
 
 class IMiddlewares
 {

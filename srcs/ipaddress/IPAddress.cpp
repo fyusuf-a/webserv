@@ -1,4 +1,4 @@
-#include "../../includes/IPAddress.hpp"
+#include "IPAddress.hpp"
 #include <fstream>
 #include <sstream>
 #include <stdexcept>

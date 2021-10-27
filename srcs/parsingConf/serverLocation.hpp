@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include "utils.hpp"
+#include "../utils/utils.hpp"
 
 class ServerLocation
 {

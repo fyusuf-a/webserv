@@ -1,5 +1,5 @@
-#include "../../includes/serverBlock.hpp"
-#include "../../includes/parsingConf.hpp"
+#include "serverBlock.hpp"
+#include "parsingConf.hpp"
 
 ServerBlock::ServerBlock(){}
 

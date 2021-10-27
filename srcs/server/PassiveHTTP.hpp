@@ -1,12 +1,12 @@
 #ifndef PASSIVEHTTP_HPP
 #define PASSIVEHTTP_HPP
 
-#include "INetAddress.hpp"
+#include "../ipaddress/INetAddress.hpp"
 #include "Socket.hpp"
 #include "ActiveServer.hpp"
 #include "PassiveServer.hpp"
 #include "NIOSelector.hpp"
-#include "serverBlock.hpp"
+#include "../parsingConf/serverBlock.hpp"
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
@@ -39,7 +39,7 @@ protected:
 };
 
 #ifndef PASSIVEHTTP_TPP
-	#include "../srcs/server/PassiveHTTP.tpp"
+	#include "PassiveHTTP.tpp"
 #endif
 
 #endif

@@ -1,5 +1,5 @@
-#include "../../includes/ActiveServer.hpp"
-#include "../../includes/NIOSelector.hpp"
+#include "ActiveServer.hpp"
+#include "NIOSelector.hpp"
 
 ActiveServer::ActiveServer() : Callback() {
 	_socket = new Socket();

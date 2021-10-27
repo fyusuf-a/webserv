@@ -7,8 +7,8 @@
 #include <sstream>
 #include <stdlib.h>
 
-#include "utils.hpp"
-#include "serverBlock.hpp"
+#include "../utils/utils.hpp"
+#include "../parsingConf/serverBlock.hpp"
 
 #define ITER std::vector<std::string>::iterator
 #define ServerBlocks std::vector<ServerBlock>

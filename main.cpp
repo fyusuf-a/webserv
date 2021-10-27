@@ -1,7 +1,6 @@
-#include "includes/IPAddress.hpp"
-#include "includes/webserv.hpp"
-#include "includes/webserv.hpp"
-#include "includes/NIOSelector.hpp"
+#include "srcs/ipaddress/IPAddress.hpp"
+#include "srcs/webserv/webserv.hpp"
+#include "srcs/server/NIOSelector.hpp"
 #define DEFAULT_PATH "conf/nginx.conf"
 #define SERVER_PORT 500
 #define INVALID_SOCKET -1
