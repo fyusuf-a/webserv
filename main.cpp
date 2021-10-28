@@ -29,9 +29,9 @@ int main(int ac, char **av)
 		exit(EXIT_FAILURE);
 	}
 
-	// while (1) {
-	//  	NIOSelector::getInstance()->poll();
-	// }
+	while (1) {
+	  	NIOSelector::getInstance()->poll();
+	}
 
  	return (0);
 }

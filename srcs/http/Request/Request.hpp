@@ -2,6 +2,7 @@
 # define REQUEST_HPP
 # include <iostream>
 # include <map>
+#include <ostream>
 
 class Request
 {
@@ -18,14 +19,14 @@ class Request
 
 	public:
 		Request();
-		Request(char *str);
+		Request(std::string& str);
 		~Request();
 		Request( Request const & src );
 		Request & operator=( Request const & rhs );
 
-		char								*parse(char *str);
-		std::string							extract_attribute(std::string req_copy, std::string terminating, char **ptr, std::size_t residual_offset);
-		void								manage_head(char **ptr);
+		std::string&						parse(std::string&);
+		std::string							extract_attribute(std::string req_copy, std::string terminating, std::string& str, std::size_t residual_offset);
+		void								manage_head(std::string&);
 		void								checkIncompleteRequest(void) const;
 		std::string							get_method(void) const;
 		std::string							get_path(void) const;
@@ -37,5 +38,7 @@ class Request
 		bool								get_over(void) const;
 		void								set_over(bool over);
 };
+
+std::ostream& operator<<(std::ostream&, const Request&);
 
 #endif

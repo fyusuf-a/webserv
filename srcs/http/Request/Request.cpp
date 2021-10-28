@@ -57,11 +57,27 @@ Request::Request() : _head(0), _over(true) {
 	_header = new std::map<std::string, std::string>;
 }
 
-Request::Request(char *str) : _head(0), _over(true) {
+Request::Request(std::string& str) : _head(0), _over(true) {
 	_header = new std::map<std::string, std::string>;
 	this->parse(str);
 }
 
 Request::~Request() {
 	delete _header;
+}
+
+std::ostream& operator<<(std::ostream& os, const Request& req) {
+	os << req.get_method() << " " << req.get_path() << " " << req.get_protocol() << "\r\n";
+	if (req.get_header()) {
+		std::map<std::string, std::string> my_headers = *(req.get_header());
+		for (std::map<std::string, std::string>::const_iterator it = my_headers.begin(); it != my_headers.end() ; it++) {
+			os << it->first << ":" << it->second << "\r\n";
+		}
+	}
+	os << "\r\n" << req.get_body();
+	os << std::endl << "Other stuff:" << std::endl;
+	os << "head = " << req.get_head() << std::endl;
+	os << "over = " << (req.get_over() ? "true" : "false") << std::endl;
+	os << "residual = \"" << req.get_residual() << "\"" << std::endl;
+	return os;
 }
