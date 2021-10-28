@@ -1,4 +1,4 @@
-#include "../../includes/serverConfig.hpp"
+#include "serverConfig.hpp"
 
 
 ServerConfig::ServerConfig() : _host(0), _name(), _error(), _server_root(), _port(80), _ip_already_set(false) {}

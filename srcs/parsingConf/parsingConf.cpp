@@ -1,4 +1,4 @@
-#include "../../includes/parsingConf.hpp"
+#include "parsingConf.hpp"
 
 // checker pour plusieur root 
 

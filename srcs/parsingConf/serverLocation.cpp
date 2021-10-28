@@ -1,4 +1,4 @@
-#include "../../includes/serverLocation.hpp"
+#include "serverLocation.hpp"
 
 
 ServerLocation::ServerLocation() :

@@ -1,8 +1,8 @@
 #ifndef SOCKET_HPP
 #define SOCKET_HPP
 
-#include "INetAddress.hpp"
-#include "IPAddress.hpp"
+#include "../ipaddress/INetAddress.hpp"
+#include "../ipaddress/IPAddress.hpp"
 #include <iostream>
 #include <sstream>
 #include <cstdlib>

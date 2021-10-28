@@ -1,7 +1,7 @@
-#include "../../includes/webserv.hpp"
-#include "../../includes/PassiveHTTP.hpp"
-#include "ActiveServer.hpp"
-#include "serverBlock.hpp"
+#include "../webserv/webserv.hpp"
+#include "../server/PassiveHTTP.hpp"
+#include "../server/ActiveServer.hpp"
+#include "../parsingConf/serverBlock.hpp"
 
 WebServ::WebServ() : _conf(){};
 

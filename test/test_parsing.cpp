@@ -1,4 +1,4 @@
-#include "../includes/webserv.hpp"
+#include "../srcs/webserv/webserv.hpp"
 #define DEFAULT_PATH "../conf/is_good.conf"
 #define SERVER_PORT 500
 #define INVALID_SOCKET -1

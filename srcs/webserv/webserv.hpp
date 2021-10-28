@@ -1,16 +1,10 @@
 #ifndef WEBSERV_HPP
 #define WEBSERV_HPP
-
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-#include "parsingConf.hpp"
-#include "serverBlock.hpp"
+#include "../parsingConf/parsingConf.hpp"
+#include "../parsingConf/serverBlock.hpp"
 
 
 

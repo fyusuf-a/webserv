@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <vector>
 #include <poll.h>
-#include "utils/Singleton.hpp"
+#include "../utils/Singleton.hpp"
 
 #define READ	POLLIN
 #define WRITE	POLLOUT

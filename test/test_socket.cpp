@@ -1,5 +1,5 @@
-#include "../includes/Socket.hpp"
-#include "../includes/IPAddress.hpp"
+#include "../srcs/server/Socket.hpp"
+#include "../srcs/ipaddress/IPAddress.hpp"
 #include <cctype>
 #include <arpa/inet.h>
 

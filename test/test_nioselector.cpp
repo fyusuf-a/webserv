@@ -1,7 +1,7 @@
-#include "../includes/Socket.hpp"
-#include "../includes/ActiveServer.hpp"
-#include "../includes/PassiveServer.hpp"
-#include "../includes/NIOSelector.hpp"
+#include "../srcs/server/Socket.hpp"
+#include "../srcs/server/ActiveServer.hpp"
+#include "../srcs/server/PassiveServer.hpp"
+#include "../srcs/server/NIOSelector.hpp"
 #include <cctype>
 #include <arpa/inet.h>
 
