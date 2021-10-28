@@ -13,7 +13,7 @@ int main(int ac, char **av)
 {
 	std::string path = ac == 2 ? av[1] : DEFAULT_PATH;
 
-	try 
+	try
     {
  		WebServ webserv(path);
  	    std::cout << webserv;
