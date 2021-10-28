@@ -7,15 +7,15 @@
 class Request
 {
 	private:
-		std::string	_method;
-		std::string _path;
-		std::string _protocol;
+		std::string		_method;
+		std::string 	_path;
+		std::string 	_protocol;
 		std::map<std::string, std::string> *_header;
-		std::string _body;
-		int			_head;
-		bool		_over;
-		std::string _residual;
-		std::string	_field_name;
+		std::string 	_body;
+		int				_head;
+		bool			_over;
+		std::string 	_residual;
+		std::string		_field_name;
 
 	public:
 		Request();
@@ -25,6 +25,7 @@ class Request
 		Request & operator=( Request const & rhs );
 
 		std::string&						parse(std::string&);
+		void								parse_all(std::string&);
 		std::string							extract_attribute(std::string req_copy, std::string terminating, std::string& str, std::size_t residual_offset);
 		void								manage_head(std::string&);
 		void								checkIncompleteRequest(void) const;

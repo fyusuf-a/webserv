@@ -59,7 +59,8 @@ Request::Request() : _head(0), _over(true) {
 
 Request::Request(std::string& str) : _head(0), _over(true) {
 	_header = new std::map<std::string, std::string>;
-	this->parse(str);
+	//this->parse(str);
+	parse_all(str);
 }
 
 Request::~Request() {
@@ -74,10 +75,10 @@ std::ostream& operator<<(std::ostream& os, const Request& req) {
 			os << it->first << ":" << it->second << "\r\n";
 		}
 	}
-	os << "\r\n" << req.get_body();
+	/*os << "\r\n" << req.get_body();
 	os << std::endl << "Other stuff:" << std::endl;
 	os << "head = " << req.get_head() << std::endl;
 	os << "over = " << (req.get_over() ? "true" : "false") << std::endl;
-	os << "residual = \"" << req.get_residual() << "\"" << std::endl;
+	os << "residual = \"" << req.get_residual() << "\"" << std::endl;*/
 	return os;
 }
