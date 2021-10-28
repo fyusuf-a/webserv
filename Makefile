@@ -7,6 +7,7 @@ SRC = 	main.cpp\
 	srcs/webserv/webserv.cpp\
 	srcs/server/Socket.cpp\
 	srcs/server/ActiveServer.cpp\
+	srcs/server/ActiveHTTP.cpp\
 	srcs/server/NIOSelector.cpp\
 	srcs/ipaddress/IPAddress.cpp\
 	srcs/ipaddress/INetAddress.cpp\

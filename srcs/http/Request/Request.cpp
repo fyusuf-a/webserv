@@ -72,9 +72,10 @@ std::ostream& operator<<(std::ostream& os, const Request& req) {
 	if (req.get_header()) {
 		std::map<std::string, std::string> my_headers = *(req.get_header());
 		for (std::map<std::string, std::string>::const_iterator it = my_headers.begin(); it != my_headers.end() ; it++) {
-			os << it->first << ":" << it->second << "\r\n";
+			os << it->first << ": " << it->second << "\r\n";
 		}
 	}
+	os << "over = " << (req.get_over() ? "true" : "false") << std::endl;
 	/*os << "\r\n" << req.get_body();
 	os << std::endl << "Other stuff:" << std::endl;
 	os << "head = " << req.get_head() << std::endl;

@@ -23,10 +23,8 @@ std::string	Request::extract_attribute(std::string req_copy, std::string termina
 
 void		Request::manage_head(std::string& str) {
 	if (_head == 4) {
-		//if (((std::string)*ptr).find("\r\n") == 0) {
 		if (str.find("\r\n") == 0) {
 			str = str.substr(2);
-			//(*ptr) += 2;
 			_head++;
 		}
 		else if (_over)
