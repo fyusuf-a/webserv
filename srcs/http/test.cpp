@@ -71,8 +71,8 @@ void	check_sntx(void) {
 	std::cout << req << std::endl;
 }*/
 
-void	request_parsing_testing(std::string& str, bool nouveau, std::list<Request *> & requests, bool clean) {
-	while (!str.empty()) {
+void	request_parsing_testing(const char* str, bool nouveau, std::list<Request *> & requests, bool clean) {
+	while (*str) {
 		if (nouveau)
 			requests.push_back(new Request);
 		else
@@ -105,7 +105,7 @@ void	rpt(void) {
 	Request req;
 	//try_parse((char *)"GET           /test.html HTTP/1.1\r\nHost: ok\r\nContent-Length: non\r\nok: ok\r\nretest: ah\r\nuseless: useless\r\n\r\n", req);
 	std::string lol("GET           /test.html HTTP/1.1\r\nHost: ok\r\nContent-Length: non\r\nok: ok\r\nretest: ah\r\nuseless: useless\r\n\r\n");
-	request_parsing_testing(lol, true, requests, true);
+	request_parsing_testing(lol.c_str(), true, requests, true);
 	//request_parsing_testing((char *)"GET           /test.html HTTP/1.1\r\nDate: ok\r\nContent-Length: non\r\n\r\nretest: ah\r\n\r\n", true, requests, true);
 	//request_parsing_testing((char *)"GET           test.html HTTP/1.1\r\nHost: ok\r\nContent-Length: non\r\n\r\nretest: ah\r\n\r\n", true, requests, true);
 	//request_parsing_testing((char *)"GET           /test.html HTTP/1.1\r\nHost: ok\r\nContent-Length: non\r\n\r\nretest: ah\r\n", true, requests, false);

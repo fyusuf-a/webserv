@@ -26,7 +26,7 @@ void	ActiveHTTP::readable(int fd) {
 		try {
 			std::ostringstream ss;
 			ActiveServer::readable(fd);
-			_req.parse_all(_read_buffer);
+			_req.parse_all(_read_buffer.c_str());
 			ss << "<<<" << std::endl;
 			ss << _req << std::endl;
 			ss << ">>>" << std::endl;
