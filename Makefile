@@ -15,7 +15,8 @@ SRC = 	main.cpp\
 	srcs/http/Request/Request.cpp\
 	srcs/http/Request/requestParsing.cpp\
 	srcs/http/Request/checkIncompleteRequest.cpp\
-	srcs/http/Response/Response.cpp
+	srcs/http/Response/Response.cpp\
+	srcs/logger/Logger.cpp
 
 NAME = Webserv
 HEADERS = -Iincludes 
