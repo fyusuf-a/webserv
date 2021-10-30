@@ -1,4 +1,4 @@
-#include "../../includes/INetAddress.hpp"
+#include "INetAddress.hpp"
 #include <exception>
 #include <ostream>
 #include <sys/socket.h>
@@ -60,22 +60,10 @@ void INetAddress::to_sockaddr_in(struct sockaddr_in* structure) {
 	structure->sin_family = AF_INET;
 	structure->sin_port = htons(_port);
 	structure->sin_addr.s_addr = htonl(_address.getIP());
-	//std::cerr << "ip is " << structure->sin_port << " port is " << structure->sin_port << std::endl;
 	memset(structure->sin_zero, 0, sizeof(structure->sin_zero));
 }
 
 std::ostream& operator<<(std::ostream& os, const INetAddress& addr) {
-	//struct sockaddr_in	my_addr = addr.getIP();
-	//uint32_t			ip = my_addr.sin_addr.s_addr;
-
-	/*for (int i = 0; i < 4; i++)
-	{
-		os << ip % 0x100;
-		ip /= 0x100;
-		if (i != 3)
-			os << '.';
-	}
-	os << ':' << ntohs(my_addr.sin_port);*/
 	os << addr.getAddress() << ":" << addr.getPort();
 	return os;
 }

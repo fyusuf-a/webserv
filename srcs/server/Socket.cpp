@@ -1,5 +1,5 @@
-#include "../../includes/Socket.hpp"
-#include "../../includes/INetAddress.hpp"
+#include "Socket.hpp"
+#include "../ipaddress/INetAddress.hpp"
 #include <cstring>
 #include <stdexcept>
 

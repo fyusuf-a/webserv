@@ -1,12 +1,12 @@
 #ifndef PASSIVEHTTP_TPP
 #define PASSIVEHTTP_TPP
 
-#include "../includes/Socket.hpp"
-#include "../includes/ActiveServer.hpp"
-#include "../includes/PassiveServer.hpp"
-#include "../includes/PassiveHTTP.hpp"
-#include "../includes/NIOSelector.hpp"
-#include "serverBlock.hpp"
+#include "Socket.hpp"
+#include "ActiveServer.hpp"
+#include "PassiveServer.hpp"
+#include "PassiveHTTP.hpp"
+#include "NIOSelector.hpp"
+#include "../parsingConf/serverBlock.hpp"
 #include <cctype>
 #include <arpa/inet.h>
 

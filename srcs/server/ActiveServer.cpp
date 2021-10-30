@@ -1,5 +1,5 @@
-#include "../../includes/ActiveServer.hpp"
-#include "../../includes/NIOSelector.hpp"
+#include "ActiveServer.hpp"
+#include "NIOSelector.hpp"
 
 ActiveServer::ActiveServer() : Callback() {
 	_socket = new Socket();
@@ -46,9 +46,11 @@ void ActiveServer::readable(int fd) {
 			_read_buffer += _socket->recv(max_read);
 		}
 		catch (Socket::ConnectionClosed& e) {
+			throw e;
 			on_close(fd);
 		}
 		catch (std::exception& e) {
+			throw e;
 			std::cerr << "An error occured while using recv" << std::endl;
 			on_close(fd);
 		}

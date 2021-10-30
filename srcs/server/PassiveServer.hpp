@@ -1,7 +1,7 @@
 #ifndef PASSIVESERVER_HPP
 #define PASSIVESERVER_HPP
 
-#include "INetAddress.hpp"
+#include "../ipaddress/INetAddress.hpp"
 #include "Socket.hpp"
 #include "ActiveServer.hpp"
 #include "NIOSelector.hpp"
@@ -42,7 +42,7 @@ private:
 };
 
 #ifndef PASSIVESERVER_TPP
-#include "../srcs/server/PassiveServer.tpp"
+#include "PassiveServer.tpp"
 #endif
 
 #endif
