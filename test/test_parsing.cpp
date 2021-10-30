@@ -52,8 +52,6 @@ int main(int ac, char **av)
 
     }
 
-
-
     try
     {
         webserv1.init(ERROR1);

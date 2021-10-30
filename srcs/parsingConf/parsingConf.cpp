@@ -449,7 +449,6 @@ std::vector<std::string> ParsingConf::parsing_line(std::string line, std::vector
                 return content;
             }
             line = &line[i + 1];
-            std::cout << "-->"<< line << std::endl;
             i = -1;
         }
         else if (line[i] == '}')
