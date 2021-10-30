@@ -34,16 +34,27 @@ void		Request::manage_head(const char **ptr) {
 		++_head;
 }
 
-Request		Request::parse_all(const char *ptr) {
-	Request request;
+size_t		Request::parse_all(const char *ptr) {
+	bool		nouveau = true;
+	const char *new_ptr = ptr;
+	size_t		char_count = 0;
 
-	request.set_over(true);
 	while (*ptr) {
-		request.set_over(true);
-		while (request.get_head() < 6 && request.get_over() == true)
-			ptr = request.parse(ptr);
+		/*if (nouveau)
+			return ;
+		else*/
+		if (!nouveau)
+			set_over(true);
+		set_over(true);
+		while (get_head() < 6 && get_over() == true)
+		{
+			new_ptr = parse(ptr);
+			char_count += new_ptr - ptr;
+			ptr = new_ptr;
+		}
+		nouveau = get_over();
 	}
-	return (request);
+	return char_count;
 }
 
 const char		*Request::parse(const char *ptr) {

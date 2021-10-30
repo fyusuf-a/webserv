@@ -78,7 +78,9 @@ void	request_parsing_testing(const char* str, bool nouveau, std::list<Request *>
 		else
 			requests.back()->set_over(true);
 		while (requests.back()->get_head() < 6 && requests.back()->get_over() == true)
+		{
 			str = requests.back()->parse(str);
+		}
 		nouveau = requests.back()->get_over();
 	}
 

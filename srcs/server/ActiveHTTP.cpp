@@ -24,23 +24,21 @@ ActiveHTTP::~ActiveHTTP() {
 
 void	ActiveHTTP::readable(int fd) {
 		try {
+			size_t parsed_chars;
+			(void)parsed_chars;
+
 			std::ostringstream ss;
 			ActiveServer::readable(fd);
-			_req.parse_all(_read_buffer.c_str());
+			parsed_chars = _req.parse_all(_read_buffer.c_str());
 			ss << "<<<" << std::endl;
 			ss << _req << std::endl;
 			ss << ">>>" << std::endl;
 			_write_buffer = ss.str();
 			
-			std::cout << "read_buffer: \"" << _read_buffer << "\"" << std::endl;
-			std::cout << "write_buffer: \"" << _write_buffer << "\"" << std::endl;
-
-			//size_t write_len = _write_buffer.length();
-			//size_t read_len = _read_buffer.length();
-			//_write_buffer += _read_buffer;
-			//for (size_t i = write_len; i < write_len + read_len; i++)
-				//_write_buffer[i] = _write_buffer[i];
-			//_read_buffer = "";
+			//std::cout << "read_buffer: \"" << _read_buffer << "\"" << std::endl;
+			//std::cout << "write_buffer: \"" << _write_buffer << "\"" << std::endl;
+			_read_buffer = _read_buffer.substr(parsed_chars);
+			//std::cout << "read_buffer: \"" << _read_buffer << "\"" << std::endl;
 		}
 		catch(std::exception &e) {
 		}

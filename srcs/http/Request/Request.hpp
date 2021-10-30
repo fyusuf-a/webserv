@@ -23,7 +23,8 @@ class Request
 		Request( Request const & src );
 		Request & operator=( Request const & rhs );
 
-		Request								parse_all(const char *str);
+		// Returns the index to which the parsing led
+		size_t								parse_all(const char *str);
 		const char							*parse(const char *str);
 		std::string							extract_attribute(std::string req_copy, std::string terminating, const char **ptr, std::size_t residual_offset);
 		void								manage_head(const char **ptr);
