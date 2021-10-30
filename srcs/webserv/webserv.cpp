@@ -23,12 +23,12 @@ void WebServ::init(const std::string& path)
 
     _conf.parsing(path, this->_servers);
 
-	// for (std::vector<ServerBlock>::iterator it = _servers.begin(); it != _servers.end(); it++)
-	// {
-	// 	ServerConfig const& conf = it->get_server_conf();
-    //     INetAddress interface(conf.get_host(), conf.get_port());
-	// 	new PassiveHTTP<ActiveServer>(interface, *it, true);
-	// }
+	for (std::vector<ServerBlock>::iterator it = _servers.begin(); it != _servers.end(); it++)
+	{
+	 	ServerConfig const& conf = it->get_server_conf();
+        INetAddress interface(conf.get_host(), conf.get_port());
+	 	new PassiveHTTP<ActiveServer>(interface, *it, true);
+	}
 }
 
 ServerBlocks const& WebServ::get_servers() const {
