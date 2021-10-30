@@ -47,27 +47,31 @@ template<typename T> PassiveServer<T>::~PassiveServer() {
 }
 
 template<typename T>
-void			PassiveServer<T>::on_readable(int fd) {
+bool			PassiveServer<T>::on_readable(int fd) {
 	(void)fd;
 #ifdef DEBUG
 	std::cerr << "New connection on passive server" << std::endl;
 #endif
 	new T(_socket->accept());
+	return (true);
 }
 
 template<typename T>
-void			PassiveServer<T>::on_writable(int fd) {
+bool			PassiveServer<T>::on_writable(int fd) {
 	(void)fd;
+	return (true);
 }
 
 template<typename T>
-void			PassiveServer<T>::on_close(int fd) {
+bool			PassiveServer<T>::on_close(int fd) {
 	(void)fd;
+	return (true);
 }
 
 template<typename T>
-void			PassiveServer<T>::always(int fd) {
+bool			PassiveServer<T>::always(int fd) {
 	(void)fd;
+	return (true);
 }
 
 #endif

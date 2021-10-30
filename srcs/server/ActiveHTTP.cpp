@@ -34,18 +34,12 @@ time_t const& ActiveHTTP::get_last_time_active() const {
 	return _last_time_active;
 }
 
-void	ActiveHTTP::on_readable(int fd) {
+bool	ActiveHTTP::on_readable(int fd) {
 	size_t				parsed_chars;
 	std::ostringstream	ss;
-	try {
-		ActiveServer::on_readable(fd);
-	}
-	catch (Socket::ConnectionClosed& e) {
-		return ;
-	}
-	catch(std::exception &e) {
-		return ;
-	}
+
+	if (ActiveServer::on_readable(fd) == false)
+		return (false);
 	time(&_last_time_active);
 	parsed_chars = _req.parse_all(_read_buffer.c_str());
 	ss << "<<<" << std::endl;
@@ -53,9 +47,10 @@ void	ActiveHTTP::on_readable(int fd) {
 	ss << ">>>" << std::endl;
 	_write_buffer += ss.str();
 	_read_buffer = _read_buffer.substr(parsed_chars);
+	return (true);
 }
 
-void	ActiveHTTP::always(int fd) {
+bool	ActiveHTTP::always(int fd) {
 	(void)fd;
 	time_t				now;
 
@@ -64,5 +59,7 @@ void	ActiveHTTP::always(int fd) {
 	{
 		std::cerr << "Connection timed out" << std::endl;
 		on_close(fd);
+		return (false);
 	}
+	return (true);
 }

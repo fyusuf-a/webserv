@@ -20,10 +20,10 @@ class NIOSelector : public Singleton<NIOSelector> {
 		Callback(const Callback&);
 		Callback& operator=(const Callback&);
 		virtual ~Callback();
-		virtual void	on_writable(int fd) = 0;
-		virtual void	on_readable(int fd) = 0;
-		virtual void	on_close(int fd) = 0;
-		virtual void	always(int fd) = 0;
+		virtual bool	on_writable(int fd) = 0;
+		virtual bool	on_readable(int fd) = 0;
+		virtual bool	on_close(int fd) = 0;
+		virtual bool	always(int fd) = 0;
 	};
 
 	typedef struct	s_action {

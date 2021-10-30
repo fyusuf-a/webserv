@@ -23,8 +23,8 @@ public:
 protected:
 	time_t			_last_time_active;
 	Request			_req;
-	virtual void	on_readable(int fd);
-	virtual void	always(int fd);
+	virtual bool	on_readable(int fd);
+	virtual bool	always(int fd);
 };
 
 #endif

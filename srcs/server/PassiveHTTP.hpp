@@ -35,7 +35,7 @@ public:
 
 protected:
 	ServerBlock			_server_block;
-	void				on_readable(int fd);
+	bool				on_readable(int fd);
 };
 
 #ifndef PASSIVEHTTP_TPP

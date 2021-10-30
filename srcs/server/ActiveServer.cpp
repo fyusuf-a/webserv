@@ -37,7 +37,7 @@ Socket *ActiveServer::getSocket() {
 	return _socket;
 }
 
-void ActiveServer::on_readable(int fd) {
+bool ActiveServer::on_readable(int fd) {
 	(void)fd;
 	ssize_t max_read = BUFFER_LENGTH - _read_buffer.length();
 	if (max_read > 0)
@@ -47,20 +47,21 @@ void ActiveServer::on_readable(int fd) {
 		}
 		catch (Socket::ConnectionClosed& e) {
 			on_close(fd);
-			throw e;
+			return (false);
 		}
 		catch (std::exception& e) {
 			std::cerr << "An error occured while using recv" << std::endl;
 			on_close(fd);
-			throw e;
+			return (false);
 		}
 	}
+	return (true);
 }
 
-void ActiveServer::on_writable(int fd) {
+bool ActiveServer::on_writable(int fd) {
 	(void)fd;
 	if (_write_buffer.empty())
-		return ;
+		return (true);
 	try {
 		ssize_t sent = _socket->send(_write_buffer);
 		_write_buffer = _write_buffer.substr(sent);
@@ -68,10 +69,13 @@ void ActiveServer::on_writable(int fd) {
 	catch (std::exception& e) {
 		std::cerr << "An error occured while using send" << std::endl;
 		on_close(fd);
+		return (false);
 	}
+	return (true);
 }
 
-void ActiveServer::on_close(int fd) {
+bool ActiveServer::on_close(int fd) {
 	(void)fd;
 	delete (this);
+	return (false);
 }

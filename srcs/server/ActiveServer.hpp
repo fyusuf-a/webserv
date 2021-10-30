@@ -20,10 +20,10 @@ protected:
 	std::string		_write_buffer;
 	std::string		_read_buffer;
 	Socket			*_socket;
-	virtual void	on_readable(int fd);
-	virtual void	on_writable(int fd);
-	virtual void	on_close(int fd);
-	virtual void	always(int fd) = 0;
+	virtual bool	on_readable(int fd);
+	virtual bool	on_writable(int fd);
+	virtual bool	on_close(int fd);
+	virtual bool	always(int fd) = 0;
 };
 
 #endif

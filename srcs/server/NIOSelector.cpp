@@ -84,34 +84,32 @@ void	NIOSelector::remove(int fd) {
 }
 
 void	NIOSelector::poll() {
-	int		ret = ::poll(_polled_fds.data(), _polled_fds.size(), _timeout);
-	int		fd;
-	time_t	now;
+	int			ret = ::poll(_polled_fds.data(), _polled_fds.size(), _timeout);
+	int			fd;
+	time_t		now;
+	short		revents;
+	t_action	action;
 
 	time(&now);
 	if (ret < 0)
 		throw std::runtime_error("poll: unexpected error");
 	for (unsigned long i = 0; i < _polled_fds.size(); i++) {
 		fd = _polled_fds[i].fd;
-		if (_polled_fds[i].revents & (POLLERR | POLLNVAL))
-		{
-			std::cerr << "An error has occured" << std::endl;
-			_actions[fd].callback->on_close(fd);
+		revents = _polled_fds[i].revents;
+		action = _actions[fd];
+		if (revents & (POLLERR | POLLNVAL)) { std::cerr << "An error has occured" << std::endl;
+			action.callback->on_close(fd);
 			continue;
 		}
-		else if (_polled_fds[i].revents & POLLHUP)
-		{
+		if (revents & POLLHUP) {
 			std::cerr << "Peer closed the connection" << std::endl;
-			_actions[fd].callback->on_close(fd);
+			action.callback->on_close(fd);
 			continue;
 		}
-		if (_actions.find(fd) != _actions.end()
-				&& _polled_fds[i].revents & (POLLIN | POLLPRI))
-			_actions[fd].callback->on_readable(fd);
-		if (_actions.find(fd) != _actions.end()
-				&& _polled_fds[i].revents & POLLOUT)
-			_actions[fd].callback->on_writable(fd);
-		if (_actions.find(fd) != _actions.end())
-			_actions[fd].callback->always(fd);
+		if (revents & (POLLIN | POLLPRI) && !action.callback->on_readable(fd))
+			continue;
+		if (revents & POLLOUT && !action.callback->on_writable(fd))
+			continue;
+		action.callback->always(fd);
 	}
 }
