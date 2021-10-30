@@ -42,7 +42,7 @@ PassiveHTTP<T>::PassiveHTTP(uint32_t ip, uint16_t port, const ServerBlock& serve
 template<typename T> PassiveHTTP<T>::~PassiveHTTP() {
 }
 
-template<typename T> void PassiveHTTP<T>::readable(int fd) {
+template<typename T> void PassiveHTTP<T>::on_readable(int fd) {
 	(void)fd;
 #ifdef DEBUG
 	std::cerr << "New connection on passive HTTP server" << std::endl;

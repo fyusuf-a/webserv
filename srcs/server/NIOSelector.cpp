@@ -84,9 +84,11 @@ void	NIOSelector::remove(int fd) {
 }
 
 void	NIOSelector::poll() {
-	int ret = ::poll(_polled_fds.data(), _polled_fds.size(), _timeout);
-	int fd;
+	int		ret = ::poll(_polled_fds.data(), _polled_fds.size(), _timeout);
+	int		fd;
+	time_t	now;
 
+	time(&now);
 	if (ret < 0)
 		throw std::runtime_error("poll: unexpected error");
 	for (unsigned long i = 0; i < _polled_fds.size(); i++) {
@@ -103,10 +105,13 @@ void	NIOSelector::poll() {
 			_actions[fd].callback->on_close(fd);
 			continue;
 		}
-		if (_polled_fds[i].revents & (POLLIN | POLLPRI))
-			_actions[fd].callback->readable(fd);
+		if (_actions.find(fd) != _actions.end()
+				&& _polled_fds[i].revents & (POLLIN | POLLPRI))
+			_actions[fd].callback->on_readable(fd);
 		if (_actions.find(fd) != _actions.end()
 				&& _polled_fds[i].revents & POLLOUT)
-			_actions[fd].callback->writable(fd);
+			_actions[fd].callback->on_writable(fd);
+		if (_actions.find(fd) != _actions.end())
+			_actions[fd].callback->always(fd);
 	}
 }

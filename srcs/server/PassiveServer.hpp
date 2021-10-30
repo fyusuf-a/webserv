@@ -33,9 +33,10 @@ public:
 
 protected:
 	Socket			*_socket;
-	void			writable(int fd);
-	void			readable(int fd);
+	void			on_writable(int fd);
+	void			on_readable(int fd);
 	void			on_close(int fd);
+	void			always(int fd);
 
 private:
 	void init(const INetAddress& address, bool nonblocking);

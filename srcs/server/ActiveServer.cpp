@@ -37,7 +37,7 @@ Socket *ActiveServer::getSocket() {
 	return _socket;
 }
 
-void ActiveServer::readable(int fd) {
+void ActiveServer::on_readable(int fd) {
 	(void)fd;
 	ssize_t max_read = BUFFER_LENGTH - _read_buffer.length();
 	if (max_read > 0)
@@ -46,18 +46,18 @@ void ActiveServer::readable(int fd) {
 			_read_buffer += _socket->recv(max_read);
 		}
 		catch (Socket::ConnectionClosed& e) {
-			throw e;
 			on_close(fd);
+			throw e;
 		}
 		catch (std::exception& e) {
-			throw e;
 			std::cerr << "An error occured while using recv" << std::endl;
 			on_close(fd);
+			throw e;
 		}
 	}
 }
 
-void ActiveServer::writable(int fd) {
+void ActiveServer::on_writable(int fd) {
 	(void)fd;
 	if (_write_buffer.empty())
 		return ;

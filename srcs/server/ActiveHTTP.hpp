@@ -6,6 +6,7 @@
 #include "ActiveServer.hpp"
 #include "../http/Request/Request.hpp"
 #include <sstream>
+#define TIMEOUT 60.0
 
 class ActiveHTTP : public ActiveServer {
 
@@ -15,11 +16,15 @@ public:
 	ActiveHTTP(Socket*);
 	ActiveHTTP& operator=(const ActiveHTTP&);
 	virtual ~ActiveHTTP();
-	Request _req;
+	const Request& get_req() const;
+	time_t const& get_last_time_active() const;
 
 
 protected:
-	virtual void	readable(int fd);
+	time_t			_last_time_active;
+	Request			_req;
+	virtual void	on_readable(int fd);
+	virtual void	always(int fd);
 };
 
 #endif

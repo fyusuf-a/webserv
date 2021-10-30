@@ -47,7 +47,7 @@ template<typename T> PassiveServer<T>::~PassiveServer() {
 }
 
 template<typename T>
-void			PassiveServer<T>::readable(int fd) {
+void			PassiveServer<T>::on_readable(int fd) {
 	(void)fd;
 #ifdef DEBUG
 	std::cerr << "New connection on passive server" << std::endl;
@@ -56,12 +56,17 @@ void			PassiveServer<T>::readable(int fd) {
 }
 
 template<typename T>
-void			PassiveServer<T>::writable(int fd) {
+void			PassiveServer<T>::on_writable(int fd) {
 	(void)fd;
 }
 
 template<typename T>
 void			PassiveServer<T>::on_close(int fd) {
+	(void)fd;
+}
+
+template<typename T>
+void			PassiveServer<T>::always(int fd) {
 	(void)fd;
 }
 
