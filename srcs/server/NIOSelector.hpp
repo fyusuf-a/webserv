@@ -1,6 +1,7 @@
 #ifndef NIOSELECTOR_HPP
 #define NIOSELECTOR_HPP
 
+#include <unistd.h>
 #include <iostream>
 #include <map>
 #include <stdexcept>
