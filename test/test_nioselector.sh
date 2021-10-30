@@ -8,7 +8,7 @@ PORT2=8081
 valgrind --show-leak-kinds=all ./a.out 2>valgrind.log &
 sleep 1
 echo -n "s" | nc -w1 localhost $PORT1 > my_test.txt ; echo -n "N" | nc -w1 localhost $PORT2 >> my_test.txt
-if  pgrep valgrind > /dev/null; then
+if  pgrep -f valgrind > /dev/null; then
 	echo program exists
 	kill $!
 else
