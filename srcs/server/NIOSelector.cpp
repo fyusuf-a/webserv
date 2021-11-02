@@ -1,6 +1,7 @@
 #include "../server/NIOSelector.hpp"
 #include <poll.h>
 #include <stdexcept>
+#include "../utils/Log.hpp"
 
 NIOSelector::Callback::Callback() {
 }
@@ -35,17 +36,13 @@ NIOSelector::~NIOSelector() {
 
 NIOSelector* NIOSelector::getInstance(int timeout) {
 	if (_singleton == NULL)
-	{
 		_singleton = new NIOSelector(timeout);
-	}
 	return _singleton;
 }
 
 void	NIOSelector::add(int fd, Callback& callback, short operations) {
-#ifdef DEBUG
-	std::cerr << "Adding fd no " << fd << " to NIOSelector" << std::endl;
-	std::cerr << "\twith operations " << (operations & READ ? "READ/" : "") << (operations & WRITE ? "WRITE/" : "") << std::endl;
-#endif
+	Log<>(DEBUG) << "Adding fd no " << fd << " to NIOSelector with operations "
+		<< (operations & READ ? "READ/" : "") << (operations & WRITE ? "WRITE/" : "");
 	_actions[fd] = (t_action){_polled_fds.size(), &callback};
 	_polled_fds.push_back((struct pollfd)
 						{ fd
@@ -57,14 +54,14 @@ void	NIOSelector::updateOps(int fd, short operations) {
 	if (_actions.find(fd) != _actions.end())
 		_polled_fds[_actions[fd].index].events = operations;
 	else
-		std::cerr << "fd " << fd << " does not exist in map. (updateOps)" << std::endl;
+		Log<>(WARNING) << "fd " << fd << " does not exist in map. (updateOps)";
 }
 
 void	NIOSelector::removeOps(int fd, short operations) {
 	if (_actions.find(fd) != _actions.end())
 		_polled_fds[_actions[fd].index].events &= ~operations;
 	else
-		std::cerr << "fd " << fd << " does not exist in map. (removeOps)" << std::endl;
+		Log<>(WARNING) << "fd " << fd << " does not exist in map. (removeOps)";
 }
 
 void	NIOSelector::remove(int fd) {
@@ -79,7 +76,7 @@ void	NIOSelector::remove(int fd) {
 		}
 	}
 	else
-		std::cerr << "fd " << fd << " does not exist in map. (remove)" << std::endl;
+		Log<>(WARNING) << "fd " << fd << " does not exist in map. (remove)";
 	_actions.erase(fd);
 }
 
@@ -97,12 +94,13 @@ void	NIOSelector::poll() {
 		fd = _polled_fds[i].fd;
 		revents = _polled_fds[i].revents;
 		action = _actions[fd];
-		if (revents & (POLLERR | POLLNVAL)) { std::cerr << "An error has occured" << std::endl;
+		if (revents & (POLLERR | POLLNVAL)) {
+			Log<>(ERROR) << "An error has occured in the connection with peer";
 			action.callback->on_close(fd);
 			continue;
 		}
 		if (revents & POLLHUP) {
-			std::cerr << "Peer closed the connection" << std::endl;
+			Log<>(INFO) << "Peer closed the connection";
 			action.callback->on_close(fd);
 			continue;
 		}

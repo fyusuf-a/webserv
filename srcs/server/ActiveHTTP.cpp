@@ -1,6 +1,7 @@
 #include "ActiveHTTP.hpp"
 #include "ActiveServer.hpp"
 #include "NIOSelector.hpp"
+#include "../utils/Log.hpp"
 #include <ctime>
 
 ActiveHTTP::ActiveHTTP() : ActiveServer() {
@@ -57,7 +58,7 @@ bool	ActiveHTTP::always(int fd) {
 	time(&now);
 	if (difftime(now, _last_time_active) > TIMEOUT)
 	{
-		std::cerr << "Connection timed out" << std::endl;
+		Log<>(INFO) << "Connection timed out";
 		on_close(fd);
 		return (false);
 	}

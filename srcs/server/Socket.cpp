@@ -2,6 +2,7 @@
 #include "../ipaddress/INetAddress.hpp"
 #include <cstring>
 #include <stdexcept>
+#include "../utils/Log.hpp"
 
 Socket::Socket() {
 }
@@ -27,18 +28,14 @@ void Socket::init(const IPAddress& ip, uint16_t port, bool nonblocking) {
 		throw std::runtime_error(oss.str());
 	}
 	int yes = 1;
-#if DEBUG
-	std::cerr << "Initialized socket (address " << _address << ')' << std::endl;
-#endif
+	Log<>(DEBUG) << "Initialized socket (address " << _address << ')';
 	if (setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes) < 0)
 	{
 		std::ostringstream oss;
 		oss << "setsockopt: unexpected error while setting socket options (address: " << _address << ')';
 		throw std::runtime_error(oss.str());
 	}
-#if DEBUG
-	std::cerr << "Options set (address " << _address << ')' << std::endl;
-#endif
+	Log<>(DEBUG) << "Options set (address " << _address << ')';
 	if (nonblocking)
 	{
 		if (fcntl(_fd, F_SETFL, O_NONBLOCK) < 0)
@@ -47,9 +44,7 @@ void Socket::init(const IPAddress& ip, uint16_t port, bool nonblocking) {
 			oss << "cannot set socket to be not blocking (address: " << _address << ')';
 			throw std::runtime_error(oss.str());
 		}
-		#if DEBUG
-			std::cerr << "Socket set as nonblocking (address " << _address << ')' << std::endl;
-		#endif
+		Log<>(DEBUG) << "Socket set as nonblocking (address " << _address << ')';
 	}
 	struct sockaddr_in my_struct;
 	_address.to_sockaddr_in(&my_struct);
@@ -59,9 +54,7 @@ void Socket::init(const IPAddress& ip, uint16_t port, bool nonblocking) {
 		oss << "cannot bind socket (address: " << _address << ')';
 		throw std::runtime_error(oss.str());
 	}
-#if DEBUG
-	std::cerr << "Socket bound (address " << _address << ')' << std::endl;
-#endif
+	Log<>(DEBUG) << "Socket bound (address " << _address << ')';
 }
 
 Socket::Socket(const IPAddress& ip, uint16_t port, bool nonblocking) { //:	_port(port)  {
@@ -83,9 +76,7 @@ void	Socket::listen() {
 		oss << "Cannot listen on socket (address: " << _address << ')';
 		throw std::runtime_error(oss.str());
 	}
-#ifdef DEBUG
-	std::cerr << "Listening on " << _address << std::endl;
-#endif
+	Log<>(INFO) << "Listening on " << _address;
 }
 
 Socket*	 Socket::accept() const //throw (std::runtime_error)
@@ -100,9 +91,7 @@ Socket*	 Socket::accept() const //throw (std::runtime_error)
 	Socket *newSocket = new Socket();
 	newSocket->_fd = newfd;
 	newSocket->_address.setPort((*reinterpret_cast<struct sockaddr_in*>(&address)).sin_port);
-#ifdef DEBUG 
-	std::cerr << "New active socket on: " << newSocket->_address << std::endl;
-#endif
+	Log<>(DEBUG) << "New active socket on: " << newSocket->_address;
 	return (newSocket);
 }
 

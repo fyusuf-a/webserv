@@ -9,6 +9,7 @@
 #include "../parsingConf/serverBlock.hpp"
 #include <cctype>
 #include <arpa/inet.h>
+#include "../utils/Log.hpp"
 
 template<typename T>
 PassiveHTTP<T>::PassiveHTTP() : PassiveServer<T>() {
@@ -44,10 +45,9 @@ template<typename T> PassiveHTTP<T>::~PassiveHTTP() {
 
 template<typename T> bool PassiveHTTP<T>::on_readable(int fd) {
 	(void)fd;
-#ifdef DEBUG
-	std::cerr << "New connection on passive HTTP server" << std::endl;
-#endif
-	new T(this->_socket->accept());
+	Log<>(INFO) << "New connection on " << this->_socket->getAddress();
+	T* activeServer = new T(this->_socket->accept());
+	Log<>(INFO) << "Transfering connection to " << activeServer->getSocket()->getAddress();
 	return (true);
 }
 

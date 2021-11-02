@@ -1,3 +1,5 @@
+#ifndef SINGLETON_HPP
+#define SINGLETON_HPP
 #include <iostream>
 
 template <typename T>
@@ -9,13 +11,12 @@ protected:
 public:
 	static T* getInstance() {
 		if (_singleton == NULL)
-		{
-			std::cerr << "singleton was null" << std::endl;
 			_singleton = new T();
-		}
 		return _singleton;
 	}
 };
 
 template <typename T>
 T* Singleton<T>::_singleton = NULL;
+
+#endif

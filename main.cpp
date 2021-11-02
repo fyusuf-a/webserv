@@ -1,12 +1,13 @@
 #include "srcs/ipaddress/IPAddress.hpp"
 #include "srcs/webserv/webserv.hpp"
 #include "srcs/server/NIOSelector.hpp"
+#include "srcs/utils/Log.hpp"
 #define DEFAULT_PATH "conf/is_good.conf"
 #define SERVER_PORT 500
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
 
-
+log_level_t g_log_level = DEBUG;
 
 int main(int ac, char **av)
 {

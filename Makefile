@@ -15,8 +15,7 @@ SRC = 	main.cpp\
 	srcs/http/Request/Request.cpp\
 	srcs/http/Request/requestParsing.cpp\
 	srcs/http/Request/checkIncompleteRequest.cpp\
-	srcs/http/Response/Response.cpp\
-	srcs/logger/Logger.cpp
+	srcs/http/Response/Response.cpp
 
 NAME = Webserv
 HEADERS = -Iincludes 
@@ -31,7 +30,7 @@ $(NAME) : $(O_FILES)
 	@echo "\033[33;32mCompilation...\t""\033[33;31mDONE 🙃\033[0m"
 
 debug: CFLAGS += -g3
-debug: CFLAGS += -D DEBUG
+debug: CFLAGS += -D DEBUG_LVL
 debug: all
 
 clean :
