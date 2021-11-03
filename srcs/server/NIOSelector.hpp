@@ -36,16 +36,16 @@ class NIOSelector : public Singleton<NIOSelector> {
 		std::map<int, t_action>		_actions;
 		std::vector<struct pollfd>	_polled_fds;
 		int							_timeout;
-        NIOSelector(int timeout);
 		NIOSelector(const NIOSelector&);
 		NIOSelector& operator=(const NIOSelector&);
 
     public:
 		static Log& LOG;
 
+		NIOSelector();
         virtual ~NIOSelector();
 
-		static NIOSelector* getInstance(int timeout = 1000);
+		void	setTimeout(int timeout);
 		void	add(int fd, Callback&, short operations=READ | WRITE);
 		void	updateOps(int fd, short operations=READ | WRITE);
 		void	removeOps(int fd, short operations=READ | WRITE);

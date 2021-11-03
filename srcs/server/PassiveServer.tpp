@@ -9,7 +9,7 @@ Log& PassiveServer<T>::LOG = Log::getInstance();
 template<typename T>
 PassiveServer<T>::PassiveServer() : Callback() {
 	_socket = new Socket();
-	NIOSelector::getInstance()->add(_socket->getFd(), *this, READ);
+	NIOSelector::getInstance().add(_socket->getFd(), *this, READ);
 }
 
 template<typename T>
@@ -30,7 +30,7 @@ template<typename T>
 void PassiveServer<T>::init(const INetAddress& address, bool nonblocking) {
 	_socket = new Socket(address, nonblocking);
 	_socket->listen();
-	NIOSelector::getInstance()->add(_socket->getFd(), *this, READ);
+	NIOSelector::getInstance().add(_socket->getFd(), *this, READ);
 }
 
 template<typename T>
@@ -45,7 +45,7 @@ PassiveServer<T>::PassiveServer(uint32_t ip, uint16_t port, bool nonblocking) {
 }
 
 template<typename T> PassiveServer<T>::~PassiveServer() {
-	NIOSelector::getInstance()->remove(_socket->getFd());
+	NIOSelector::getInstance().remove(_socket->getFd());
 	delete _socket;
 }
 

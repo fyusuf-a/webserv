@@ -4,6 +4,7 @@ SRC = 	main.cpp\
 	srcs/parsingConf/serverConfig.cpp\
 	srcs/parsingConf/serverLocation.cpp\
 	srcs/utils/utils.cpp\
+	srcs/utils/Log.cpp\
 	srcs/webserv/webserv.cpp\
 	srcs/server/Socket.cpp\
 	srcs/server/ActiveServer.cpp\

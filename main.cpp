@@ -7,11 +7,12 @@
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
 
-Log& LOG = Log::getInstance(INFO);
+Log& LOG = Log::getInstance();
 
 int main(int ac, char **av)
 {
 	std::string path = ac == 2 ? av[1] : DEFAULT_PATH;
+	LOG.setLevel(INFO);
 
 	try
     {
@@ -20,19 +21,16 @@ int main(int ac, char **av)
     }
     catch(MyException& caught)
     {
-        std::cout << "[ERROR] " << caught.what() << std::endl;
+        LOG.error() << caught.what() << std::endl;
         exit(EXIT_FAILURE) ;
     }
 	catch(std::invalid_argument& caught) 
     {
-		std::cout << "[ERROR] " << caught.what() << std::endl;
+		LOG.error() << caught.what() << std::endl;
 		exit(EXIT_FAILURE);
 	}
 
-	while (1) {
-	  	NIOSelector::getInstance()->poll();
-	}
-
-	Log::destroyInstance();
+	while (1)
+	  	NIOSelector::getInstance().poll();
  	return (0);
 }

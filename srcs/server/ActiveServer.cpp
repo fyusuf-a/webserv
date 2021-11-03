@@ -6,7 +6,7 @@ Log& ActiveServer::LOG = Log::getInstance();
 
 ActiveServer::ActiveServer() : Callback() {
 	_socket = new Socket();
-	NIOSelector::getInstance()->add(_socket->getFd(), *this, READ | WRITE);
+	NIOSelector::getInstance().add(_socket->getFd(), *this, READ | WRITE);
 }
 
 ActiveServer::ActiveServer(const ActiveServer& src) : Callback(src) {
@@ -15,7 +15,7 @@ ActiveServer::ActiveServer(const ActiveServer& src) : Callback(src) {
 
 ActiveServer::ActiveServer(Socket* socket) {
 	_socket = socket;
-	NIOSelector::getInstance()->add(_socket->getFd(), *this, READ | WRITE);
+	NIOSelector::getInstance().add(_socket->getFd(), *this, READ | WRITE);
 }
 
 ActiveServer& ActiveServer::operator=(const ActiveServer& src) {
@@ -30,7 +30,7 @@ ActiveServer& ActiveServer::operator=(const ActiveServer& src) {
 
 ActiveServer::~ActiveServer() {
 	LOG.info() << "Connection closed with " << _socket->getAddress() << std::endl;
-	NIOSelector::getInstance()->remove(_socket->getFd());
+	NIOSelector::getInstance().remove(_socket->getFd());
 	delete _socket;
 }
 

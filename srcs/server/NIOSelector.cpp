@@ -17,7 +17,7 @@ NIOSelector::Callback& NIOSelector::Callback::operator=(const Callback&) {
 
 NIOSelector::Callback::~Callback() {}
 
-NIOSelector::NIOSelector(int timeout) : _timeout(timeout) {
+NIOSelector::NIOSelector() : _timeout(0) {
 }
 
 NIOSelector::NIOSelector(const NIOSelector& src) {
@@ -35,10 +35,8 @@ NIOSelector& NIOSelector::operator=(const NIOSelector& src) {
 NIOSelector::~NIOSelector() {
 }
 
-NIOSelector* NIOSelector::getInstance(int timeout) {
-	if (_singleton == NULL)
-		_singleton = new NIOSelector(timeout);
-	return _singleton;
+void NIOSelector::setTimeout(int timeout) {
+	_timeout = timeout;
 }
 
 void	NIOSelector::add(int fd, Callback& callback, short operations) {
