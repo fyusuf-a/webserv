@@ -2,6 +2,8 @@
 #include "NIOSelector.hpp"
 #include "../utils/Log.hpp"
 
+Log& ActiveServer::LOG = Log::getInstance();
+
 ActiveServer::ActiveServer() : Callback() {
 	_socket = new Socket();
 	NIOSelector::getInstance()->add(_socket->getFd(), *this, READ | WRITE);
@@ -27,7 +29,7 @@ ActiveServer& ActiveServer::operator=(const ActiveServer& src) {
 }
 
 ActiveServer::~ActiveServer() {
-	Log<>(INFO) << "Connection closed with " << _socket->getAddress();
+	LOG.info() << "Connection closed with " << _socket->getAddress() << std::endl;
 	NIOSelector::getInstance()->remove(_socket->getFd());
 	delete _socket;
 }
@@ -49,7 +51,7 @@ bool ActiveServer::on_readable(int fd) {
 			return (false);
 		}
 		catch (std::exception& e) {
-			Log<>(ERROR) << "An error occured while using recv";
+			LOG.error() << "An error occured while using recv" << std::endl;
 			on_close(fd);
 			return (false);
 		}
@@ -66,7 +68,7 @@ bool ActiveServer::on_writable(int fd) {
 		_write_buffer = _write_buffer.substr(sent);
 	}
 	catch (std::exception& e) {
-		Log<>(ERROR) << "An error occured while using send";
+		LOG.error() << "An error occured while using send" << std::endl;
 		on_close(fd);
 		return (false);
 	}

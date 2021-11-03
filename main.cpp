@@ -7,7 +7,7 @@
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
 
-log_level_t g_log_level = DEBUG;
+Log& LOG = Log::getInstance(INFO);
 
 int main(int ac, char **av)
 {
@@ -33,5 +33,6 @@ int main(int ac, char **av)
 	  	NIOSelector::getInstance()->poll();
 	}
 
+	Log::destroyInstance();
  	return (0);
 }

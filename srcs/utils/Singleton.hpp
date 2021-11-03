@@ -9,10 +9,13 @@ protected:
 	static T* _singleton;
 
 public:
-	static T* getInstance() {
+	static T& getInstance() {
 		if (_singleton == NULL)
 			_singleton = new T();
-		return _singleton;
+		return *_singleton;
+	}
+	static void destroyInstance() {
+		delete _singleton;
 	}
 };
 

@@ -2,7 +2,9 @@
 #define PASSIVESERVER_TPP
 
 #include "PassiveServer.hpp"
-#include "../utils/Log.hpp"
+
+template<typename T>
+Log& PassiveServer<T>::LOG = Log::getInstance();
 
 template<typename T>
 PassiveServer<T>::PassiveServer() : Callback() {
@@ -50,7 +52,7 @@ template<typename T> PassiveServer<T>::~PassiveServer() {
 template<typename T>
 bool			PassiveServer<T>::on_readable(int fd) {
 	(void)fd;
-	Log<>(DEBUG) << "New connection on passive server";
+	Log::getInstance().debug() << "New connection on passive server" << std::endl;
 	new T(_socket->accept());
 	return (true);
 }

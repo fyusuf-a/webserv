@@ -3,6 +3,7 @@
 
 #include "../ipaddress/INetAddress.hpp"
 #include "../ipaddress/IPAddress.hpp"
+#include "../utils/Log.hpp"
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
@@ -20,6 +21,8 @@
 class Socket { //: public std::streambuf {
 
 public:
+	static Log& LOG;
+
 	class ConnectionClosed : public std::exception {
 		const char* what() const throw() {
 			return "Connection Closed";

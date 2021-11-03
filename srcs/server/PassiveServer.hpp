@@ -19,11 +19,14 @@
 #include <cstring>
 #include <fcntl.h>
 #include <stdexcept>
+#include "../utils/Log.hpp"
 
 template<typename T>
 class PassiveServer : public NIOSelector::Callback {
 
 public:
+	static Log& LOG;
+
 	PassiveServer();
 	PassiveServer(const PassiveServer&);
 	PassiveServer&	operator=(const PassiveServer&);

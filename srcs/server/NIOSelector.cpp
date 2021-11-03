@@ -1,7 +1,8 @@
 #include "../server/NIOSelector.hpp"
 #include <poll.h>
 #include <stdexcept>
-#include "../utils/Log.hpp"
+
+Log &NIOSelector::LOG = Log::getInstance();
 
 NIOSelector::Callback::Callback() {
 }
@@ -41,8 +42,8 @@ NIOSelector* NIOSelector::getInstance(int timeout) {
 }
 
 void	NIOSelector::add(int fd, Callback& callback, short operations) {
-	Log<>(DEBUG) << "Adding fd no " << fd << " to NIOSelector with operations "
-		<< (operations & READ ? "READ/" : "") << (operations & WRITE ? "WRITE/" : "");
+	LOG.debug() << "Adding fd no " << fd << " to NIOSelector with operations "
+		<< (operations & READ ? "READ/" : "") << (operations & WRITE ? "WRITE/" : "")  << std::endl;
 	_actions[fd] = (t_action){_polled_fds.size(), &callback};
 	_polled_fds.push_back((struct pollfd)
 						{ fd
@@ -54,14 +55,14 @@ void	NIOSelector::updateOps(int fd, short operations) {
 	if (_actions.find(fd) != _actions.end())
 		_polled_fds[_actions[fd].index].events = operations;
 	else
-		Log<>(WARNING) << "fd " << fd << " does not exist in map. (updateOps)";
+		LOG.warning() << "fd " << fd << " does not exist in map. (updateOps)" << std::endl;
 }
 
 void	NIOSelector::removeOps(int fd, short operations) {
 	if (_actions.find(fd) != _actions.end())
 		_polled_fds[_actions[fd].index].events &= ~operations;
 	else
-		Log<>(WARNING) << "fd " << fd << " does not exist in map. (removeOps)";
+		LOG.warning() << "fd " << fd << " does not exist in map. (removeOps)" << std::endl;
 }
 
 void	NIOSelector::remove(int fd) {
@@ -76,7 +77,7 @@ void	NIOSelector::remove(int fd) {
 		}
 	}
 	else
-		Log<>(WARNING) << "fd " << fd << " does not exist in map. (remove)";
+		LOG.warning() << "fd " << fd << " does not exist in map. (remove)" << std::endl;
 	_actions.erase(fd);
 }
 
@@ -95,12 +96,12 @@ void	NIOSelector::poll() {
 		revents = _polled_fds[i].revents;
 		action = _actions[fd];
 		if (revents & (POLLERR | POLLNVAL)) {
-			Log<>(ERROR) << "An error has occured in the connection with peer";
+			LOG.error() << "An error has occured in the connection with peer" << std::endl;
 			action.callback->on_close(fd);
 			continue;
 		}
 		if (revents & POLLHUP) {
-			Log<>(INFO) << "Peer closed the connection";
+			LOG.info() << "Peer closed the connection" << std::endl << std::endl;
 			action.callback->on_close(fd);
 			continue;
 		}

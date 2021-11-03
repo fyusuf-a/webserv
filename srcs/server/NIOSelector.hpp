@@ -8,6 +8,7 @@
 #include <vector>
 #include <poll.h>
 #include "../utils/Singleton.hpp"
+#include "../utils/Log.hpp"
 
 #define READ	POLLIN
 #define WRITE	POLLOUT
@@ -40,6 +41,8 @@ class NIOSelector : public Singleton<NIOSelector> {
 		NIOSelector& operator=(const NIOSelector&);
 
     public:
+		static Log& LOG;
+
         virtual ~NIOSelector();
 
 		static NIOSelector* getInstance(int timeout = 1000);

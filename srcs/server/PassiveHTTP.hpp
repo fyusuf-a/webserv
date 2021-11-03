@@ -26,6 +26,8 @@ template<typename T>
 class PassiveHTTP : public PassiveServer<T> {
 
 public:
+	static Log& LOG;
+
 	PassiveHTTP();
 	PassiveHTTP(const PassiveHTTP&);
 	PassiveHTTP&	operator=(const PassiveHTTP&);

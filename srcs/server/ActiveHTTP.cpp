@@ -4,6 +4,8 @@
 #include "../utils/Log.hpp"
 #include <ctime>
 
+Log& ActiveHTTP::LOG = Log::getInstance();
+
 ActiveHTTP::ActiveHTTP() : ActiveServer() {
 	time(&_last_time_active);
 }
@@ -58,7 +60,7 @@ bool	ActiveHTTP::always(int fd) {
 	time(&now);
 	if (difftime(now, _last_time_active) > TIMEOUT)
 	{
-		Log<>(INFO) << "Connection timed out";
+		LOG.info() << "Connection timed out" << std::endl;
 		on_close(fd);
 		return (false);
 	}

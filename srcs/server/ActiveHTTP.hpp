@@ -11,6 +11,8 @@
 class ActiveHTTP : public ActiveServer {
 
 public:
+	static Log& LOG;
+
 	ActiveHTTP();
 	ActiveHTTP(const ActiveHTTP&);
 	ActiveHTTP(Socket*);

@@ -12,6 +12,9 @@
 #include "../utils/Log.hpp"
 
 template<typename T>
+Log& PassiveHTTP<T>::LOG = Log::getInstance();
+
+template<typename T>
 PassiveHTTP<T>::PassiveHTTP() : PassiveServer<T>() {
 	_server_block = ServerBlock();
 }
@@ -45,9 +48,9 @@ template<typename T> PassiveHTTP<T>::~PassiveHTTP() {
 
 template<typename T> bool PassiveHTTP<T>::on_readable(int fd) {
 	(void)fd;
-	Log<>(INFO) << "New connection on " << this->_socket->getAddress();
+	LOG.info() << "New connection on " << this->_socket->getAddress() << std::endl;
 	T* activeServer = new T(this->_socket->accept());
-	Log<>(INFO) << "Transfering connection to " << activeServer->getSocket()->getAddress();
+	LOG.info() << "Transfering connection to " << activeServer->getSocket()->getAddress() << std::endl;
 	return (true);
 }
 

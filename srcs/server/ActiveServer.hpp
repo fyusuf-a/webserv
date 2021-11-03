@@ -9,6 +9,8 @@
 class ActiveServer : public NIOSelector::Callback {
 
 public:
+	static Log& LOG;
+
 	ActiveServer();
 	ActiveServer(const ActiveServer&);
 	ActiveServer(Socket*);
