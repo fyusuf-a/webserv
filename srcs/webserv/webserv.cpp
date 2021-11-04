@@ -21,7 +21,6 @@ WebServ &WebServ::operator=(const WebServ &other){(void)other;return *this;}
 
 void WebServ::init(const std::string& path)
 {
-
     _conf.parsing(path, this->_servers);
 
 	for (std::vector<ServerBlock>::iterator it = _servers.begin(); it != _servers.end(); it++)

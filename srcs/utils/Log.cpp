@@ -5,19 +5,21 @@ void Log::setLevel(log_level_t level) {
 }
 
 std::ostream& Log::log(log_level_t level) {
-	std::ostream& os = level < _level ? _nullStream : std::cout;
 	if (level < _level)
 		return _nullStream;
 	time_t rawtime;
 	struct tm* t;
 	time(&rawtime);
 	t = localtime(&rawtime);
-	os << "[" << 1900 + t->tm_year << "/";
-	os << std::setfill('0') << std::setw(2) << _months_to_str[t->tm_mon];
-	os << "/" << t->tm_mday
-		<< ":" << t->tm_hour << ":" << t->tm_min << ":" << t->tm_sec
+	std::cout << "[" << 1900 + t->tm_year << "/";
+	std::cout << _months_to_str[t->tm_mon];
+	std::cout
+		<< "/" << std::setfill('0') << std::setw(2) << t->tm_mday
+		<< ":" << std::setfill('0') << std::setw(2) << t->tm_hour
+		<< ":" << std::setfill('0') << std::setw(2) << t->tm_min
+		<< ":" << std::setfill('0') << std::setw(2) << t->tm_sec
 		<< " " <<  std::setfill(' ') << std::setw(7) << _levels_to_str[level] << "] ";
-	return os;
+	return std::cout;
 }
 
 std::ostream& Log::debug() {
@@ -36,7 +38,7 @@ std::ostream& Log::error() {
 	return log(ERROR);
 }
 
-Log::Log() : _level(ERROR) {
+Log::Log() : _level(ERROR), _nullStream(&_nullBuffer) {
 	_levels_to_str[DEBUG] = "debug";
 	_levels_to_str[INFO] = "info";
 	_levels_to_str[WARNING] = "warning";

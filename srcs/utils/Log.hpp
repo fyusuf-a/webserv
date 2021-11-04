@@ -7,18 +7,10 @@
 #include <map>
 #include "../utils/Singleton.hpp"
 
-class NullStream : public std::ostream, Singleton<NullStream> {
-	public:
-	NullStream() : std::ostream() {
-	}
-	virtual ~NullStream() {
-	}
+class NullBuffer : public std::streambuf {
+public:
+	int overflow(int c) { return c; }
 };
-
-template<typename T>
-NullStream& operator<<(NullStream& os, const T&) {
-	return os;
-}
 
 typedef enum {
 	DEBUG,
@@ -31,7 +23,8 @@ class Log : public Singleton<Log> {
 
 private:
 	log_level_t _level;
-	NullStream _nullStream;
+	NullBuffer _nullBuffer;
+	std::ostream _nullStream;
 	std::map<log_level_t, std::string> _levels_to_str;
 	std::map<char, std::string> _months_to_str;
 

@@ -10,7 +10,14 @@ g++ -g3 -D DEBUG -I ../includes -Wall -Werror -Wextra --std=c++98 ./test_parsing
 
 
 ./a.out $FD1 >> $FD2
-diff $FD1 $FD2
+# echo $?
+if [ "$?" != "9" ]; then
+echo bonjour
+	rm -f $FD1
+	rm -f $FD2
+	rm a.out
+	exit 1
+fi	
 if [ "$(diff $FD1 $FD2 | wc -c)" != "0" ]; then
 	rm -f $FD1
 	rm -f $FD2

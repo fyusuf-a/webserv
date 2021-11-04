@@ -434,6 +434,8 @@ std::vector<std::string> ParsingConf::parsing_line(std::string line, std::vector
 
     for (int i = 0; line[i]; i++)
     {
+        if (line[0] == '#')
+            return (content);
         if (line[i] == '{')
         {
             tmp = line.substr(0, i);
@@ -443,6 +445,7 @@ std::vector<std::string> ParsingConf::parsing_line(std::string line, std::vector
             content.push_back("{");
             if (!line[i + 1])
             {
+
                 return content;
             }
             line = &line[i + 1];
@@ -469,7 +472,7 @@ std::vector<std::string> ParsingConf::parsing_line(std::string line, std::vector
             line = &line[i + 1];
             i = -1;
         }
-        if (!line[i + 1] && (!Utils::is_spaces(line) && tmp.empty()))
+        if (!line[i + 1] && !Utils::is_spaces(line))
         {
             content.push_back(line);
             return (content);
@@ -503,7 +506,6 @@ void ParsingConf::parsing(std::string path, ServerBlocks &servers)
             else
                 it++;
         }
-
         this->setup_servers(content, servers);
     }
 }
