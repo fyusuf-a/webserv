@@ -1,4 +1,5 @@
-#include "../srcs/webserv/webserv.hpp"
+#include "../srcs/parsingConf/parsingConf.hpp"
+#include "../srcs/parsingConf/serverBlock.hpp"
 
 #define DEFAULT_PATH "../conf/is_good.conf"
 #define ERROR1 "./tests_conf/is_not1.conf"
@@ -17,12 +18,24 @@
 #define SOCKET_ERROR -1
 
 
+void init(const std::string& path, ServerBlocks& servers) {
+	ParsingConf conf;
+    conf.parsing(path, servers);
+}
+
+std::ostream& operator<<(std::ostream& os, const ServerBlocks& servers) {
+	for(std::vector<ServerBlock>::const_iterator i = servers.begin()
+			;i != servers.end(); i++) {
+		os << *i;
+	}
+    return os;
+}
 
 int main(int ac, char **av)
 {
 
-    WebServ webserv1;
-    WebServ webserv2;
+	ServerBlocks server_blocks1;
+	ServerBlocks server_blocks2;
     int     value = 0;
 
     try 
@@ -35,13 +48,13 @@ int main(int ac, char **av)
             if (!fd.is_open() && !fd.good())
                 throw MyException("[ERROR] File: Can't open File !");
 
-            webserv1.init(DEFAULT_PATH);
+            init(DEFAULT_PATH, server_blocks1);
 
-            fd << webserv1;
+            fd << server_blocks1;
 
-            webserv2.init(av[1]);
+            init(av[1], server_blocks2);
 
-			std::cout << webserv2;
+			std::cout << server_blocks2;
         }
     }
 
@@ -54,7 +67,7 @@ int main(int ac, char **av)
 
     try
     {
-        webserv1.init(ERROR1);
+        init(ERROR1, server_blocks1);
     }
     catch(MyException& caught)
     {
@@ -62,7 +75,7 @@ int main(int ac, char **av)
     }
     try
     {
-        webserv1.init(ERROR2);
+        init(ERROR2, server_blocks1);
     }
     catch(MyException& caught)
     {
@@ -70,7 +83,7 @@ int main(int ac, char **av)
     }
     try
     {
-        webserv1.init(ERROR3);
+        init(ERROR3, server_blocks1);
     }
     catch(MyException& caught)
     {
@@ -78,7 +91,7 @@ int main(int ac, char **av)
     }
     try
     {
-        webserv1.init(ERROR4);
+        init(ERROR4, server_blocks1);
     }
     catch(MyException& caught)
     {
@@ -86,7 +99,7 @@ int main(int ac, char **av)
     }
     try
     {
-        webserv1.init(ERROR5);
+        init(ERROR5, server_blocks1);
     }
     catch(MyException& caught)
     {
@@ -94,7 +107,7 @@ int main(int ac, char **av)
     }
     try
     {
-        webserv1.init(ERROR6);
+        init(ERROR6, server_blocks1);
     }
     catch(MyException& caught)
     {
@@ -102,7 +115,7 @@ int main(int ac, char **av)
     }
     try
     {
-        webserv1.init(ERROR7);
+        init(ERROR7, server_blocks1);
     }
     catch(MyException& caught)
     {
@@ -110,7 +123,7 @@ int main(int ac, char **av)
     }
     try
     {
-        webserv1.init(ERROR8);
+        init(ERROR8, server_blocks1);
     }
     catch(MyException& caught)
     {
@@ -118,7 +131,7 @@ int main(int ac, char **av)
     }
     try
     {
-        webserv1.init(ERROR9);
+        init(ERROR9, server_blocks1);
     }
     catch(MyException& caught)
     {

@@ -12,7 +12,12 @@ Log& LOG = Log::getInstance();
 int main(int ac, char **av)
 {
 	std::string path = ac == 2 ? av[1] : DEFAULT_PATH;
+
+#ifdef DEBUG_FLAG
+	LOG.setLevel(DEBUG);
+#else
 	LOG.setLevel(INFO);
+#endif
 
 	try
     {

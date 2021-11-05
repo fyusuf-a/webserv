@@ -9,18 +9,6 @@ WebServ::WebServ() : _conf(){};
 WebServ::WebServ(const WebServ &other){(void)other;};
 
 WebServ::WebServ(const std::string&path){
-	init(path);
-};
-
-WebServ::~WebServ(){};
-
-WebServ &WebServ::operator=(const WebServ &other){(void)other;return *this;}
-
-
-
-
-void WebServ::init(const std::string& path)
-{
     _conf.parsing(path, this->_servers);
 
 	for (std::vector<ServerBlock>::iterator it = _servers.begin(); it != _servers.end(); it++)
@@ -29,7 +17,11 @@ void WebServ::init(const std::string& path)
         INetAddress interface(conf.get_host(), conf.get_port());
 		new PassiveHTTP<ActiveHTTP>(interface, *it, true);
 	}
-}
+};
+
+WebServ::~WebServ(){};
+
+WebServ &WebServ::operator=(const WebServ &other){(void)other;return *this;}
 
 ServerBlocks const& WebServ::get_servers() const {
 	return _servers;

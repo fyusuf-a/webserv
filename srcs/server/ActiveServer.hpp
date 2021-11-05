@@ -25,7 +25,7 @@ protected:
 	virtual bool	on_readable(int fd);
 	virtual bool	on_writable(int fd);
 	virtual bool	on_close(int fd);
-	virtual bool	always(int fd) = 0;
+	virtual bool	always(int fd);
 };
 
 #endif

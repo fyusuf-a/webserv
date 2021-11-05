@@ -31,7 +31,7 @@ $(NAME) : $(O_FILES)
 	@echo "\033[33;32mCompilation...\t""\033[33;31mDONE 🙃\033[0m"
 
 debug: CFLAGS += -g3
-debug: CFLAGS += -D DEBUG_LVL
+debug: CFLAGS += -D DEBUG_FLAG
 debug: all
 
 clean :

@@ -75,8 +75,11 @@ bool ActiveServer::on_writable(int fd) {
 	return (true);
 }
 
-bool ActiveServer::on_close(int fd) {
-	(void)fd;
+bool ActiveServer::on_close(int) {
 	delete (this);
 	return (false);
+}
+
+bool ActiveServer::always(int) {
+	return (true);
 }
