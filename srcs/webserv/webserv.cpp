@@ -1,6 +1,7 @@
 #include "../webserv/webserv.hpp"
 #include "../server/PassiveHTTP.hpp"
 #include "../server/ActiveServer.hpp"
+#include "../server/ActiveHTTP.hpp"
 #include "../parsingConf/serverBlock.hpp"
 
 WebServ::WebServ() : _conf(){};
@@ -8,26 +9,19 @@ WebServ::WebServ() : _conf(){};
 WebServ::WebServ(const WebServ &other){(void)other;};
 
 WebServ::WebServ(const std::string&path){
-	init(path);
+    _conf.parsing(path, this->_servers);
+
 	for (std::vector<ServerBlock>::iterator it = _servers.begin(); it != _servers.end(); it++)
 	{
 	 	ServerConfig const& conf = it->get_server_conf();
         INetAddress interface(conf.get_host(), conf.get_port());
-	 	new PassiveHTTP<ActiveServer>(interface, *it, true);
+		new PassiveHTTP<ActiveHTTP>(interface, *it, true);
 	}
 };
 
 WebServ::~WebServ(){};
 
 WebServ &WebServ::operator=(const WebServ &other){(void)other;return *this;}
-
-
-
-
-void WebServ::init(const std::string& path)
-{
-    _conf.parsing(path, this->_servers);
-}
 
 ServerBlocks const& WebServ::get_servers() const {
 	return _servers;

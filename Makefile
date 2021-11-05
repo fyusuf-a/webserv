@@ -4,9 +4,11 @@ SRC = 	main.cpp\
 	srcs/parsingConf/serverConfig.cpp\
 	srcs/parsingConf/serverLocation.cpp\
 	srcs/utils/utils.cpp\
+	srcs/utils/Log.cpp\
 	srcs/webserv/webserv.cpp\
 	srcs/server/Socket.cpp\
 	srcs/server/ActiveServer.cpp\
+	srcs/server/ActiveHTTP.cpp\
 	srcs/server/NIOSelector.cpp\
 	srcs/ipaddress/IPAddress.cpp\
 	srcs/ipaddress/INetAddress.cpp\
@@ -29,7 +31,7 @@ $(NAME) : $(O_FILES)
 	@echo "\033[33;32mCompilation...\t""\033[33;31mDONE 🙃\033[0m"
 
 debug: CFLAGS += -g3
-debug: CFLAGS += -D DEBUG
+debug: CFLAGS += -D DEBUG_FLAG
 debug: all
 
 clean :

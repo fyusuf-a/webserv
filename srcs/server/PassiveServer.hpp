@@ -19,11 +19,14 @@
 #include <cstring>
 #include <fcntl.h>
 #include <stdexcept>
+#include "../utils/Log.hpp"
 
 template<typename T>
 class PassiveServer : public NIOSelector::Callback {
 
 public:
+	static Log& LOG;
+
 	PassiveServer();
 	PassiveServer(const PassiveServer&);
 	PassiveServer&	operator=(const PassiveServer&);
@@ -33,9 +36,10 @@ public:
 
 protected:
 	Socket			*_socket;
-	void			writable(int fd);
-	void			readable(int fd);
-	void			on_close(int fd);
+	bool			on_writable(int fd);
+	bool			on_readable(int fd);
+	bool			on_close(int fd);
+	bool			always(int fd);
 
 private:
 	void init(const INetAddress& address, bool nonblocking);

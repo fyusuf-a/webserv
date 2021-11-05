@@ -23,9 +23,11 @@ class Request
 		Request( Request const & src );
 		Request & operator=( Request const & rhs );
 
-		char								*parse(char *str);
-		std::string							extract_attribute(std::string req_copy, std::string terminating, char **ptr, std::size_t residual_offset);
-		void								manage_head(char **ptr);
+		// Returns the index to which the parsing led
+		size_t								parse_all(const char *str);
+		const char							*parse(const char *str);
+		std::string							extract_attribute(std::string req_copy, std::string terminating, const char **ptr, std::size_t residual_offset);
+		void								manage_head(const char **ptr);
 		void								checkIncompleteRequest(void) const;
 		std::string							get_method(void) const;
 		std::string							get_path(void) const;
@@ -37,5 +39,7 @@ class Request
 		bool								get_over(void) const;
 		void								set_over(bool over);
 };
+
+std::ostream& operator<<(std::ostream&, const Request&);
 
 #endif

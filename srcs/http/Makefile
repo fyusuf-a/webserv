@@ -1,15 +1,17 @@
 SRC = 	test.cpp\
-		middlewares/CheckSyntax.cpp\
-		Request/Request.cpp\
-		Request/requestParsing.cpp\
-		Request/checkIncompleteRequest.cpp\
-		Response/Response.cpp
+	middlewares/CheckSyntax.cpp\
+	Request/Request.cpp\
+	Request/requestParsing.cpp\
+	Request/checkIncompleteRequest.cpp\
+	Response/Response.cpp
 
 INC = 	includes
 
 NAME = test
 CC = g++
-CFLAGS = -Wall -Wextra -std=c++98 -fsanitize=address -g
+CFLAGS = -Wall -Wextra -std=c++98 -g
+
+O_FILES = $(SRC:.cpp=.o)
 
 
 $(NAME) : $(O_FILES)

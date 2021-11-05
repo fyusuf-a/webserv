@@ -6,7 +6,7 @@ std::string	ft_strtrim(std::string str) {
 	return str.substr(str.find_first_not_of(" \n\r\v\t\f"), str.find_first_not_of(" \n\r\v\t\f") - str.find_last_not_of(" \n\r\v\t\f"));
 }
 
-std::string	Request::extract_attribute(std::string req_copy, std::string terminating, char **ptr, std::size_t residual_offset) {
+std::string	Request::extract_attribute(std::string req_copy, std::string terminating, const char **ptr, std::size_t residual_offset) {
 	std::size_t	length;
 
 	length = req_copy.find(terminating);
@@ -21,7 +21,7 @@ std::string	Request::extract_attribute(std::string req_copy, std::string termina
 	return req_copy.substr(0, length);
 }
 
-void		Request::manage_head(char **ptr) {
+void		Request::manage_head(const char **ptr) {
 	if (_head == 4) {
 		if (((std::string)*ptr).find("\r\n") == 0) {
 			(*ptr) += 2;
@@ -34,7 +34,30 @@ void		Request::manage_head(char **ptr) {
 		++_head;
 }
 
-char		*Request::parse(char *ptr) {
+size_t		Request::parse_all(const char *ptr) {
+	bool		nouveau = true;
+	const char *new_ptr = ptr;
+	size_t		char_count = 0;
+
+	while (*ptr) {
+		/*if (nouveau)
+			return ;
+		else*/
+		if (!nouveau)
+			set_over(true);
+		set_over(true);
+		while (get_head() < 6 && get_over() == true)
+		{
+			new_ptr = parse(ptr);
+			char_count += new_ptr - ptr;
+			ptr = new_ptr;
+		}
+		nouveau = get_over();
+	}
+	return char_count;
+}
+
+const char		*Request::parse(const char *ptr) {
 
 	while ((_head == 1 || _head == 2) && *ptr == ' ')
 		ptr++;

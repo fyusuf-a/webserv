@@ -1,9 +1,12 @@
 #include "ActiveServer.hpp"
 #include "NIOSelector.hpp"
+#include "../utils/Log.hpp"
+
+Log& ActiveServer::LOG = Log::getInstance();
 
 ActiveServer::ActiveServer() : Callback() {
 	_socket = new Socket();
-	NIOSelector::getInstance()->add(_socket->getFd(), *this, READ | WRITE);
+	NIOSelector::getInstance().add(_socket->getFd(), *this, READ | WRITE);
 }
 
 ActiveServer::ActiveServer(const ActiveServer& src) : Callback(src) {
@@ -12,7 +15,7 @@ ActiveServer::ActiveServer(const ActiveServer& src) : Callback(src) {
 
 ActiveServer::ActiveServer(Socket* socket) {
 	_socket = socket;
-	NIOSelector::getInstance()->add(_socket->getFd(), *this, READ | WRITE);
+	NIOSelector::getInstance().add(_socket->getFd(), *this, READ | WRITE);
 }
 
 ActiveServer& ActiveServer::operator=(const ActiveServer& src) {
@@ -26,10 +29,8 @@ ActiveServer& ActiveServer::operator=(const ActiveServer& src) {
 }
 
 ActiveServer::~ActiveServer() {
-#ifdef DEBUG
-	std::cerr << "Connection closed with " << _socket->getAddress() << std::endl;
-#endif
-	NIOSelector::getInstance()->remove(_socket->getFd());
+	LOG.info() << "Connection closed with " << _socket->getAddress() << std::endl;
+	NIOSelector::getInstance().remove(_socket->getFd());
 	delete _socket;
 }
 
@@ -37,7 +38,7 @@ Socket *ActiveServer::getSocket() {
 	return _socket;
 }
 
-void ActiveServer::readable(int fd) {
+bool ActiveServer::on_readable(int fd) {
 	(void)fd;
 	ssize_t max_read = BUFFER_LENGTH - _read_buffer.length();
 	if (max_read > 0)
@@ -46,32 +47,39 @@ void ActiveServer::readable(int fd) {
 			_read_buffer += _socket->recv(max_read);
 		}
 		catch (Socket::ConnectionClosed& e) {
-			throw e;
 			on_close(fd);
+			return (false);
 		}
 		catch (std::exception& e) {
-			throw e;
-			std::cerr << "An error occured while using recv" << std::endl;
+			LOG.error() << "An error occured while using recv" << std::endl;
 			on_close(fd);
+			return (false);
 		}
 	}
+	return (true);
 }
 
-void ActiveServer::writable(int fd) {
+bool ActiveServer::on_writable(int fd) {
 	(void)fd;
 	if (_write_buffer.empty())
-		return ;
+		return (true);
 	try {
 		ssize_t sent = _socket->send(_write_buffer);
 		_write_buffer = _write_buffer.substr(sent);
 	}
 	catch (std::exception& e) {
-		std::cerr << "An error occured while using send" << std::endl;
+		LOG.error() << "An error occured while using send" << std::endl;
 		on_close(fd);
+		return (false);
 	}
+	return (true);
 }
 
-void ActiveServer::on_close(int fd) {
-	(void)fd;
+bool ActiveServer::on_close(int) {
 	delete (this);
+	return (false);
+}
+
+bool ActiveServer::always(int) {
+	return (true);
 }

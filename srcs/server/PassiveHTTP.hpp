@@ -26,6 +26,8 @@ template<typename T>
 class PassiveHTTP : public PassiveServer<T> {
 
 public:
+	static Log& LOG;
+
 	PassiveHTTP();
 	PassiveHTTP(const PassiveHTTP&);
 	PassiveHTTP&	operator=(const PassiveHTTP&);
@@ -35,7 +37,7 @@ public:
 
 protected:
 	ServerBlock			_server_block;
-	void				readable(int fd);
+	bool				on_readable(int fd);
 };
 
 #ifndef PASSIVEHTTP_TPP
