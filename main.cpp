@@ -16,7 +16,7 @@ int main(int ac, char **av)
 #ifdef DEBUG_FLAG
 	LOG.setLevel(DEBUG);
 #else
-	LOG.setLevel(INFO);
+	LOG.setLevel(DEBUG);
 #endif
 
 	try
