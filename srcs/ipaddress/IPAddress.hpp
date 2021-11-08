@@ -23,7 +23,13 @@ class IPAddress {
         virtual ~IPAddress();
 		uint32_t getIP() const;
 		void setIP(uint32_t);
+
+
+
 };
+
+bool operator==(const IPAddress& lhs, const IPAddress& rhs);
+
 
 std::ostream& operator<<(std::ostream&, const IPAddress&);
 

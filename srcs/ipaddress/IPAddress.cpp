@@ -63,3 +63,6 @@ std::ostream& operator<<(std::ostream& os, const IPAddress& addr) {
 	print_ip(os, ip, 4);
 	return os;
 }
+
+bool operator==(const IPAddress& lhs, const IPAddress& rhs){ return (lhs.getIP() == rhs.getIP()); };
+
