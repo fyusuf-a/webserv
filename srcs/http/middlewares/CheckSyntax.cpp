@@ -1,6 +1,6 @@
 #include "Middlewares.hpp"
 
-void		CheckSyntax::body(Request & request, Response & response, ServerBlocks const &serverBlocks, INetAddress const* interface) {
+void		CheckSyntax::body(Request & request, Response & response, ServerBlocks const &serverBlocks, INetAddress const &interface) {
 	
 	(void)response;
 	(void)serverBlocks;

@@ -12,6 +12,8 @@ Log& LOG = Log::getInstance();
 
 void	req_check_syntax(char const *str, WebServ &webserv) {
 
+	IPAddress  adr(0);
+	INetAddress iadr(adr, 80);
 	Request		req;
 	Response 	resp;
 	std::list<IMiddlewares *> middlewares;
@@ -31,7 +33,7 @@ void	req_check_syntax(char const *str, WebServ &webserv) {
 	
 	try {
 		for (it = middlewares.begin(); it != middlewares.end(); ++it) {
-			(*it)->body(req, resp, webserv._servers, NULL);
+			(*it)->body(req, resp, webserv._servers, iadr);
 		}
 	}
 	catch (int code) {resp.set_code(code);}
@@ -52,7 +54,6 @@ int	main(int ac, char **av) {
 	try
     {
  		WebServ webserv(path);
-		std::cout << "--->"<< webserv._servers[0]._serverConf.get_name();
 		
 		req_check_syntax((char *)"GET           /req.html HTTP/1.1\r\nHost: ok\r\nContent-Length: non\r\n\r\nrereq: ah\r\n\r\n", webserv);
 

@@ -1,6 +1,6 @@
 #include "Middlewares.hpp"
 
-void		BlockSelector::body(Request & request, Response & response, ServerBlocks const &serverBlocks, INetAddress const* interface) {
+void		BlockSelector::body(Request & request, Response & response, ServerBlocks const &serverBlocks, INetAddress const &interface) {
 	
     (void)response;
     (void)interface;
@@ -12,10 +12,10 @@ void		BlockSelector::body(Request & request, Response & response, ServerBlocks c
 
     for (std::vector<ServerBlock>::const_iterator it = serverBlocks.begin(); it != serverBlocks.end(); it++)
     {
-        // if (it->_serverConf.get_host() == interface->getAddress())
-        // {
+        if (it->_serverConf.get_host() == interface.getAddress())
+        {
             std::cout << "bonjour" << std::endl;
-        // }
+        }
     }
 
 
