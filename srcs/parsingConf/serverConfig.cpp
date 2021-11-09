@@ -28,7 +28,7 @@ void            ServerConfig::set_error(std::string const &error){ this->_error 
 void            ServerConfig::set_root(std::string const &server_root){ this->_server_root = server_root; }
 void            ServerConfig::set_ip_already_set(bool my_bool) {_ip_already_set = my_bool;}
 
-uint16_t             ServerConfig::get_port(void) const { return (this->_port); }
+const uint16_t&            ServerConfig::get_port(void) const { return (this->_port); }
 IPAddress const   &ServerConfig::get_host(void) const { return (this->_host); }
 std::string const   &ServerConfig::get_name(void) const { return (this->_name); }
 std::string const   &ServerConfig::get_error(void) const { return (this->_error); }

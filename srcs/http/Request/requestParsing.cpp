@@ -103,7 +103,6 @@ const char		*Request::parse(const char *ptr) {
 				//std::cerr << "_field_name " << _field_name << std::endl;
 				//std::cerr << "field_value " << field_value << std::endl;
 				_header.insert(std::pair<std::string, std::string>(_field_name, field_value));
-				//std::cerr << "lol" << std::endl;
 			}
 			break;
 		case 5:

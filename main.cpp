@@ -18,11 +18,12 @@ int main(int ac, char **av)
 #else
 	LOG.setLevel(DEBUG);
 #endif
-
 	try
     {
- 		WebServ webserv(path);
- 	    //std::cout << webserv;
+ 		WebServ* webserv = new WebServ(path);
+		while (1)
+			NIOSelector::getInstance().poll();
+		delete webserv;
     }
     catch(MyException& caught)
     {
@@ -34,8 +35,5 @@ int main(int ac, char **av)
 		LOG.error() << caught.what() << std::endl;
 		exit(EXIT_FAILURE);
 	}
-
-	while (1)
-	  	NIOSelector::getInstance().poll();
  	return (0);
 }

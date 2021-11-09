@@ -35,7 +35,7 @@ class ServerConfig
         void            set_error(std::string const &error);
         void            set_ip_already_set(bool error);
 
-        uint16_t       get_port(void) const;
+        const uint16_t& get_port(void) const;
         IPAddress      const &get_host(void) const;
         std::string    const &get_name(void) const;
         std::string    const &get_root(void) const;
