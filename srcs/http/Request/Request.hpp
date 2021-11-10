@@ -2,6 +2,9 @@
 # define REQUEST_HPP
 # include <iostream>
 # include <map>
+# include "../../parsingConf/serverBlock.hpp"
+
+class ServerBlock;
 
 class Request
 {
@@ -15,6 +18,12 @@ class Request
 		bool		_over;
 		std::string _residual;
 		std::string	_field_name;
+
+
+		ServerBlock 	_server;
+		ServerLocation	_location;
+
+
 
 	public:
 		Request();
@@ -38,6 +47,13 @@ class Request
 		int									get_head(void) const;
 		bool								get_over(void) const;
 		void								set_over(bool over);
+
+		void 								set_server(ServerBlock server);
+		ServerBlock	const 					&get_server(void);
+
+		void 								set_location(ServerLocation location);
+		ServerLocation const 				&get_location(void);
+
 };
 
 std::ostream& operator<<(std::ostream&, const Request&);

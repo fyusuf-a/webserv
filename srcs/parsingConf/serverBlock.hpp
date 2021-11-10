@@ -24,7 +24,7 @@ class ServerBlock
         ServerBlock &operator=(const ServerBlock &other);
 
 		ServerConfig const& get_server_conf() const;
-		Locations const& get_locations() const;
+		Locations    const& get_locations() const;
 };
 
 std::ostream& operator<<(std::ostream& os, const ServerBlock& server);

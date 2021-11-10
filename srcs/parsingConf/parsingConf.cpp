@@ -305,25 +305,25 @@ void  ParsingConf::setup_server_directive(std::string const &line, ServerBlock &
     if (value.empty())
         throw MyException("Directive: '" +  directive + "' : invalid number of arguments");
 
-    else if (directive == "listen" && is_set(server._serverConf.get_port(), directive) )
-        server._serverConf.set_port( parsing_port_value(value, directive) );
+    else if (directive == "listen" && is_set(server._serverConf.getPort(), directive) )
+        server._serverConf.setPort( parsing_port_value(value, directive) );
 
-    else if (directive == "host" && is_set(server._serverConf.get_ip_already_set(), directive) )
+    else if (directive == "host" && is_set(server._serverConf.getIP_already_set(), directive) )
     {
         //std::cerr << "value to parse " << value << std::endl;
-        server._serverConf.set_host(IPAddress(value));
+        server._serverConf.setAddress(IPAddress(value));
         //server._serverConf.set_host( parsing_host_value(value, directive) );
         // !!! catch preceding function's exceptions
-        server._serverConf.set_ip_already_set(true);
+        server._serverConf.setIP_already_set(true);
     }
-    else if (directive == "server_name" && is_set(server._serverConf.get_name(), directive) )
-        server._serverConf.set_name( parsing_name_value(value, directive) );
+    else if (directive == "server_name" && is_set(server._serverConf.getName(), directive) )
+        server._serverConf.setName( parsing_name_value(value, directive) );
 
-    else if (directive == "root" && is_set(server._serverConf.get_root(), directive) )
-        server._serverConf.set_root( parsing_path_value(value, directive) );
+    else if (directive == "root" && is_set(server._serverConf.getRoot(), directive) )
+        server._serverConf.setRoot( parsing_path_value(value, directive) );
 
-    else if (directive == "error" && is_set(server._serverConf.get_error(), directive) )
-        server._serverConf.set_error( parsing_path_value(value, directive) );
+    else if (directive == "error" && is_set(server._serverConf.getError(), directive) )
+        server._serverConf.setError( parsing_path_value(value, directive) );
 }
 
 
