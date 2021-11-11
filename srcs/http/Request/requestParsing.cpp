@@ -6,25 +6,24 @@ std::string	ft_strtrim(std::string str) {
 	return str.substr(str.find_first_not_of(" \n\r\v\t\f"), str.find_first_not_of(" \n\r\v\t\f") - str.find_last_not_of(" \n\r\v\t\f"));
 }
 
-std::string	Request::extract_attribute(std::string req_copy, std::string terminating, const char **ptr, std::size_t residual_offset) {
-	std::size_t	length;
+std::string	Request::extract_attribute(std::string& buffer, std::string terminating) {
+	std::size_t	length = 0;
 
-	length = req_copy.find(terminating);
+	length = buffer.find(terminating, _lctr);
 	if (length == std::string::npos) {
 		_over = false;
-		(*ptr) += req_copy.length() - residual_offset;
-		if (_residual == "")
-			_residual = req_copy;
 		return "";
 	}
-	(*ptr) += length + terminating.length() - residual_offset;
-	return req_copy.substr(0, length);
+	_lctr += length + terminating.length();
+	return buffer.substr(_lctr - length - terminating.length(), length);
 }
 
-void		Request::manage_head(const char **ptr) {
+void		Request::manage_head(std::string& buffer) {
+	if (_head == 6)
+		return ;
 	if (_head == 4) {
-		if (((std::string)*ptr).find("\r\n") == 0) {
-			(*ptr) += 2;
+		if (buffer.find("\r\n", _lctr) == _lctr) {
+			_lctr += 2;
 			_head++;
 		}
 		else if (_over)
@@ -34,89 +33,68 @@ void		Request::manage_head(const char **ptr) {
 		++_head;
 }
 
-size_t		Request::parse_all(const char *ptr) {
-	bool		nouveau = true;
-	const char *new_ptr = ptr;
-	size_t		char_count = 0;
+void		Request::deal_header_empty_line(std::string& buffer) {
+	std::size_t end = buffer.find("\r\n", _lctr);
 
-	while (*ptr) {
-		/*if (nouveau)
-			return ;
-		else*/
-		if (!nouveau)
-			set_over(true);
-		set_over(true);
-		while (get_head() < 6 && get_over() == true)
-		{
-			new_ptr = parse(ptr);
-			char_count += new_ptr - ptr;
-			ptr = new_ptr;
-		}
-		nouveau = get_over();
+	if (end == 0)
+		_head = 4;
+	else {
+		_shadow_header.push_back(extract_attribute(buffer, "\r\n"));
+		_head = 2;	
 	}
-	return char_count;
 }
 
-const char		*Request::parse(const char *ptr) {
+void		Request::parse(std::string& buffer) {
+	_lctr = 0;
+	while ((_head == 1 || _head == 2) && buffer[0] == ' ')
+		++_lctr;
 
-	while ((_head == 1 || _head == 2) && *ptr == ' ')
-		ptr++;
-
-	std::string	req_copy = _residual + (std::string)ptr;
-	std::size_t	residual_offset = _residual.length();
 	std::string field_value;
-	std::size_t i = 0;
 	_over = true;
-	_residual = "";
 
-	if ((std::string)ptr == "") {
+	if (buffer[0] == '\0') {
 		if (_head == 5)
 			++_head;
 		else
 			_over = false;
-		return ptr;
+		return;
 	}
 	switch(this->get_head()) {
 		case 0:
-			_method = extract_attribute(req_copy, " ", &ptr, residual_offset);
+			_method = extract_attribute(buffer, " ");
 			break;
 		case 1:
-			_path = extract_attribute(req_copy, " ", &ptr, residual_offset);
+			_path = extract_attribute(buffer, " ");
 			break;
 		case 2:
-			_protocol = extract_attribute(req_copy, "\r\n", &ptr, residual_offset);
+			_protocol = extract_attribute(buffer, "\r\n");
 			_protocol = ft_strtrim(_protocol);
 			break;
 		case 3:
-			while (req_copy[i] == ' ')
-				i++;
-			if (req_copy.erase(0, i).find("\r\n") == 0 && i != 0)
-				ptr += i;
+			if (buffer.find("\r\n", _lctr) < buffer.find(":", _lctr))
+				deal_header_empty_line(buffer);
 			else
-				_field_name = extract_attribute(req_copy, ":", &ptr, residual_offset);
+				_field_name = extract_attribute(buffer, ":");
 			break;
 		case 4:
-			field_value = ft_strtrim(extract_attribute(req_copy, "\r\n", &ptr, residual_offset));
-			if (_residual == "")
-			{
-				//std::cerr << "_header " << &_header << " of size " << _header.size() << std::endl;
-				//std::cerr << "_field_name " << _field_name << std::endl;
-				//std::cerr << "field_value " << field_value << std::endl;
+			field_value = ft_strtrim(extract_attribute(buffer, "\r\n"));
+			if (_over)
 				_header.insert(std::pair<std::string, std::string>(_field_name, field_value));
-				//std::cerr << "lol" << std::endl;
-			}
 			break;
 		case 5:
 			++_head;
-			if (_header["Content-Length"] == "" && _header["Transfer-Encoding"] == "")
-				return ptr; 
-			if (req_copy.find("\r\n\r\n") == std::string::npos){
+			if (_header.find("Content-Length") == _header.end() && _header.find("Transfer-Encoding") == _header.end())
+				break;
+			if (buffer.find("\r\n\r\n") == std::string::npos) {
 				_over = false;
 				--_head;
+				break;
 			}
-			_body = extract_attribute(req_copy, "\r\n\r\n", &ptr, residual_offset);
-			return ptr;
+			_body = extract_attribute(buffer, "\r\n\r\n");
 	}
-	manage_head(&ptr);
-	return ptr;
+	std::cout << "head & over " << _head << _over << std::endl;
+	manage_head(buffer);
+	buffer = buffer.substr(_lctr);
+	std::cout << "head & over " << _head << _over << std::endl;
+	return ;
 }
