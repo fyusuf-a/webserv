@@ -3,6 +3,7 @@
 #include "../server/ActiveServer.hpp"
 #include "../server/ActiveHTTP.hpp"
 #include "../parsingConf/serverBlock.hpp"
+#include "../utils/Log.hpp"
 
 WebServ::WebServ() : _conf(){};
 
@@ -15,7 +16,11 @@ WebServ::WebServ(const std::string&path){
 	{
 	 	ServerConfig const& conf = it->get_server_conf();
         INetAddress interface(conf.get_host(), conf.get_port());
-		new PassiveHTTP<ActiveHTTP>(interface, *it, true);
+		try {
+			new PassiveHTTP<ActiveHTTP>(interface, *it, true);
+		}
+		catch (std::runtime_error& e) {
+		}
 	}
 };
 
