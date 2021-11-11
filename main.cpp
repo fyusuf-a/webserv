@@ -22,7 +22,7 @@ int main(int ac, char **av)
 	try
     {
  		WebServ webserv(path);
- 	    //std::cout << webserv;
+ 	    // std::cout << webserv;
     }
     catch(MyException& caught)
     {

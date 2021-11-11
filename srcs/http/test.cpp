@@ -55,7 +55,7 @@ int	main(int ac, char **av) {
     {
  		WebServ webserv(path);
 		
-		req_check_syntax((char *)"GET           /req.html HTTP/1.1\r\nHost: test\r\nContent-Length: non\r\n\r\nrereq: ah\r\n\r\n", webserv);
+		req_check_syntax((char *)"GET           /bonjou HTTP/1.1\r\nHost: test\r\nContent-Length: non\r\n\r\nrereq: ah\r\n\r\n", webserv);
 
  	    //std::cout << webserv;
     }
