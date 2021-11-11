@@ -47,4 +47,6 @@ std::ostream& operator<<(std::ostream& os, const ServerConfig& config) {
 	return os;
 }
 
-
+bool ServerConfig::operator==(const ServerConfig& other) {
+	return _host == other._host && _port == other._port && _name == other._name;
+}

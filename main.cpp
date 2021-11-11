@@ -16,7 +16,7 @@ int main(int ac, char **av)
 #ifdef DEBUG_FLAG
 	LOG.setLevel(DEBUG);
 #else
-	LOG.setLevel(DEBUG);
+	LOG.setLevel(ERROR);
 #endif
 	try
     {
@@ -25,15 +25,10 @@ int main(int ac, char **av)
 			NIOSelector::getInstance().poll();
 		delete webserv;
     }
-    catch(MyException& caught)
+    catch(std::exception& caught)
     {
         LOG.error() << caught.what() << std::endl;
         exit(EXIT_FAILURE) ;
     }
-	catch(std::invalid_argument& caught) 
-    {
-		LOG.error() << caught.what() << std::endl;
-		exit(EXIT_FAILURE);
-	}
  	return (0);
 }
