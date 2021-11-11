@@ -58,6 +58,10 @@ static void print_ip(std::ostream& os, uint32_t ip, int again) {
 	os << ip % 0x100 << (again < 4 ? "." : "");
 }
 
+bool IPAddress::operator==(const IPAddress& other) {
+	return _address == other._address;
+}
+
 std::ostream& operator<<(std::ostream& os, const IPAddress& addr) {
 	uint32_t ip = addr.getIP();
 	print_ip(os, ip, 4);
