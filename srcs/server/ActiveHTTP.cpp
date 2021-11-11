@@ -53,7 +53,6 @@ bool	ActiveHTTP::on_readable(int fd) {
 		_reqs.back().set_over(true);
 		while (_reqs.back().get_head() < 6 && _reqs.back().get_over()) {
 			_reqs.back().parse(_read_buffer);
-			std::cout << _reqs.front().get_head() << std::endl;
 		}
 		_still_parsing = _reqs.back().get_over() == 0 ? 1 : 0;
 		if (_read_buffer == "" || !_reqs.back().get_over())

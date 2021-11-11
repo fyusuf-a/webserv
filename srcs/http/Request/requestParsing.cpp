@@ -85,16 +85,14 @@ void		Request::parse(std::string& buffer) {
 			++_head;
 			if (_header.find("Content-Length") == _header.end() && _header.find("Transfer-Encoding") == _header.end())
 				break;
-			if (buffer.find("\r\n\r\n") == std::string::npos) {
+			if (buffer.find("\r\n\r\n") == std::string::npos && _method == "POST") {
 				_over = false;
 				--_head;
 				break;
 			}
 			_body = extract_attribute(buffer, "\r\n\r\n");
 	}
-	std::cout << "head & over " << _head << _over << std::endl;
 	manage_head(buffer);
 	buffer = buffer.substr(_lctr);
-	std::cout << "head & over " << _head << _over << std::endl;
 	return ;
 }
