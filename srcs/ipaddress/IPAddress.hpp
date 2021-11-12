@@ -20,12 +20,10 @@ class IPAddress {
 		IPAddress(uint32_t address);
 		IPAddress(const IPAddress&);
 		IPAddress& operator=(const IPAddress&);
-        virtual 	~IPAddress();
-		uint32_t 	getIP() const;
-		void 		setIP(uint32_t);
-
-
-
+        virtual ~IPAddress();
+		uint32_t getIP() const;
+		void setIP(uint32_t);
+		bool operator==(const IPAddress&);
 };
 
 bool operator==(const IPAddress& lhs, const IPAddress& rhs);

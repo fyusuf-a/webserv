@@ -46,7 +46,7 @@ class ServerConfig
 
         void test(void);
 
-
+bool operator==(const ServerConfig& other);
 
 
 };

@@ -23,10 +23,11 @@ class INetAddress {
 		INetAddress& operator=(const INetAddress&);
         virtual ~INetAddress();
 		IPAddress const& getAddress() const;
-		uint16_t 	getPort() const;
-		void 		setAddress(IPAddress&);
-		void 		setPort(uint16_t);
-		void 		to_sockaddr_in(struct sockaddr_in*);
+		uint16_t getPort() const;
+		void setAddress(IPAddress&);
+		void setPort(uint16_t);
+		void to_sockaddr_in(struct sockaddr_in*);
+		bool operator==(const INetAddress&);
 };
 
 std::ostream& operator<<(std::ostream&, const INetAddress&);
