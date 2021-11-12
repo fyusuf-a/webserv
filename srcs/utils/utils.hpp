@@ -26,6 +26,9 @@ namespace Utils
     template <typename T>
     bool is_set(std::vector<T> value);
 
+    int ft_find(std::string str, std::string find);
+
+
 
 
 

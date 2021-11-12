@@ -11,8 +11,7 @@ g++ -g3 -D DEBUG_FLAG -I ../includes -Wall -Werror -Wextra --std=c++98 ./test_pa
 
 ./a.out $FD1 >> $FD2
 # echo $?
-if [ "$?" != "9" ]; then
-echo bonjour
+if [ "$?" != "11" ]; then
 	rm -f $FD1
 	rm -f $FD2
 	rm a.out

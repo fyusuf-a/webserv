@@ -90,6 +90,17 @@ namespace Utils
             return (false);
         return (true);
     }
+    int ft_find(std::string str, std::string find)
+    {
+        int i = 0;
+        for (; str[i] == find[i]; i++);
+        return (i);
+    }
+
+
+
+
+
     template <typename T>
     bool is_set(std::vector<T> value)
     {

@@ -235,6 +235,9 @@ std::string ParsingConf::parsing_location_path(std::string line)
 {
 
     std::string location_path = parsing_path_value(&line[8], "location");
+
+    if (location_path == "")
+        throw MyException("Directive: 'location' : invalid number of arguments");
     return (location_path);
 }
 
@@ -342,6 +345,11 @@ void ParsingConf::setup_location(ITER &start, ITER &end, ServerBlock &server, st
             start++;
     }
 
+    for (Locations::const_iterator it = server._locations.begin(); it != server._locations.end(); it++)
+        if (it->get_location_path() == location_path)
+            throw MyException("Directive: 'location' : duplicate symbols");
+
+        
     location.set_location_path(location_path);
 
     server._locations.push_back(location);
@@ -434,7 +442,7 @@ std::vector<std::string> ParsingConf::parsing_line(std::string line, std::vector
 
     for (int i = 0; line[i]; i++)
     {
-        if (line[0] == '#')
+        if (line[i] == '#')
             return (content);
         if (line[i] == '{')
         {
@@ -506,6 +514,7 @@ void ParsingConf::parsing(std::string path, ServerBlocks &servers)
             else
                 it++;
         }
+        
         this->setup_servers(content, servers);
     }
 }
