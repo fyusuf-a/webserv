@@ -1,23 +1,21 @@
 #include "Request.hpp"
 
-void		Request::checkIncompleteRequest(void) const {
+/*void		Request::checkIncompleteRequest(std::string &buffer) const {
+	(void)buffer;
 	switch (this->get_head()) {
 		case 5:
-		break;
 		case 4:
-		break;
 		case 3:
 			if (_protocol != "HTTP/1.1")
 				throw(505);
-		break;
+		//
 		case 2:
-			if (_path[0] != '/')
+			if (_path.find("\r\n") != std::string::npos)
 				throw(400);
-		break;
+		//
 		case 1:
-			if (_method != "GET" && _method != "POST" && _method != "DELETE")
+			if (_method.find("\r\n") != std::string::npos)
 				throw(501);
-		break;
 	}
 
 	if (_residual == "")
@@ -44,4 +42,4 @@ void		Request::checkIncompleteRequest(void) const {
 				throw(501);
 			break;
 	}
-}
+}*/

@@ -56,8 +56,8 @@ Request::Request( Request const & src ) {
 Request::Request() : _head(0), _over(true) {
 }
 
-Request::Request(char *str) : _head(0), _over(true) {
-	this->parse(str);
+Request::Request(std::string& buffer) : _head(0), _over(true) {
+	this->parse(buffer);
 }
 
 Request::~Request() {

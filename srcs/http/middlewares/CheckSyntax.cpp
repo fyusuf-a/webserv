@@ -21,7 +21,7 @@ void		CheckSyntax::body(Request & request, Response & response) {
 			throw(400);
 		if (it->first.find("\r\n") != std::string::npos)
 			throw(400);
-		if (it->first == "Host" )
+		if (it->first == "Host")
 			++host;
 	}
 	if (host != 1)
