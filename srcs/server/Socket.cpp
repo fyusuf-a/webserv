@@ -52,6 +52,12 @@ void Socket::init(const IPAddress& ip, uint16_t port, bool nonblocking) {
 	if (bind(_fd, (struct sockaddr*)&my_struct, sizeof my_struct) < 0)
 	{
 		std::ostringstream oss;
+		if (errno == EACCES)
+			LOG.error() << "Access denied on address " << _address << std::endl;
+		else if (errno == EADDRINUSE)
+			LOG.debug() << "Address already in use " << _address << std::endl;
+		else if (errno == EADDRNOTAVAIL)
+			LOG.error() << "Address " << _address << " is not available" << std::endl;
 		oss << "cannot bind socket (address: " << _address << ')';
 		throw std::runtime_error(oss.str());
 	}

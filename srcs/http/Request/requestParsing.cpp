@@ -98,11 +98,16 @@ const char		*Request::parse(const char *ptr) {
 		case 4:
 			field_value = ft_strtrim(extract_attribute(req_copy, "\r\n", &ptr, residual_offset));
 			if (_residual == "")
-				_header->insert(std::pair<std::string, std::string>(_field_name, field_value));
+			{
+				//std::cerr << "_header " << &_header << " of size " << _header.size() << std::endl;
+				//std::cerr << "_field_name " << _field_name << std::endl;
+				//std::cerr << "field_value " << field_value << std::endl;
+				_header.insert(std::pair<std::string, std::string>(_field_name, field_value));
+			}
 			break;
 		case 5:
 			++_head;
-			if ((*_header)["Content-Length"] == "" && (*_header)["Transfer-Encoding"] == "")
+			if (_header["Content-Length"] == "" && _header["Transfer-Encoding"] == "")
 				return ptr; 
 			if (req_copy.find("\r\n\r\n") == std::string::npos){
 				_over = false;

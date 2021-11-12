@@ -16,26 +16,19 @@ int main(int ac, char **av)
 #ifdef DEBUG_FLAG
 	LOG.setLevel(DEBUG);
 #else
-	LOG.setLevel(INFO);
+	LOG.setLevel(ERROR);
 #endif
-
 	try
     {
- 		WebServ webserv(path);
- 	    //std::cout << webserv;
+ 		WebServ* webserv = new WebServ(path);
+		while (1)
+			NIOSelector::getInstance().poll();
+		delete webserv;
     }
-    catch(MyException& caught)
+    catch(std::exception& caught)
     {
         LOG.error() << caught.what() << std::endl;
         exit(EXIT_FAILURE) ;
     }
-	catch(std::invalid_argument& caught) 
-    {
-		LOG.error() << caught.what() << std::endl;
-		exit(EXIT_FAILURE);
-	}
-
-	while (1)
-	  	NIOSelector::getInstance().poll();
  	return (0);
 }

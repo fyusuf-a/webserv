@@ -31,13 +31,14 @@ public:
 	PassiveHTTP();
 	PassiveHTTP(const PassiveHTTP&);
 	PassiveHTTP&	operator=(const PassiveHTTP&);
-	PassiveHTTP(const INetAddress& address, const ServerBlock& server_block, bool nonblocking=true);
-	PassiveHTTP(uint32_t ip, uint16_t port, const ServerBlock& server_block, bool nonblocking=true);
+	PassiveHTTP(const INetAddress& address, const std::vector<ServerBlock>* server_blocks, bool nonblocking=true);
+	//PassiveHTTP(uint32_t ip, uint16_t port, const std::vector<ServerBlock>* server_blocks, bool nonblocking=true);
 	virtual 		~PassiveHTTP();
 
 protected:
-	ServerBlock			_server_block;
-	bool				on_readable(int fd);
+	INetAddress						_interface;
+	std::vector<ServerBlock> const*	_server_blocks;
+	bool							on_readable(int fd);
 };
 
 #ifndef PASSIVEHTTP_TPP

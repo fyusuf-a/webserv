@@ -53,3 +53,7 @@ std::ostream& operator<<(std::ostream& os, const INetAddress& addr) {
 	os << addr.getAddress() << ":" << addr.getPort();
 	return os;
 }
+
+bool INetAddress::operator==(const INetAddress& other) {
+	return _address == other._address && _port == other._port;
+}
