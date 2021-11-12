@@ -22,9 +22,9 @@ int main(int ac, char **av)
     {
  		WebServ* webserv = new WebServ(path);
 		 (void)webserv;
-		// while (1)
-		// 	NIOSelector::getInstance().poll();
-		// delete webserv;
+		while (1)
+			NIOSelector::getInstance().poll();
+		delete webserv;
     }
     catch(std::exception& caught)
     {
