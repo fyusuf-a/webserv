@@ -1,6 +1,7 @@
 SRC = 	test.cpp\
 	middlewares/CheckSyntax.cpp\
 	middlewares/BlockSelector.cpp\
+	middlewares/MethodsChecker.cpp\
 	Request/Request.cpp\
 	Request/requestParsing.cpp\
 	Request/checkIncompleteRequest.cpp\

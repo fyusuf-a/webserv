@@ -21,7 +21,7 @@ void		BlockSelector::body(Request & request, Response & response, ServerBlocks c
         }
     }
     
-    std::map<std::string, std::string> rqt_host = *request.get_header();
+    std::map<std::string, std::string> rqt_host = request.get_header();
     
     for (std::vector<ServerBlock>::const_iterator it = tmp_servers.begin(); it != tmp_servers.end(); it++)
     {
@@ -119,7 +119,6 @@ void		BlockSelector::body(Request & request, Response & response, ServerBlocks c
         }
     }
 
-    std::cout << request.get_location().get_location_path() << std::endl;
     if (set == false)
         throw (404);
 }

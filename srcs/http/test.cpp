@@ -10,27 +10,41 @@
 Log& LOG = Log::getInstance();
 
 
-void	req_check_syntax(char const *str, WebServ &webserv) {
+void	req_check_syntax(std::string str, WebServ &webserv) {
 
 	IPAddress  adr(0);
 	INetAddress iadr(adr, 80);
 	Request		req;
 	Response 	resp;
 
-	st = str;
 	std::list<IMiddlewares *> middlewares;
 	std::list<IMiddlewares *>::iterator it;
 	std::map<std::string, std::string>::iterator it2;
 	
 	CheckSyntax		csx;
 	BlockSelector	bs;
+	MethodsCheker  mc;
+
+	// while (1) {
+	// 	if (!_still_parsing)
+	// 		_reqs.resize(_reqs.size() + 1);
+	// 	_reqs.back().set_over(true);
+	// 	while (_reqs.back().get_head() < 6 && _reqs.back().get_over()) {
+	// 		_reqs.back().parse(_read_buffer);
+	// 	}
+	// 	_still_parsing = _reqs.back().get_over() == 0 ? 1 : 0;
+	// 	if (_read_buffer == "" || !_reqs.back().get_over())
+	// 		break ;
+	// }
 
 	while (req.get_head() < 6 && req.get_over() == true)
-		str = req.parse(st);
+		req.parse(str);
 
 	
 	middlewares.push_back(&csx);
 	middlewares.push_back(&bs);
+	middlewares.push_back(&mc);
+
 
 	
 	try {
@@ -57,7 +71,7 @@ int	main(int ac, char **av) {
     {
  		WebServ webserv(path);
 		
-		req_check_syntax((char *)"GET           / HTTP/1.1\r\nHost: test\r\nContent-Length: non\r\n\r\nrereq: ah\r\n\r\n", webserv);
+		req_check_syntax("GET /test HTTP/1.1\r\nHost: test\r\n\r\n", webserv);
 
  	    //std::cout << webserv;
     }
