@@ -10,7 +10,6 @@ class Request
 		std::string _path;
 		std::string _protocol;
 		std::map<std::string, std::string>	_header;
-		std::list<std::string>				_shadow_header;
 		std::string _body;
 		int			_head;
 		bool		_over;
@@ -29,8 +28,7 @@ class Request
 		void								parse(std::string& buffer);
 		std::string							extract_attribute(std::string& buffer, std::string terminating);
 		void								manage_head(std::string &buffer);
-		void								deal_header_empty_line(std::string& buffer);
-		void								checkIncompleteRequest(void) const;
+		//void								checkIncompleteRequest(std::string& buffer) const;
 		std::string							get_method(void) const;
 		std::string							get_path(void) const;
 		std::string							get_protocol(void) const;

@@ -65,7 +65,6 @@ bool	ActiveHTTP::on_readable(int fd) {
 					<< *it << (*it).get_over() << "//" << (*it).get_head() << std::endl
 					<< ">>>" << std::endl;
 	}
-	//_write_buffer += ss.str();
 	std::cout << "readbuffer after parsing: " << std::endl
 			  << "(" << _read_buffer << ")" << std::endl;
 	LOG.debug() << "end of parsing" << std::endl;

@@ -9,6 +9,8 @@ std::string	ft_strtrim(std::string str) {
 std::string	Request::extract_attribute(std::string& buffer, std::string terminating) {
 	std::size_t	length = 0;
 
+	if (buffer.find("\r\n", _lctr) < buffer.find(terminating, _lctr))
+		throw (400);
 	length = buffer.find(terminating, _lctr);
 	if (length == std::string::npos) {
 		_over = false;
@@ -31,17 +33,6 @@ void		Request::manage_head(std::string& buffer) {
 	}
 	else if (_over)
 		++_head;
-}
-
-void		Request::deal_header_empty_line(std::string& buffer) {
-	std::size_t end = buffer.find("\r\n", _lctr);
-
-	if (end == 0)
-		_head = 4;
-	else {
-		_shadow_header.push_back(extract_attribute(buffer, "\r\n"));
-		_head = 2;	
-	}
 }
 
 void		Request::parse(std::string& buffer) {
@@ -71,8 +62,8 @@ void		Request::parse(std::string& buffer) {
 			_protocol = ft_strtrim(_protocol);
 			break;
 		case 3:
-			if (buffer.find("\r\n", _lctr) < buffer.find(":", _lctr))
-				deal_header_empty_line(buffer);
+			if (buffer.find("\r\n", _lctr) == 0)
+				_head = 4;
 			else
 				_field_name = extract_attribute(buffer, ":");
 			break;
