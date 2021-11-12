@@ -37,9 +37,11 @@ void		Request::manage_head(std::string& buffer) {
 
 void		Request::parse(std::string& buffer) {
 	_lctr = 0;
-	while ((_head == 1 || _head == 2) && buffer[0] == ' ')
+	while ((_head == 1 || _head == 2) && buffer[_lctr] == ' ')
 		++_lctr;
-
+	while (_head == 0 && (buffer[_lctr] == '\r' || buffer[_lctr] == '\n'))
+		++_lctr;
+	
 	std::string field_value;
 	_over = true;
 
