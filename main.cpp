@@ -21,9 +21,10 @@ int main(int ac, char **av)
 	try
     {
  		WebServ* webserv = new WebServ(path);
-		while (1)
-			NIOSelector::getInstance().poll();
-		delete webserv;
+		 (void)webserv;
+		// while (1)
+		// 	NIOSelector::getInstance().poll();
+		// delete webserv;
     }
     catch(std::exception& caught)
     {

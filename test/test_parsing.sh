@@ -10,14 +10,13 @@ g++ -g3 -D DEBUG_FLAG -I ../includes -Wall -Werror -Wextra --std=c++98 ./test_pa
 
 
 ./a.out $FD1 >> $FD2
-# echo $?
 if [ "$?" != "11" ]; then
 	rm -f $FD1
 	rm -f $FD2
 	rm a.out
 	exit 1
-fi	
-if [ "$(diff $FD1 $FD2 | wc -c)" != "0" ]; then
+fi
+if [ "$(diff $FD1 $FD2)" != "" ]; then
 	rm -f $FD1
 	rm -f $FD2
 	rm a.out

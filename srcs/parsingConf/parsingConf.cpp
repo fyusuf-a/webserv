@@ -237,7 +237,9 @@ std::string ParsingConf::parsing_location_path(std::string line)
     std::string location_path = parsing_path_value(&line[8], "location");
 
     if (location_path == "")
+    {
         throw MyException("Directive: 'location' : invalid number of arguments");
+    }
     return (location_path);
 }
 
@@ -438,11 +440,16 @@ void ParsingConf::setup_servers(std::vector<std::string> &content, ServerBlocks 
 // split the conf file by ';' & "{,}"
 std::vector<std::string> ParsingConf::parsing_line(std::string line, std::vector<std::string> content)
 {
+    int i = 0;
+    bool comment = 0;
     std::string tmp;
 
+    for (; Utils::is_space(line[i]); i++);
+    if (line[i] == '#')
+        comment = 1;
     for (int i = 0; line[i]; i++)
     {
-        if (line[i] == '#')
+        if (line[0] == '#')
             return (content);
         if (line[i] == '{')
         {
@@ -450,7 +457,7 @@ std::vector<std::string> ParsingConf::parsing_line(std::string line, std::vector
             if (!Utils::is_spaces(tmp) || tmp.empty())
                 content.push_back(tmp);
 
-            content.push_back("{");
+            (comment == 0) ? content.push_back("{") : content.push_back("#{");
             if (!line[i + 1])
             {
 
@@ -464,7 +471,9 @@ std::vector<std::string> ParsingConf::parsing_line(std::string line, std::vector
             tmp = line.substr(0, i);
             if (!Utils::is_spaces(tmp) || tmp.empty())
                 content.push_back(tmp);
-            content.push_back("}");
+            
+            (comment == 0) ? content.push_back("}") : content.push_back("#}");
+            
             if (!line[i + 1])
                 return content;
             line = &line[i + 1];
@@ -510,7 +519,9 @@ void ParsingConf::parsing(std::string path, ServerBlocks &servers)
         {
             Utils::ft_trim(*it);
             if (Utils::is_comentary(*it) || (Utils::is_spaces(*it) && (*it).empty()))
+            {
                 content.erase(it);
+            }
             else
                 it++;
         }
