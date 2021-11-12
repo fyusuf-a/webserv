@@ -16,6 +16,8 @@ void	req_check_syntax(char const *str, WebServ &webserv) {
 	INetAddress iadr(adr, 80);
 	Request		req;
 	Response 	resp;
+
+	st = str;
 	std::list<IMiddlewares *> middlewares;
 	std::list<IMiddlewares *>::iterator it;
 	std::map<std::string, std::string>::iterator it2;
@@ -24,7 +26,7 @@ void	req_check_syntax(char const *str, WebServ &webserv) {
 	BlockSelector	bs;
 
 	while (req.get_head() < 6 && req.get_over() == true)
-		str = req.parse(str);
+		str = req.parse(st);
 
 	
 	middlewares.push_back(&csx);
