@@ -35,14 +35,17 @@ class ServerConfig
         void            set_error(std::string const &error);
         void            set_ip_already_set(bool error);
 
-        uint16_t       get_port(void) const;
+        const uint16_t& get_port(void) const;
         IPAddress      const &get_host(void) const;
         std::string    const &get_name(void) const;
         std::string    const &get_root(void) const;
         std::string    const &get_error(void) const;
         bool           get_ip_already_set(void) const;
+		// Two serverblocks are equal if their configs are the same (same IP, same port,
+		// same server name)
+		bool operator==(const ServerConfig& other);
 
-void set_host(std::string const &n);
+		void set_host(std::string const &n);
 
 
 

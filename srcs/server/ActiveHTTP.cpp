@@ -7,15 +7,28 @@
 
 Log& ActiveHTTP::LOG = Log::getInstance();
 
-ActiveHTTP::ActiveHTTP() : ActiveServer(), _still_parsing(false) {
+ActiveHTTP::ActiveHTTP() : ActiveServer(), _still_parsing(false), _server_blocks(NULL) {
 	time(&_last_time_active);
 }
 
-ActiveHTTP::ActiveHTTP(const ActiveHTTP& src) : ActiveServer(src) {
+ActiveHTTP::ActiveHTTP(const ActiveHTTP& src) : ActiveServer(src), _still_parsing(src._still_parsing), _server_blocks(src._server_blocks) {
 	*this = src;
 }
 
-ActiveHTTP::ActiveHTTP(Socket* socket) : ActiveServer(socket), _still_parsing(false) {
+ActiveHTTP::ActiveHTTP(Socket* socket, INetAddress const& interface, std::vector<ServerBlock> const* server_blocks)
+													: ActiveServer(socket)
+													, _still_parsing(false)
+													, _interface(interface)
+													, _server_blocks(server_blocks)
+{
+	time(&_last_time_active);
+}
+
+ActiveHTTP::ActiveHTTP(Socket* socket)
+													: ActiveServer(socket)
+													, _still_parsing(false)
+													, _server_blocks(NULL)
+{
 	time(&_last_time_active);
 }
 
@@ -24,6 +37,8 @@ ActiveHTTP& ActiveHTTP::operator=(const ActiveHTTP& src) {
 		ActiveServer::operator=(src);
 		_still_parsing = false;
 		_last_time_active = src._last_time_active;
+		_interface = src._interface;
+		_server_blocks = src._server_blocks;
 	}
 	return (*this);
 }
@@ -83,4 +98,12 @@ bool	ActiveHTTP::always(int fd) {
 		return (false);
 	}
 	return (true);
+}
+
+std::vector<ServerBlock> const* ActiveHTTP::getServerBlocks() const {
+	return _server_blocks;
+}
+
+void ActiveHTTP::setServerBlocks(std::vector<ServerBlock> const* server_blocks) {
+	_server_blocks = server_blocks;
 }

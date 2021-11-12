@@ -35,3 +35,7 @@ std::ostream& operator<<(std::ostream& os, const ServerBlock& server) {
 	os << "}" << std::endl;
 	return os;
 }
+
+bool ServerBlock::operator==(const ServerBlock& other) {
+	return _serverConf == other._serverConf;
+}
