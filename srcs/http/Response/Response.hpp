@@ -2,7 +2,7 @@
 # define RESPONSE_HPP
 # include <iostream>
 
-class Response
+class Response : public Request
 {
 	private:
 		int	_code;
@@ -14,6 +14,7 @@ class Response
 
 		int		get_code(void) const;
 		void	set_code(int code);
+
 };
 
 #endif
