@@ -1,6 +1,7 @@
 #include <list>
 #include "../utils/Log.hpp"
 #include "middlewares/Middlewares.hpp"
+#include "Response/Response.hpp"
 #define DEFAULT_PATH "../../conf/is_good.conf"
 #define SERVER_PORT 500
 #define INVALID_SOCKET -1
@@ -8,6 +9,8 @@
 
 
 Log& LOG = Log::getInstance();
+
+class Response;
 
 
 void	req_check_syntax(std::string str, WebServ &webserv) {
@@ -52,7 +55,7 @@ void	req_check_syntax(std::string str, WebServ &webserv) {
 			(*it)->body(req, resp, webserv._servers, iadr);
 		}
 	}
-	catch (int code) {resp.set_code(code);}
+	catch (Response::http_code code) {resp.set_code(code);}
 	std::cout << resp.get_code() << std::endl;
 }
 
