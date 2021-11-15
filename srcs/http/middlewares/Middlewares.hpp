@@ -34,6 +34,15 @@ class BlockSelector : public IMiddlewares
 
 };
 
+class MethodsCheker : public IMiddlewares
+{
+	public:
+		virtual	~MethodsCheker() {};
+		// void	body(Request & resquest, Response & response);
+		virtual void	body(Request & request, Response & response, ServerBlocks const &serverBlocks, INetAddress const &interface);
+
+};
+
 
 
 #endif
