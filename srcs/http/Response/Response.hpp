@@ -32,7 +32,8 @@ class Response
 			RequestTime_out = 408,
 
 			// Erreur Server
-			HTTPNotSupported = 505;
+			NotImplemented = 501,
+			HTTPNotSupported = 505,
 			UnknownError = 520,
 			WebServerIsDown = 521,
 			ConnectionTimedOut = 522,
