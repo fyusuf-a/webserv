@@ -1,6 +1,5 @@
 #include "Response.hpp"
 
-
 void				Response::set_code(int code) {
 	this->_code = code;
 }

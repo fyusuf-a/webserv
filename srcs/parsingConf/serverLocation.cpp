@@ -57,7 +57,7 @@ size_t                            ServerLocation::get_body_size(void) const{ ret
 
 
 std::ostream& operator<<(std::ostream& os, const ServerLocation& location) {
-	os << "location" << std::endl << "{" << std::endl;
+	os << "location " + location.get_location_path() << std::endl << "{" << std::endl;
 	if (!location.get_index().empty())
 		os << "index\t" <<  location.get_index() << ";" << std::endl;
 	

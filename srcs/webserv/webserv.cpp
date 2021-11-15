@@ -16,7 +16,7 @@ WebServ::WebServ(const std::string&path){
 	for (std::vector<ServerBlock>::iterator it = _servers.begin(); it != _servers.end(); it++)
 	{
 	 	ServerConfig const& conf = it->get_server_conf();
-        INetAddress interface(conf.get_host(), conf.get_port());
+        INetAddress interface(conf.getAddress(), conf.getPort());
 		try {
 			new PassiveHTTP<ActiveHTTP>(interface, &_servers, true);
 			interfaces_launched++;

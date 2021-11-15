@@ -1,6 +1,5 @@
 #ifndef INETADDRESS_HPP
 #define INETADDRESS_HPP
-
 #include <cstdio>
 #include <cstdlib>
 #include <sys/socket.h>

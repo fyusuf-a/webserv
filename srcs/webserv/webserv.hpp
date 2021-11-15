@@ -7,13 +7,14 @@
 #include "../parsingConf/serverBlock.hpp"
 
 
+#define ServerBlocks std::vector<ServerBlock>
 
 class WebServ
 {
 
     public:
-        ParsingConf  _conf;
-        ServerBlocks      _servers;
+        ParsingConf   _conf;
+        ServerBlocks  _servers;
         void init(const std::string& path);
 
     public:
