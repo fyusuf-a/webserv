@@ -18,6 +18,7 @@ class Middleware
 class CheckSyntax : public Middleware
 {
 	public:
+		CheckSyntax(){};
 		virtual	~CheckSyntax() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, Middleware* next);
 
@@ -26,6 +27,7 @@ class CheckSyntax : public Middleware
 class BlockSelector : public Middleware
 {
 	public:
+		BlockSelector(){};
 		virtual	~BlockSelector() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, Middleware* next);
 
@@ -34,6 +36,7 @@ class BlockSelector : public Middleware
 class MethodChecker : public Middleware
 {
 	public:
+		MethodChecker(){};
 		virtual	~MethodChecker() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, Middleware* next);
 };
@@ -41,7 +44,16 @@ class MethodChecker : public Middleware
 class IndexSelector : public Middleware
 {
 	public:
+		IndexSelector(){};
 		virtual	~IndexSelector() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, Middleware* next);
+};
+
+class MethodGET : public Middleware
+{
+	public:
+		MethodGET(){};
+		virtual	~MethodGET() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, Middleware* next);
 };
 
