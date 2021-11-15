@@ -39,7 +39,6 @@ void	req_check_syntax(std::string str, WebServ &webserv) {
 	// 	if (_read_buffer == "" || !_reqs.back().get_over())
 	// 		break ;
 	// }
-
 	while (req.get_head() < 6 && req.get_over() == true)
 		req.parse(str);
 
@@ -55,8 +54,10 @@ void	req_check_syntax(std::string str, WebServ &webserv) {
 			(*it)->body(req, resp, webserv._servers, iadr);
 		}
 	}
-	catch (Response::http_code code) {resp.set_code(code);}
-	std::cout << resp.get_code() << std::endl;
+	catch (Response::http_code code) {
+		resp.set_code(code);
+	}
+		std::cout << resp.get_code() << std::endl;
 }
 
 

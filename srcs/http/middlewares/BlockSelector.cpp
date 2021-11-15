@@ -11,6 +11,9 @@ void		BlockSelector::body(Request & request, Response & response, ServerBlocks c
 	ServerBlocks    tmp_servers;
 	Locations       tmp_locations;
 
+	if (response.get_code() < 400)
+		std::cout << "bonjour" << std::endl;
+
 	// ---- Select server block
 
 	for (std::vector<ServerBlock>::const_iterator it = serverBlocks.begin(); it != serverBlocks.end(); it++)

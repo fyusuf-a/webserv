@@ -5,7 +5,7 @@
 
 
 
-class Response : public Request
+class Response
 {
 	public:
 		enum http_code {
@@ -27,7 +27,7 @@ class Response : public Request
 			Unauthoried = 401,
 			Forbidden = 403,
 			NotFound = 404,
-			MethodNotAllowed = 405,
+			// MethodNotAllowed = 405,
 			MethodNotAllowed = 406,
 			RequestTime_out = 408,
 
@@ -43,6 +43,7 @@ class Response : public Request
 	
 	private:
 		http_code	_code;
+		
 
 
 	public:

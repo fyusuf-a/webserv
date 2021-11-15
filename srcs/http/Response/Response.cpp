@@ -18,7 +18,7 @@ Response::Response( Response const & src ) {
 	return ;
 }
 
-Response::Response() {
+Response::Response() : _code(OK) {
 }
 
 Response::~Response() {
