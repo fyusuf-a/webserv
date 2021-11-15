@@ -4,6 +4,8 @@
 #include "../utils/Log.hpp"
 #include <ctime>
 #include <ostream>
+#include <sstream>
+#include "../http/Response/Response.hpp"
 
 Log& ActiveHTTP::LOG = Log::getInstance();
 
@@ -44,14 +46,6 @@ ActiveHTTP& ActiveHTTP::operator=(const ActiveHTTP& src) {
 }
 
 ActiveHTTP::~ActiveHTTP() {
-}
-
-const std::list<Request> &ActiveHTTP::get_reqs() const {
-	return (_reqs);
-}
-
-time_t const& ActiveHTTP::get_last_time_active() const {
-	return _last_time_active;
 }
 
 bool	ActiveHTTP::on_readable(int fd) {
@@ -101,6 +95,13 @@ bool	ActiveHTTP::always(int fd) {
 	(void)fd;
 	time_t				now;
 
+	if (!_resps.empty())
+	{
+		std::ostringstream oss;
+		oss << _resps.front();
+		_write_buffer += oss.str();
+		_resps.pop_front();
+	}
 	time(&now);
 	if (difftime(now, _last_time_active) > TIMEOUT)
 	{
@@ -117,4 +118,20 @@ std::vector<ServerBlock> const* ActiveHTTP::getServerBlocks() const {
 
 void ActiveHTTP::setServerBlocks(std::vector<ServerBlock> const* server_blocks) {
 	_server_blocks = server_blocks;
+}
+
+time_t const& ActiveHTTP::get_last_time_active() const {
+	return _last_time_active;
+}
+
+const std::list<Request> &ActiveHTTP::get_reqs() const {
+	return (_reqs);
+}
+
+std::list<Response> &ActiveHTTP::get_resps() {
+	return (_resps);
+}
+
+void ActiveHTTP::add_response(const Response& resp) {
+	_resps.push_back(resp);
 }
