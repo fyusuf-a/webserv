@@ -45,4 +45,11 @@ class IndexSelector : public Middleware
 		virtual void	body(ActiveHTTP&, Request&, Response&, Middleware* next);
 };
 
+class AbsolutePathConcatenator : public Middleware
+{
+	public:
+		virtual	~AbsolutePathConcatenator() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, Middleware* next);
+};
+
 #endif

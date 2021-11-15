@@ -25,6 +25,8 @@ void		IndexSelector::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 
     if (idx != "")
         return ;
+    else
+        request.set_path(idx);
     if (request.get_location().get_auto_index() == false)
         response.set_code(Response::Forbidden);
     next();
