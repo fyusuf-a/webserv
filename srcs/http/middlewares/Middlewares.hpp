@@ -31,13 +31,18 @@ class BlockSelector : public Middleware
 
 };
 
-class MethodsCheker : public Middleware
+class MethodChecker : public Middleware
 {
 	public:
-		virtual	~MethodsCheker() {};
+		virtual	~MethodChecker() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, Middleware* next);
 };
 
-
+class IndexSelector : public Middleware
+{
+	public:
+		virtual	~IndexSelector() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, Middleware* next);
+};
 
 #endif
