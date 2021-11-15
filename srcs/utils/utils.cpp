@@ -98,29 +98,9 @@ namespace Utils
     }
 
 
-
-
-
-    template <typename T>
-    bool is_set(std::vector<T> value)
+    bool DoesFileExist (const std::string& name)
     {
-        if (value.empty())
-        {
-            std::cout << "lalala" << std::endl;
-            return (false);
-        }
-        return (true);
-
+        return ( access( name.c_str(), F_OK ) != -1 );
     }
-    // bool is_set(std::string value)
-    // {
-    //     if (value.empty())
-    //     {
-    //         std::cout << "lalala" << std::endl;
-    //         return (false);
-    //     }
-    //     return (true);
-
-    // }
 }
 

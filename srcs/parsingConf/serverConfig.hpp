@@ -12,12 +12,13 @@ class ServerConfig
 {
 
     private:
-        IPAddress  			    _host;
-		std::string				_name;
-		std::string				_error;
-		std::string				_server_root;
-		uint16_t                _port;
-        bool                    _ip_already_set;
+        IPAddress  			        _host;
+		std::string				    _name;
+		std::string				    _error;
+		std::string				    _server_root;
+		uint16_t                    _port;
+        bool                        _ip_already_set;
+        std::vector<std::string>	_index;
 
 
         
@@ -34,13 +35,17 @@ class ServerConfig
         void            setRoot(std::string const &path);
         void            setError(std::string const &error);
         void            setIP_already_set(bool error);
+        void            setIndex(std::vector<std::string> const &index);
 
-        uint16_t       getPort(void) const;
-        IPAddress      const &getAddress(void) const;
-        std::string    const &getName(void) const;
-        std::string    const &getRoot(void) const;
-        std::string    const &getError(void) const;
-        bool           getIP_already_set(void) const;
+        
+
+        uint16_t                        getPort(void) const;
+        IPAddress   const               &getAddress(void) const;
+        std::string const               &getName(void) const;
+        std::string const               &getRoot(void) const;
+        std::string const               &getError(void) const;
+        bool                            getIP_already_set(void) const;
+        std::vector<std::string> const  &getIndex(void) const;
 
 
 

@@ -289,9 +289,6 @@ void  ParsingConf::setup_location_directive(std::string const &line, ServerLocat
 
     else if (directive == "client_max_body_size" && is_set(location.get_body_size(), directive) )
         location.set_body_size( parsing_body_size_value(value, directive) );
-
-    // else if (directive == "language" && is_set(location.get_index(), directive) )
-        // location.set_language(value); 
 }
 void  ParsingConf::setup_server_directive(std::string const &line, ServerBlock &server)
 {
@@ -309,6 +306,9 @@ void  ParsingConf::setup_server_directive(std::string const &line, ServerBlock &
 
     if (value.empty())
         throw MyException("Directive: '" +  directive + "' : invalid number of arguments");
+
+    else if ( directive == "index" && is_set(server._serverConf.getIndex(), directive) )
+        server._serverConf.setIndex( parsing_index_value(value) );
 
     else if (directive == "listen" && is_set(server._serverConf.getPort(), directive) )
         server._serverConf.setPort( parsing_port_value(value, directive) );
