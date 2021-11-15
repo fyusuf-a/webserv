@@ -5,42 +5,37 @@
 # include "../Response/Response.hpp"
 # include "../../webserv/webserv.hpp"
 # include "../../ipaddress/INetAddress.hpp"
+# include "../../server/ActiveHTTP.hpp"
 
 
-class IMiddlewares
+class Middleware
 {
 	public:
-		virtual ~IMiddlewares() {};
-		// virtual void	body(Request & resquest, Response & response) = 0;
-
-		virtual void	body(Request & request, Response & response, ServerBlocks const &serverBlocks, INetAddress const &interface) = 0;
+		virtual ~Middleware() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, Middleware* next) = 0;
 };
 
-class CheckSyntax : public IMiddlewares
+class CheckSyntax : public Middleware
 {
 	public:
 		virtual	~CheckSyntax() {};
-		// void	body(Request & resquest, Response & response);
-		virtual void	body(Request & request, Response & response, ServerBlocks const &serverBlocks, INetAddress const &interface);
+		virtual void	body(ActiveHTTP&, Request&, Response&, Middleware* next);
 
 };
 
-class BlockSelector : public IMiddlewares
+class BlockSelector : public Middleware
 {
 	public:
 		virtual	~BlockSelector() {};
-		// void	body(Request & resquest, Response & response);
-		virtual void	body(Request & request, Response & response, ServerBlocks const &serverBlocks, INetAddress const &interface);
+		virtual void	body(ActiveHTTP&, Request&, Response&, Middleware* next);
 
 };
 
-class MethodsCheker : public IMiddlewares
+class MethodsCheker : public Middleware
 {
 	public:
 		virtual	~MethodsCheker() {};
-		// void	body(Request & resquest, Response & response);
-		virtual void	body(Request & request, Response & response, ServerBlocks const &serverBlocks, INetAddress const &interface);
-
+		virtual void	body(ActiveHTTP&, Request&, Response&, Middleware* next);
 };
 
 

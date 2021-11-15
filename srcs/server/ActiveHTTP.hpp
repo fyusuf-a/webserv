@@ -24,6 +24,7 @@ public:
 	const std::list<Request>& get_reqs() const;
 	time_t const& get_last_time_active() const;
 	std::vector<ServerBlock> const* getServerBlocks() const;
+	INetAddress getInterface() const;
 	void setServerBlocks(std::vector<ServerBlock> const*);
 
 protected:

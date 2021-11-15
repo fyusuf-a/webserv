@@ -104,6 +104,10 @@ std::vector<ServerBlock> const* ActiveHTTP::getServerBlocks() const {
 	return _server_blocks;
 }
 
+INetAddress ActiveHTTP::getInterface() const {
+	return _interface;
+}
+
 void ActiveHTTP::setServerBlocks(std::vector<ServerBlock> const* server_blocks) {
 	_server_blocks = server_blocks;
 }

@@ -1,13 +1,13 @@
 #include "Middlewares.hpp"
 
 //405
-void		MethodsCheker::body(Request & request, Response & response, ServerBlocks const &serverBlocks, INetAddress const &interface) {
+void		MethodsCheker::body(ActiveHTTP& actHTTP, Request& request, Response& response, Middleware* next) {
 
 
 	(void)response;
-	(void)interface;
-	(void)serverBlocks;
-
+	(void)actHTTP;
+	(void)next;
+	
 	bool set = false;
 
 	for (std::vector<std::string>::const_iterator it = request.get_location().get_methods().begin(); it != request.get_location().get_methods().end(); it++)

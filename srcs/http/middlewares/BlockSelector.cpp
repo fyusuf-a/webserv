@@ -1,15 +1,14 @@
 #include "Middlewares.hpp"
 
-void		BlockSelector::body(Request & request, Response & response, ServerBlocks const &serverBlocks, INetAddress const &interface) {
+void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& response, Middleware* next) {
 
-	(void)response;
-	(void)interface;
 	(void)request;
-	(void)serverBlocks;
 
 	bool            set = false;
 	ServerBlocks    tmp_servers;
 	Locations       tmp_locations;
+	ServerBlocks	serverBlocks = actHTTP.getServerBlocks();
+	INetAddress		interface = actHTTP.getInterface();
 
 	if (response.get_code() < 400)
 		std::cout << "bonjour" << std::endl;

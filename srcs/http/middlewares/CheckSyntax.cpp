@@ -1,11 +1,10 @@
 #include "Middlewares.hpp"
 
-void		CheckSyntax::body(Request & request, Response & response, ServerBlocks const &serverBlocks, INetAddress const &interface) {
+void		CheckSyntax::body(ActiveHTTP& actHTTP, Request& request, Response& response, Middleware* next) {
 	
 	(void)response;
-	(void)serverBlocks;
-	(void)interface;
-	
+	(void)actHTTP;
+	(void)next;
 	std::string met = request.get_method();
 
 	if (met != "GET" && met != "POST" && met != "DELETE")
