@@ -26,6 +26,8 @@ class IPAddress {
 		bool operator==(const IPAddress&);
 };
 
+bool operator==(const IPAddress& lhs, const IPAddress& rhs);
+
 std::ostream& operator<<(std::ostream&, const IPAddress&);
 
 #endif

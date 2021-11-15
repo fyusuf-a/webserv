@@ -1,12 +1,11 @@
 #include "Response.hpp"
 #include "../../server/ActiveHTTP.hpp"
 
-
-void				Response::set_code(int code) {
+void				Response::set_code(Response::http_code code) {
 	this->_code = code;
 }
 
-int					Response::get_code(void) const {
+Response::http_code					Response::get_code(void) const {
 	return this->_code;
 }
 
@@ -20,7 +19,7 @@ Response::Response( Response const & src ) {
 	return ;
 }
 
-Response::Response() : _code(200), _server(NULL) {
+Response::Response() : _server(NULL), _code(OK) {
 }
 
 Response::~Response() {

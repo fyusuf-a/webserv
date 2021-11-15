@@ -36,6 +36,21 @@ bool								Request::get_over(void) const {
 	return this->_over;
 }
 
+void 								Request::set_server(ServerBlock server){
+	this->_server = server;
+}
+ServerBlock const 					&Request::get_server(void){
+	return this->_server;
+}
+
+void 								Request::set_location(ServerLocation location){
+	this->_location = location;
+}
+ServerLocation const 				&Request::get_location(void){
+	return this->_location;
+}
+
+
 Request & 		Request::operator=( Request const & rhs ){
 	if (this != &rhs) {
 		this->_method = rhs.get_method();
@@ -56,8 +71,8 @@ Request::Request( Request const & src ) {
 Request::Request() : _head(0), _over(true) {
 }
 
-Request::Request(char *str) : _head(0), _over(true) {
-	this->parse(str);
+Request::Request(std::string& buffer) : _head(0), _over(true) {
+	this->parse(buffer);
 }
 
 Request::~Request() {

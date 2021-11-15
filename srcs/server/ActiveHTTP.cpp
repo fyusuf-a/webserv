@@ -51,42 +51,31 @@ ActiveHTTP::~ActiveHTTP() {
 bool	ActiveHTTP::on_readable(int fd) {
 	if (ActiveServer::on_readable(fd) == false)
 		return (false);
-	size_t				parsed_chars = 0;
 	std::ostringstream	ss;
-	const char*			ptr;
-	const char*			new_ptr;
-
 
 	time(&_last_time_active);
-	ptr = _read_buffer.c_str();
-	
+	std::cout << "readbuffer avant parsing:" << std::endl
+				  << "(" << _read_buffer << ")" << std::endl;
 	while (1) {
 		if (!_still_parsing)
 			_reqs.resize(_reqs.size() + 1);
 		_reqs.back().set_over(true);
-		while (_reqs.back().get_head() < 6 && _reqs.back().get_over())
-		{
-			new_ptr = _reqs.back().parse(ptr);
-			if (!*new_ptr) break;
-			parsed_chars += new_ptr - ptr;
-			ptr = new_ptr;
+		while (_reqs.back().get_head() < 6 && _reqs.back().get_over()) {
+			_reqs.back().parse(_read_buffer);
 		}
-		if (!*new_ptr)
-			break;
+		_still_parsing = _reqs.back().get_over() == 0 ? 1 : 0;
+		if (_read_buffer == "" || !_reqs.back().get_over())
+			break ;
 	}
 
 	size_t i = 0;
 	for (std::list<Request>::const_iterator it = _reqs.begin(); it != _reqs.end(); it++) {
 		LOG.debug() << "<<< request number " << i++ << std::endl
-					<< *it << std::endl
+					<< *it << (*it).get_over() << "//" << (*it).get_head() << std::endl
 					<< ">>>" << std::endl;
 	}
-	//_write_buffer += ss.str();
-	std::cout << "readbuffer before substr:" << std::endl
-			  << _read_buffer << std::endl;
-	_read_buffer = _read_buffer.substr(parsed_chars);
-	std::cout << "readbuffer after substr:" << std::endl
-			  << _read_buffer << std::endl;
+	std::cout << "readbuffer after parsing: " << std::endl
+			  << "(" << _read_buffer << ")" << std::endl;
 	LOG.debug() << "end of parsing" << std::endl;
 	return (true);
 }

@@ -19,7 +19,23 @@ class CheckSyntax : public Middleware
 	public:
 		CheckSyntax();
 		virtual	~CheckSyntax() {};
-		void	body(Request & resquest, Response &, MiddlewareChain*);
+		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain* next);
 };
 
+class BlockSelector : public Middleware
+{
+	public:
+		BlockSelector();
+		virtual	~BlockSelector() {};
+		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain* next);
+};
+
+class MethodChecker : public Middleware
+{
+	public:
+		MethodChecker();
+		virtual	~MethodChecker() {};
+		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain* next);
+};
+ 
 #endif

@@ -13,11 +13,11 @@ class ServerConfig
 
     private:
         IPAddress  			    _host;
-		std::string					_name;
-		std::string					_error;
-		std::string					_server_root;
-		uint16_t                	_port;
-                bool                            _ip_already_set;
+		std::string				_name;
+		std::string				_error;
+		std::string				_server_root;
+		uint16_t                _port;
+        bool                    _ip_already_set;
 
 
         
@@ -28,30 +28,25 @@ class ServerConfig
         ~ServerConfig();
         ServerConfig &operator=(const ServerConfig &other);
 
-        void            set_port(const uint16_t port);
-        void            set_host(const IPAddress& host);
-        void            set_name(std::string const &name);;
-        void            set_root(std::string const &path);
-        void            set_error(std::string const &error);
-        void            set_ip_already_set(bool error);
+        void            setPort(const uint16_t port);
+        void            setAddress(const IPAddress& host);
+        void            setName(std::string const &name);;
+        void            setRoot(std::string const &path);
+        void            setError(std::string const &error);
+        void            setIP_already_set(bool error);
 
-        const uint16_t& get_port(void) const;
-        IPAddress      const &get_host(void) const;
-        std::string    const &get_name(void) const;
-        std::string    const &get_root(void) const;
-        std::string    const &get_error(void) const;
-        bool           get_ip_already_set(void) const;
-		// Two serverblocks are equal if their configs are the same (same IP, same port,
-		// same server name)
-		bool operator==(const ServerConfig& other);
-
-		void set_host(std::string const &n);
+        uint16_t       getPort(void) const;
+        IPAddress      const &getAddress(void) const;
+        std::string    const &getName(void) const;
+        std::string    const &getRoot(void) const;
+        std::string    const &getError(void) const;
+        bool           getIP_already_set(void) const;
 
 
 
         void test(void);
 
-
+bool operator==(const ServerConfig& other);
 
 
 };

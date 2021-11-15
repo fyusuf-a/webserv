@@ -235,6 +235,11 @@ std::string ParsingConf::parsing_location_path(std::string line)
 {
 
     std::string location_path = parsing_path_value(&line[8], "location");
+
+    if (location_path == "")
+    {
+        throw MyException("Directive: 'location' : invalid number of arguments");
+    }
     return (location_path);
 }
 
@@ -305,25 +310,25 @@ void  ParsingConf::setup_server_directive(std::string const &line, ServerBlock &
     if (value.empty())
         throw MyException("Directive: '" +  directive + "' : invalid number of arguments");
 
-    else if (directive == "listen" && is_set(server._serverConf.get_port(), directive) )
-        server._serverConf.set_port( parsing_port_value(value, directive) );
+    else if (directive == "listen" && is_set(server._serverConf.getPort(), directive) )
+        server._serverConf.setPort( parsing_port_value(value, directive) );
 
-    else if (directive == "host" && is_set(server._serverConf.get_ip_already_set(), directive) )
+    else if (directive == "host" && is_set(server._serverConf.getIP_already_set(), directive) )
     {
         //std::cerr << "value to parse " << value << std::endl;
-        server._serverConf.set_host(IPAddress(value));
+        server._serverConf.setAddress(IPAddress(value));
         //server._serverConf.set_host( parsing_host_value(value, directive) );
         // !!! catch preceding function's exceptions
-        server._serverConf.set_ip_already_set(true);
+        server._serverConf.setIP_already_set(true);
     }
-    else if (directive == "server_name" && is_set(server._serverConf.get_name(), directive) )
-        server._serverConf.set_name( parsing_name_value(value, directive) );
+    else if (directive == "server_name" && is_set(server._serverConf.getName(), directive) )
+        server._serverConf.setName( parsing_name_value(value, directive) );
 
-    else if (directive == "root" && is_set(server._serverConf.get_root(), directive) )
-        server._serverConf.set_root( parsing_path_value(value, directive) );
+    else if (directive == "root" && is_set(server._serverConf.getRoot(), directive) )
+        server._serverConf.setRoot( parsing_path_value(value, directive) );
 
-    else if (directive == "error" && is_set(server._serverConf.get_error(), directive) )
-        server._serverConf.set_error( parsing_path_value(value, directive) );
+    else if (directive == "error" && is_set(server._serverConf.getError(), directive) )
+        server._serverConf.setError( parsing_path_value(value, directive) );
 }
 
 
@@ -342,6 +347,11 @@ void ParsingConf::setup_location(ITER &start, ITER &end, ServerBlock &server, st
             start++;
     }
 
+    for (Locations::const_iterator it = server._locations.begin(); it != server._locations.end(); it++)
+        if (it->get_location_path() == location_path)
+            throw MyException("Directive: 'location' : duplicate symbols");
+
+        
     location.set_location_path(location_path);
 
     server._locations.push_back(location);
@@ -430,8 +440,13 @@ void ParsingConf::setup_servers(std::vector<std::string> &content, ServerBlocks 
 // split the conf file by ';' & "{,}"
 std::vector<std::string> ParsingConf::parsing_line(std::string line, std::vector<std::string> content)
 {
+    int i = 0;
+    bool comment = 0;
     std::string tmp;
 
+    for (; Utils::is_space(line[i]); i++);
+    if (line[i] == '#')
+        comment = 1;
     for (int i = 0; line[i]; i++)
     {
         if (line[0] == '#')
@@ -442,7 +457,7 @@ std::vector<std::string> ParsingConf::parsing_line(std::string line, std::vector
             if (!Utils::is_spaces(tmp) || tmp.empty())
                 content.push_back(tmp);
 
-            content.push_back("{");
+            (comment == 0) ? content.push_back("{") : content.push_back("#{");
             if (!line[i + 1])
             {
 
@@ -456,7 +471,9 @@ std::vector<std::string> ParsingConf::parsing_line(std::string line, std::vector
             tmp = line.substr(0, i);
             if (!Utils::is_spaces(tmp) || tmp.empty())
                 content.push_back(tmp);
-            content.push_back("}");
+            
+            (comment == 0) ? content.push_back("}") : content.push_back("#}");
+            
             if (!line[i + 1])
                 return content;
             line = &line[i + 1];
@@ -502,10 +519,13 @@ void ParsingConf::parsing(std::string path, ServerBlocks &servers)
         {
             Utils::ft_trim(*it);
             if (Utils::is_comentary(*it) || (Utils::is_spaces(*it) && (*it).empty()))
+            {
                 content.erase(it);
+            }
             else
                 it++;
         }
+        
         this->setup_servers(content, servers);
     }
 }

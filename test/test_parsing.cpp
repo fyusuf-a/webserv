@@ -11,6 +11,9 @@
 #define ERROR7 "./tests_conf/is_not7.conf"
 #define ERROR8 "./tests_conf/is_not8.conf"
 #define ERROR9 "./tests_conf/is_not9.conf"
+#define ERROR10 "./tests_conf/is_not10.conf"
+#define ERROR11 "./tests_conf/is_not11.conf"
+
 
 
 #define SERVER_PORT 500
@@ -132,6 +135,22 @@ int main(int ac, char **av)
     try
     {
         init(ERROR9, server_blocks1);
+    }
+    catch(MyException& caught)
+    {
+        value += 1;
+    }
+    try
+    {
+        init(ERROR10, server_blocks1);
+    }
+    catch(MyException& caught)
+    {
+        value += 1;
+    }
+    try
+    {
+        init(ERROR11, server_blocks1);
     }
     catch(MyException& caught)
     {
