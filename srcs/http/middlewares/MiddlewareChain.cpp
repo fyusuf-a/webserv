@@ -1,9 +1,18 @@
 #include "MiddlewareChain.hpp"
 #include "Middleware.hpp"
 
-MiddlewareChain::MiddlewareChain() {
-	CheckSyntax check_syntax = CheckSyntax();
+MiddlewareChain::MiddlewareChain() : _activeHTTP(NULL) {
+	CheckSyntax& check_syntax = CheckSyntax::getInstance();
+	Sender& sender = Sender::getInstance();
 	_chain.push_back(&check_syntax);
+	_chain.push_back(&sender);
+}
+
+MiddlewareChain::MiddlewareChain(ActiveHTTP* callback) : _activeHTTP(callback) {
+	CheckSyntax& check_syntax = CheckSyntax::getInstance();
+	Sender& sender = Sender::getInstance();
+	_chain.push_back(&check_syntax);
+	_chain.push_back(&sender);
 }
 
 MiddlewareChain::MiddlewareChain(const MiddlewareChain& src) {
@@ -25,10 +34,8 @@ void MiddlewareChain::_next() {
 		return;
 	Middleware* middleware = _chain.front();
 	_chain.pop_front();
-	middleware->body(_req, _resp, this);
+	middleware->body(*_activeHTTP, _req, _resp, *this);
 }
-
-
 
 void MiddlewareChain::operator()() {
 	_next();

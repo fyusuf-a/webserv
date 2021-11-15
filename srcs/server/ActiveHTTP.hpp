@@ -7,9 +7,12 @@
 #include "../http/Request/Request.hpp"
 #include "../http/Response/Response.hpp"
 #include "../parsingConf/serverBlock.hpp"
+#include "../http/middlewares/MiddlewareChain.hpp"
 #include <sstream>
 #include <list>
 #define TIMEOUT 60.0
+
+class MiddlewareChain;
 
 class ActiveHTTP : public ActiveServer {
 
@@ -26,6 +29,7 @@ public:
 	void add_response(const Response&);
 
 	std::vector<ServerBlock> const* getServerBlocks() const;
+	INetAddress getInterface() const;
 	void setServerBlocks(std::vector<ServerBlock> const*);
 	time_t const& get_last_time_active() const;
 	const std::list<Request>& get_reqs() const;
@@ -38,6 +42,7 @@ protected:
 	std::vector<ServerBlock> const *	_server_blocks;
 	std::list<Request>					_reqs;
 	std::list<Response>					_resps;
+	MiddlewareChain						_chain;
 	virtual bool						on_readable(int fd);
 	virtual bool						always(int fd);
 };

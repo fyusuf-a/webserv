@@ -3,23 +3,29 @@
 # include <iostream>
 # include "../Request/Request.hpp"
 # include "../Response/Response.hpp"
-# include "../../server/ActiveHTTP.hpp"
+# include "../../utils/Singleton.hpp"
 
 class MiddlewareChain;
+class ActiveHTTP;
 
 class Middleware
 {
 	public:
-		virtual ~Middleware() {};
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain* next) = 0;
+		Middleware();
+		Middleware(ActiveHTTP& callback);
+		Middleware(const Middleware& src);
+		virtual ~Middleware();
+		Middleware& operator=(const Middleware& src);
+
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next) = 0;
 };
 
-class CheckSyntax : public Middleware
+class CheckSyntax : public Middleware, public Singleton<CheckSyntax>
 {
 	public:
 		CheckSyntax();
 		virtual	~CheckSyntax() {};
-		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain* next);
+		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
 
 class BlockSelector : public Middleware
@@ -27,7 +33,7 @@ class BlockSelector : public Middleware
 	public:
 		BlockSelector();
 		virtual	~BlockSelector() {};
-		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain* next);
+		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
 
 class MethodChecker : public Middleware
@@ -35,7 +41,16 @@ class MethodChecker : public Middleware
 	public:
 		MethodChecker();
 		virtual	~MethodChecker() {};
-		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain* next);
+		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+};
+
+class Sender : public Middleware, public Singleton<Sender>
+
+{
+	public:
+		Sender();
+		virtual	~Sender() {};
+		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
  
 #endif

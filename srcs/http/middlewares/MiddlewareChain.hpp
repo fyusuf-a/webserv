@@ -7,12 +7,14 @@
 class MiddlewareChain {
 private:
 	std::list<Middleware*> _chain;
+	ActiveHTTP* _activeHTTP;
 	Request _req;
 	Response _resp;
 	void _next();
+	MiddlewareChain();
 
 public:
-	MiddlewareChain();
+	MiddlewareChain(ActiveHTTP* callback);
 	~MiddlewareChain();
 	MiddlewareChain(const MiddlewareChain&);
 	MiddlewareChain& operator=(const MiddlewareChain& src);

@@ -29,12 +29,13 @@ class Response
 			Unauthoried = 401,
 			Forbidden = 403,
 			NotFound = 404,
-			// MethodNotAllowed = 405,
-			MethodNotAllowed = 406,
+			MethodNotAllowed = 405,
+			NotAcceptable = 406,
 			RequestTime_out = 408,
 
 			// Erreur Server
-
+			NotImplemented = 501,
+			HTTPNotSupported = 505,
 			UnknownError = 520,
 			WebServerIsDown = 521,
 			ConnectionTimedOut = 522,
@@ -49,6 +50,7 @@ class Response
 
 	public:
 		Response();
+		Response(ActiveHTTP* callback);
 		~Response();
 		Response( Response const & src );
 		Response & operator=( Response const & rhs );

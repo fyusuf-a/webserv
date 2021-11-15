@@ -22,6 +22,9 @@ Response::Response( Response const & src ) {
 Response::Response() : _server(NULL), _code(OK) {
 }
 
+Response::Response(ActiveHTTP* server) : _server(server), _code(OK) {
+}
+
 Response::~Response() {
 }
 

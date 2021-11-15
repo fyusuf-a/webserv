@@ -1,25 +1,15 @@
 #include "Middleware.hpp"
-#include "MiddlewareChain.hpp"
 
-MiddlewareChain::MiddlewareChain() {
+Middleware::Middleware() {
 }
 
-MiddlewareChain::~MiddlewareChain() {
+Middleware::~Middleware() {
 }
 
-MiddlewareChain::MiddlewareChain(const MiddlewareChain& src) {
-	if (this != &src)
-	{
-		operator=(
-	}
+Middleware::Middleware(const Middleware& src) {
+	*this = src;
 }
 
-void MiddlewareChain::_next() {
-	if (_chain.empty())
-		return ();
-	_chain.pop_front();
-}
-
-void MiddlewareChain::operator()() {
-	next();
+Middleware& Middleware::operator=(const Middleware&) {
+	return (*this);
 }

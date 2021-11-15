@@ -1,12 +1,14 @@
 #include "Middlewares.hpp"
 
 //405
-void		MethodsCheker::body(Request & request, Response & response, ServerBlocks const &serverBlocks, INetAddress const &interface) {
+void		MethodsCheker::body(ActiveHTTP& actHTTP, Request& request, Response& response, Middleware* next) {
 
 
 	(void)response;
-	(void)interface;
-	(void)serverBlocks;
+	(void)actHTTP;
+
+    if (response.get_code() >= 400)
+        next();
 
 	bool set = false;
 
@@ -17,5 +19,6 @@ void		MethodsCheker::body(Request & request, Response & response, ServerBlocks c
 	}
 
 	if (set == false)
-		throw (405);
+		response.set_code(Response::MethodNotAllowed);
+	next();
 }

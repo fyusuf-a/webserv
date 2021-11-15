@@ -9,11 +9,11 @@
 
 Log& ActiveHTTP::LOG = Log::getInstance();
 
-ActiveHTTP::ActiveHTTP() : ActiveServer(), _still_parsing(false), _server_blocks(NULL) {
+ActiveHTTP::ActiveHTTP() : ActiveServer(), _still_parsing(false), _server_blocks(NULL), _chain(this) {
 	time(&_last_time_active);
 }
 
-ActiveHTTP::ActiveHTTP(const ActiveHTTP& src) : ActiveServer(src), _still_parsing(src._still_parsing), _server_blocks(src._server_blocks) {
+ActiveHTTP::ActiveHTTP(const ActiveHTTP& src) : ActiveServer(src), _still_parsing(src._still_parsing), _server_blocks(src._server_blocks), _chain(this) {
 	*this = src;
 }
 
@@ -22,6 +22,7 @@ ActiveHTTP::ActiveHTTP(Socket* socket, INetAddress const& interface, std::vector
 													, _still_parsing(false)
 													, _interface(interface)
 													, _server_blocks(server_blocks)
+													, _chain(this)
 {
 	time(&_last_time_active);
 }
@@ -30,6 +31,7 @@ ActiveHTTP::ActiveHTTP(Socket* socket)
 													: ActiveServer(socket)
 													, _still_parsing(false)
 													, _server_blocks(NULL)
+													, _chain(this)
 {
 	time(&_last_time_active);
 }
@@ -84,6 +86,8 @@ bool	ActiveHTTP::always(int fd) {
 	(void)fd;
 	time_t				now;
 
+	if (!_reqs.empty())
+		_chain();
 	if (!_resps.empty())
 	{
 		std::ostringstream oss;
@@ -103,6 +107,10 @@ bool	ActiveHTTP::always(int fd) {
 
 std::vector<ServerBlock> const* ActiveHTTP::getServerBlocks() const {
 	return _server_blocks;
+}
+
+INetAddress ActiveHTTP::getInterface() const {
+	return _interface;
 }
 
 void ActiveHTTP::setServerBlocks(std::vector<ServerBlock> const* server_blocks) {
