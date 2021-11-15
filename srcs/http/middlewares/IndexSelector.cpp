@@ -1,12 +1,14 @@
 #include "Middlewares.hpp"
 
-void		IndexSelector::body(Request & request, Response & response, ServerBlocks const &serverBlocks, INetAddress const &interface) {
+void		IndexSelector::body(ActiveHTTP& actHTTP, Request& request, Response& response, Middleware* next) {
 
     (void)response;
     (void)interface;
     (void)request;
     (void)serverBlocks;
 
+    if (response.get_code() >= 400)
+        next();
 
     if (request.get_path().back() != '/')
         return ;
@@ -23,7 +25,7 @@ void		IndexSelector::body(Request & request, Response & response, ServerBlocks c
 
     if (idx != "")
         return ;
-    if (_auto_index == false)
+    if (request.get_location().get_auto_index() == false)
         response.set_code(Response::Forbidden);
-
+    next();
 }

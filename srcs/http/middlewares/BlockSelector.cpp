@@ -10,8 +10,8 @@ void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 	ServerBlocks	serverBlocks = actHTTP.getServerBlocks();
 	INetAddress		interface = actHTTP.getInterface();
 
-	if (response.get_code() < 400)
-		std::cout << "bonjour" << std::endl;
+    if (response.get_code() >= 400)
+        next();
 
 	// ---- Select server block
 
@@ -71,8 +71,10 @@ void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 			}
 		}
 	}
-	if (set == false)
-		throw (400);
+	if (set == false) {
+		response.set_code(Response::BadRequest);
+		next();
+	}
 	else
 		set = false;
 
@@ -122,5 +124,6 @@ void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 	}
 
 	if (set == false)
-		throw (404);
+		response.set_code(Response::NotFound);
+	next();
 }

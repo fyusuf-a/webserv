@@ -27,12 +27,12 @@ class Response
 			Unauthoried = 401,
 			Forbidden = 403,
 			NotFound = 404,
-			// MethodNotAllowed = 405,
-			MethodNotAllowed = 406,
+			MethodNotAllowed = 405,
+			NotAcceptable = 406,
 			RequestTime_out = 408,
 
 			// Erreur Server
-
+			HTTPNotSupported = 505;
 			UnknownError = 520,
 			WebServerIsDown = 521,
 			ConnectionTimedOut = 522,

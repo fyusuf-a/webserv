@@ -6,8 +6,10 @@ void		MethodsCheker::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 
 	(void)response;
 	(void)actHTTP;
-	(void)next;
-	
+
+    if (response.get_code() >= 400)
+        next();
+
 	bool set = false;
 
 	for (std::vector<std::string>::const_iterator it = request.get_location().get_methods().begin(); it != request.get_location().get_methods().end(); it++)
@@ -17,5 +19,6 @@ void		MethodsCheker::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 	}
 
 	if (set == false)
-		throw (405);
+		response.set_code(Response::MethodNotAllowed);
+	next();
 }
