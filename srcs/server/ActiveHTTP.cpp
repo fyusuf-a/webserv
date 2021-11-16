@@ -9,16 +9,17 @@
 
 Log& ActiveHTTP::LOG = Log::getInstance();
 
-ActiveHTTP::ActiveHTTP() : ActiveServer(), _server_blocks(NULL), _chain(NULL) {
+ActiveHTTP::ActiveHTTP() : ActiveServer(), _still_parsing(true), _server_blocks(NULL), _chain(NULL) {
 	time(&_last_time_active);
 }
 
-ActiveHTTP::ActiveHTTP(const ActiveHTTP& src) : ActiveServer(src), _server_blocks(src._server_blocks), _chain(NULL) {
+ActiveHTTP::ActiveHTTP(const ActiveHTTP& src) : ActiveServer(src), _still_parsing(true), _server_blocks(src._server_blocks), _chain(NULL) {
 	*this = src;
 }
 
 ActiveHTTP::ActiveHTTP(Socket* socket, INetAddress const& interface, std::vector<ServerBlock> const* server_blocks)
 													: ActiveServer(socket)
+													, _still_parsing(true)
 													, _interface(interface)
 													, _server_blocks(server_blocks)
 													, _chain(NULL)
@@ -28,6 +29,7 @@ ActiveHTTP::ActiveHTTP(Socket* socket, INetAddress const& interface, std::vector
 
 ActiveHTTP::ActiveHTTP(Socket* socket)
 													: ActiveServer(socket)
+													, _still_parsing(true)
 													, _server_blocks(NULL)
 													, _chain(NULL)
 {
@@ -37,6 +39,7 @@ ActiveHTTP::ActiveHTTP(Socket* socket)
 ActiveHTTP& ActiveHTTP::operator=(const ActiveHTTP& src) {
 	if (this != &src) {
 		ActiveServer::operator=(src);
+		_still_parsing = src._still_parsing;
 		_last_time_active = src._last_time_active;
 		_interface = src._interface;
 		_server_blocks = src._server_blocks;
@@ -60,9 +63,8 @@ bool	ActiveHTTP::on_readable(int fd) {
 	std::cout << "readbuffer avant parsing:" << std::endl
 				  << "(" << _read_buffer << ")" << std::endl;
 
-	bool still_parsing = true;
 	while (1) {
-		if (!still_parsing)
+		if (!_still_parsing)
 		{
 			_reqs.push_back(_parsed_request);
 			_parsed_request.reinitialize();
@@ -70,7 +72,7 @@ bool	ActiveHTTP::on_readable(int fd) {
 		_parsed_request.set_over(true);
 		while (_parsed_request.get_head() < 6 && _parsed_request.get_over())
 			_parsed_request.parse(_read_buffer);
-		still_parsing = !_parsed_request.get_over();
+		_still_parsing = !_parsed_request.get_over();
 		if (_read_buffer == "" || !_parsed_request.get_over())
 			break ;
 	}

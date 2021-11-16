@@ -40,6 +40,7 @@ public:
 	void send_response();
 
 protected:
+	bool								_still_parsing;
 	time_t								_last_time_active;
 	INetAddress							_interface;
 	std::vector<ServerBlock> const *	_server_blocks;
