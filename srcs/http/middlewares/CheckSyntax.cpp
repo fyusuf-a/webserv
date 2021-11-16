@@ -1,9 +1,12 @@
-#include "Middlewares.hpp"
+#include "Middleware.hpp"
+#include "MiddlewareChain.hpp"
 
-void		CheckSyntax::body(ActiveHTTP& actHTTP, Request& request, Response& response, Middleware* next) {
-	
-	(void)response;
+CheckSyntax::CheckSyntax() {
+}
+
+void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & response, MiddlewareChain& next) {
 	(void)actHTTP;
+	
 	std::string met = request.get_method();
 
 	if (met != "GET" && met != "POST" && met != "DELETE")

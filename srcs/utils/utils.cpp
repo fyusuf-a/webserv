@@ -105,10 +105,7 @@ namespace Utils
     bool is_set(std::vector<T> value)
     {
         if (value.empty())
-        {
-            std::cout << "lalala" << std::endl;
             return (false);
-        }
         return (true);
 
     }
@@ -116,7 +113,6 @@ namespace Utils
     // {
     //     if (value.empty())
     //     {
-    //         std::cout << "lalala" << std::endl;
     //         return (false);
     //     }
     //     return (true);

@@ -1,5 +1,6 @@
 #ifndef REQUEST_HPP
 # define REQUEST_HPP
+#include <cstddef>
 # include <iostream>
 # include <map>
 # include "../../parsingConf/serverBlock.hpp"
@@ -18,7 +19,8 @@ class Request
 		bool		_over;
 		std::string _residual;
 		std::string	_field_name;
-		std::size_t	_lctr;
+		size_t		_lctr;
+		bool		_treated_by_middlewares;
 
 
 		ServerBlock 	_server;
@@ -33,7 +35,7 @@ class Request
 		Request( Request const & src );
 		Request & operator=( Request const & rhs );
 
-		// Returns the index to which the parsing led
+		void								reinitialize();
 		void								parse(std::string& buffer);
 		std::string							extract_attribute(std::string& buffer, std::string terminating);
 		void								manage_head(std::string &buffer);
@@ -54,6 +56,8 @@ class Request
 		void 								set_location(ServerLocation location);
 		ServerLocation const 				&get_location(void);
 
+		bool								get_treated_by_middlewares(void) const;
+		void								set_treated_by_middlewares(bool);
 };
 
 std::ostream& operator<<(std::ostream&, const Request&);

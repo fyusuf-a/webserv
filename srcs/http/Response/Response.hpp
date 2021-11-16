@@ -5,6 +5,8 @@
 
 
 
+class ActiveHTTP;
+
 class Response
 {
 	public:
@@ -24,7 +26,7 @@ class Response
 
 			// Erreur
 			BadRequest = 400,
-			Unauthoried = 401,
+			Unauthorized = 401,
 			Forbidden = 403,
 			NotFound = 404,
 			MethodNotAllowed = 405,
@@ -39,25 +41,29 @@ class Response
 			ConnectionTimedOut = 522,
 			OriginIsUnreachable = 523,
 			ATimeoutOccurred = 524
-
 		};
 	
 	private:
+		ActiveHTTP* _server;
 		http_code	_code;
-		
-
+		bool		_ready;
 
 	public:
+		static std::string http_code_to_str(http_code);
+	
 		Response();
+		Response(ActiveHTTP* callback);
 		~Response();
 		Response( Response const & src );
 		Response & operator=( Response const & rhs );
 
-		http_code		get_code(void) const;
-		void			set_code(http_code code);
-
-
-
+		void		set_code(http_code code);
+		void		send();
+		http_code	get_code(void) const;
+		void		reinitialize();
+		bool		get_ready();
 };
+
+std::ostream& operator<<(std::ostream&, const Response&);
 
 #endif

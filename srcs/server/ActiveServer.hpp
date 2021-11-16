@@ -19,6 +19,7 @@ public:
 	Socket			*getSocket();
 
 protected:
+	bool			_closing;
 	std::string		_write_buffer;
 	std::string		_read_buffer;
 	Socket			*_socket;
