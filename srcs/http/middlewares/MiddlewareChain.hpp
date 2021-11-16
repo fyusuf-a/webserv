@@ -4,6 +4,8 @@
 #include "Middleware.hpp"
 #include <list>
 
+class Middleware;
+
 class MiddlewareChain {
 private:
 	void init();

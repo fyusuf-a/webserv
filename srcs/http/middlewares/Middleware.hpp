@@ -4,6 +4,10 @@
 # include "../Request/Request.hpp"
 # include "../Response/Response.hpp"
 # include "../../utils/Singleton.hpp"
+# include "../../webserv/webserv.hpp"
+# include "../../ipaddress/INetAddress.hpp"
+# include "MiddlewareChain.hpp"
+# include "../../server/ActiveHTTP.hpp"
 
 class MiddlewareChain;
 class ActiveHTTP;

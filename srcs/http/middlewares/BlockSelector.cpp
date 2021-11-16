@@ -1,17 +1,19 @@
-#include "Middlewares.hpp"
+#include "Middleware.hpp"
 
-void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& response, Middleware* next) {
+BlockSelector::BlockSelector() {
+}
+void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& response, MiddlewareChain& next) {
 
 	(void)request;
+
+	if (response.get_code() >= 400)
+        next();
 
 	bool            set = false;
 	ServerBlocks    tmp_servers;
 	Locations       tmp_locations;
-	ServerBlocks	serverBlocks = actHTTP.getServerBlocks();
+	ServerBlocks	serverBlocks = *actHTTP.getServerBlocks();
 	INetAddress		interface = actHTTP.getInterface();
-
-    if (response.get_code() >= 400)
-        next();
 
 	// ---- Select server block
 

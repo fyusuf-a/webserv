@@ -1,5 +1,4 @@
 #include "MiddlewareChain.hpp"
-#include "Middleware.hpp"
 
 MiddlewareChain::MiddlewareChain() : _activeHTTP(NULL), _req(NULL), _resp(NULL) {
 	init();
@@ -13,9 +12,10 @@ void MiddlewareChain::init() {
 	
 	CheckSyntax& check_syntax = CheckSyntax::getInstance();
 	Sender& sender = Sender::getInstance();
-
+	BlockSelector& block_selector = BlockSelector::getInstance();
 
 	_chain.push_back(&check_syntax);
+	_chain.push_back(&block_selector);
 	_chain.push_back(&sender);
 }
 

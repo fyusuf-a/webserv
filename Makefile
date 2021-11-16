@@ -13,6 +13,7 @@ SRC = 	main.cpp\
 	srcs/ipaddress/IPAddress.cpp\
 	srcs/ipaddress/INetAddress.cpp\
 	srcs/http/middlewares/CheckSyntax.cpp\
+	srcs/http/middlewares/BlockSelector.cpp\
 	srcs/http/middlewares/Sender.cpp\
 	srcs/http/middlewares/Middleware.cpp\
 	srcs/http/middlewares/MiddlewareChain.cpp\
