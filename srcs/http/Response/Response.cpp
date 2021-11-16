@@ -1,12 +1,22 @@
 #include "Response.hpp"
 
-void				Response::set_code(Response::http_code code) {
+void					Response::set_code(Response::http_code code) {
 	this->_code = code;
 }
-
-Response::http_code					Response::get_code(void) const {
+Response::http_code		Response::get_code(void) const {
 	return this->_code;
 }
+
+std::string		get_body(void) const {
+	return this->_body
+}
+void			set_body(std::string body)
+{
+	this->_body = body;
+}
+
+
+
 
 Response & 		Response::operator=( Response const & rhs ){
 	if (this != &rhs)

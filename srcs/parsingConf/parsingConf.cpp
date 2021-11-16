@@ -504,7 +504,7 @@ void ParsingConf::parsing(std::string path, ServerBlocks &servers)
     std::vector<std::string>    content;
     std::ifstream               fd(path.c_str());
 
-    if (!fd.is_open() && !fd.good())
+    if (!fd.is_open() || !fd.good())
         throw MyException("[ERROR] File: Can't open File !");
     else
     {

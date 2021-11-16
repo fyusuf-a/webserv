@@ -96,11 +96,5 @@ namespace Utils
         for (; str[i] == find[i]; i++);
         return (i);
     }
-
-
-    bool DoesFileExist (const std::string& name)
-    {
-        return ( access( name.c_str(), F_OK ) != -1 );
-    }
 }
 

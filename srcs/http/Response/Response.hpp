@@ -24,7 +24,7 @@ class Response
 
 			// Erreur
 			BadRequest = 400,
-			Unauthoried = 401,
+			Unauthorized = 401,
 			Forbidden = 403,
 			NotFound = 404,
 			MethodNotAllowed = 405,
@@ -44,6 +44,7 @@ class Response
 	
 	private:
 		http_code	_code;
+		std::string _body;
 		
 
 
@@ -55,6 +56,9 @@ class Response
 
 		http_code		get_code(void) const;
 		void			set_code(http_code code);
+
+		std::string	get_body(void) const;
+		void			set_body(std::string body);
 
 
 
