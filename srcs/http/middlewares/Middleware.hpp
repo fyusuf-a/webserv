@@ -28,7 +28,7 @@ class CheckSyntax : public Middleware, public Singleton<CheckSyntax>
 		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
 
-class BlockSelector : public Middleware
+class BlockSelector : public Middleware, public Singleton<BlockSelector>
 {
 	public:
 		BlockSelector();
@@ -36,7 +36,7 @@ class BlockSelector : public Middleware
 		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
 
-class MethodChecker : public Middleware
+class MethodChecker : public Middleware, public Singleton<MethodChecker>
 {
 	public:
 		MethodChecker();
@@ -45,7 +45,6 @@ class MethodChecker : public Middleware
 };
 
 class Sender : public Middleware, public Singleton<Sender>
-
 {
 	public:
 		Sender();

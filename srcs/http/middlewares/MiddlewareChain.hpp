@@ -6,6 +6,7 @@
 
 class MiddlewareChain {
 private:
+	void init();
 	std::list<Middleware*> _chain;
 	ActiveHTTP* _activeHTTP;
 	Request* _req;
