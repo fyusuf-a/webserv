@@ -47,7 +47,6 @@ PassiveHTTP<T>::PassiveHTTP(uint32_t ip, uint16_t port, const std::vector<Server
 	: PassiveServer<T>(ip, port, nonblocking)
 	, _interface(INetAddress(ip, port))
 	, _server_blocks(server_blocks) {
-	std::cout << "lol" << _interface << std::endl;
 	//_server_block = ServerBlock(server_block);
 }*/
 

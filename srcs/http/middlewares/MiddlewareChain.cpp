@@ -1,14 +1,14 @@
 #include "MiddlewareChain.hpp"
 #include "Middleware.hpp"
 
-MiddlewareChain::MiddlewareChain() : _activeHTTP(NULL) {
+MiddlewareChain::MiddlewareChain() : _activeHTTP(NULL), _req(NULL), _resp(NULL) {
 	CheckSyntax& check_syntax = CheckSyntax::getInstance();
 	Sender& sender = Sender::getInstance();
 	_chain.push_back(&check_syntax);
 	_chain.push_back(&sender);
 }
 
-MiddlewareChain::MiddlewareChain(ActiveHTTP* callback) : _activeHTTP(callback) {
+MiddlewareChain::MiddlewareChain(ActiveHTTP* callback, Request* req, Response* resp) : _activeHTTP(callback), _req(req), _resp(resp) {
 	CheckSyntax& check_syntax = CheckSyntax::getInstance();
 	Sender& sender = Sender::getInstance();
 	_chain.push_back(&check_syntax);
@@ -34,7 +34,7 @@ void MiddlewareChain::_next() {
 		return;
 	Middleware* middleware = _chain.front();
 	_chain.pop_front();
-	middleware->body(*_activeHTTP, _req, _resp, *this);
+	middleware->body(*_activeHTTP, *_req, *_resp, *this);
 }
 
 void MiddlewareChain::operator()() {

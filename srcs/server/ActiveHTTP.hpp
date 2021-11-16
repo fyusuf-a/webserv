@@ -16,6 +16,9 @@ class MiddlewareChain;
 
 class ActiveHTTP : public ActiveServer {
 
+private:
+	bool check_timeout(int fd);
+
 public:
 	static Log& LOG;
 
@@ -33,17 +36,19 @@ public:
 	void setServerBlocks(std::vector<ServerBlock> const*);
 	time_t const& get_last_time_active() const;
 	const std::list<Request>& get_reqs() const;
-	std::list<Response>& get_resps();
+	const Response& get_resp() const;
+	void send_response();
 
 protected:
-	bool								_still_parsing;
 	time_t								_last_time_active;
 	INetAddress							_interface;
 	std::vector<ServerBlock> const *	_server_blocks;
 	std::list<Request>					_reqs;
-	std::list<Response>					_resps;
-	MiddlewareChain						_chain;
+	Request								_parsed_request;
+	Response							_resp;
+	MiddlewareChain						*_chain;
 	virtual bool						on_readable(int fd);
+	virtual bool						on_close(int fd);
 	virtual bool						always(int fd);
 };
 

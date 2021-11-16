@@ -93,6 +93,7 @@ void	NIOSelector::poll() {
 		fd = _polled_fds[i].fd;
 		revents = _polled_fds[i].revents;
 		action = _actions[fd];
+		action.callback->always(fd);
 		if (revents & (POLLERR | POLLNVAL)) {
 			LOG.error() << "An error has occured in the connection with peer" << std::endl;
 			action.callback->on_close(fd);
@@ -107,6 +108,5 @@ void	NIOSelector::poll() {
 			continue;
 		if (revents & POLLOUT && !action.callback->on_writable(fd))
 			continue;
-		action.callback->always(fd);
 	}
 }
