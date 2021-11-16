@@ -7,8 +7,10 @@ void		MethodChecker::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 	(void)response;
 	(void)actHTTP;
 
-    if (response.get_code() >= 400)
+    if (response.get_code() >= 400){
         next();
+        return ;
+    }
 
 	bool set = false;
 

@@ -13,16 +13,20 @@ void		CheckSyntax::body(ActiveHTTP& actHTTP, Request& request, Response& respons
 	else if (request.get_protocol() != "HTTP/1.1")
 		response.set_code(Response::HTTPNotSupported);
 
-    if (response.get_code() >= 400)
+    if (response.get_code() >= 400) {
         next();
+        return ;
+    }
 
 	std::map<std::string, std::string>::iterator	it;
 	std::string										whitespaces = " \n\r\v\t\f";
 	int												host = 0;
 	for (it = request.get_header().begin(); it != request.get_header().end(); ++it){
 
-	    if (response.get_code() >= 400)
+	    if (response.get_code() >= 400) {
 	        next();
+	        return ;
+	    }
 		if (it->first == "Host")
 			++host;
 		if (whitespaces.find_first_of(it->first[0]) != std::string::npos)

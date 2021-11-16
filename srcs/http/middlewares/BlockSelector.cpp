@@ -10,8 +10,10 @@ void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 	ServerBlocks	serverBlocks = actHTTP.getServerBlocks();
 	INetAddress		interface = actHTTP.getInterface();
 
-    if (response.get_code() >= 400)
+    if (response.get_code() >= 400) {
         next();
+        return ;
+    }
 
 	// ---- Select server block
 
@@ -74,6 +76,7 @@ void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 	if (set == false) {
 		response.set_code(Response::BadRequest);
 		next();
+		return ;
 	}
 	else
 		set = false;

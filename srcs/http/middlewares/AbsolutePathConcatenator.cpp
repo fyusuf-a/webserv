@@ -5,8 +5,10 @@ void		AbsolutePathConcatenator::body(ActiveHTTP& actHTTP, Request& request, Resp
 	(void)response;
 	(void)actHTTP;
 
-    if (response.get_code() >= 400)
+    if (response.get_code() >= 400) {
         next();
+        return ;
+    }
 
 	std::string absolute_path;
 
