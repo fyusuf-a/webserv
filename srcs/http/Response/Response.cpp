@@ -94,10 +94,7 @@ Response::Response( Response const & src ) {
 	*this = src;
 }
 
-Response::Response() : _server(NULL), _code(OK), _ready(false) {
-}
-
-Response::Response(ActiveHTTP* server) : _server(server), _code(OK), _ready(false) {
+Response::Response() : _code(OK), _ready(false) {
 }
 
 Response::~Response() {

@@ -44,6 +44,14 @@ class MethodChecker : public Middleware, public Singleton<MethodChecker>
 		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
 
+class AbsolutePathConcatenator : public Middleware, public Singleton<AbsolutePathConcatenator>
+{
+	public:
+		AbsolutePathConcatenator();
+		virtual	~AbsolutePathConcatenator() {};
+		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+};
+
 class Sender : public Middleware, public Singleton<Sender>
 {
 	public:

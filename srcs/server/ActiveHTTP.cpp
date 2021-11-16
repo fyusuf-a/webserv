@@ -70,11 +70,11 @@ bool	ActiveHTTP::on_readable(int fd) {
 			_parsed_request.reinitialize();
 		}
 		_parsed_request.set_over(true);
+		if (_read_buffer == "" || !_parsed_request.get_over())
+			break ;
 		while (_parsed_request.get_head() < 6 && _parsed_request.get_over())
 			_parsed_request.parse(_read_buffer);
 		_still_parsing = !_parsed_request.get_over();
-		if (_read_buffer == "" || !_parsed_request.get_over())
-			break ;
 	}
 
 	LOG.debug() << "----------------- parsed request" << std::endl;
