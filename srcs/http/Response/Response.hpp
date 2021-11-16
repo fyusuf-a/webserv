@@ -5,6 +5,8 @@
 
 
 
+class ActiveHTTP;
+
 class Response
 {
 	public:
@@ -39,17 +41,19 @@ class Response
 			ConnectionTimedOut = 522,
 			OriginIsUnreachable = 523,
 			ATimeoutOccurred = 524
-
 		};
 	
 	private:
 		http_code	_code;
 		std::string _body;
-		
 
+		bool		_ready;
 
 	public:
+		static std::string http_code_to_str(http_code);
+	
 		Response();
+		Response(ActiveHTTP* callback);
 		~Response();
 		Response( Response const & src );
 		Response & operator=( Response const & rhs );
@@ -62,6 +66,11 @@ class Response
 
 
 
+		void		send();
+		void		reinitialize();
+		bool		get_ready();
 };
+
+std::ostream& operator<<(std::ostream&, const Response&);
 
 #endif

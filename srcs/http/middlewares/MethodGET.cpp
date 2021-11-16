@@ -3,7 +3,7 @@
 #define MYPATH ""
 
 //405
-void		MethodGET::body(ActiveHTTP& actHTTP, Request& request, Response& response, Middleware* next) {
+void		MethodGET::body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next) {
 	(void)response;
 	(void)actHTTP;
 

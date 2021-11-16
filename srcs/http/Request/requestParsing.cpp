@@ -65,7 +65,7 @@ void		Request::parse(std::string& buffer) {
 			break;
 		case 3:
 			if (buffer.find("\r\n", _lctr) == 0)
-				_head = 4;
+				_head = 5;
 			else
 				_field_name = extract_attribute(buffer, ":");
 			break;
