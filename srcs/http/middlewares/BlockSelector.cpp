@@ -7,7 +7,10 @@ void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 	(void)request;
 
 	if (response.get_code() >= 400)
+	{
         next();
+        return ;
+	}
 
 	bool            set = false;
 	ServerBlocks    tmp_servers;
