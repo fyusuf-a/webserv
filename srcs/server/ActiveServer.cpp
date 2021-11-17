@@ -53,7 +53,7 @@ bool ActiveServer::on_readable(int fd) {
 		}
 		catch (std::exception& e) {
 			LOG.error() << "An error occured while using recv" << std::endl;
-			_closing = true;
+			on_close(fd);
 			return (false);
 		}
 	}
@@ -70,7 +70,7 @@ bool ActiveServer::on_writable(int fd) {
 	}
 	catch (std::exception& e) {
 		LOG.error() << "An error occured while using send" << std::endl;
-		_closing = true;
+		on_close(fd);
 		return (false);
 	}
 	return (true);
@@ -81,8 +81,6 @@ bool ActiveServer::on_close(int) {
 	return (false);
 }
 
-bool ActiveServer::always(int fd) {
-	if (_closing)
-		on_close(fd);
+bool ActiveServer::always(int) {
 	return (true);
 }
