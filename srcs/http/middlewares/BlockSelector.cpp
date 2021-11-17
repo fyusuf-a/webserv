@@ -1,4 +1,7 @@
-#include "Middlewares.hpp"
+#include "Middleware.hpp"
+
+BlockSelector::BlockSelector() {
+}
 
 void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& response, Middleware* next) {
 

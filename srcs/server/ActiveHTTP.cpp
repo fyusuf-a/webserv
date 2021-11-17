@@ -68,6 +68,7 @@ bool	ActiveHTTP::on_readable(int fd) {
 		{
 			_reqs.push_back(_parsed_request);
 			_parsed_request.reinitialize();
+			_still_parsing = true;
 		}
 		_parsed_request.set_over(true);
 		if (_read_buffer == "" || !_parsed_request.get_over())
