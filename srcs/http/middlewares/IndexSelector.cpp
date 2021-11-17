@@ -1,17 +1,16 @@
 #include "Middlewares.hpp"
 
-void		IndexSelector::body(ActiveHTTP& actHTTP, Request& request, Response& response, Middleware* next) {
+void		IndexSelector::body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next) {
 
     (void)response;
     (void)interface;
     (void)request;
     (void)serverBlocks;
 
-    if (response.get_code() >= 400)
+    if (response.get_code() >= 400 || request.get_path().back() != '/'){
         next();
-
-    if (request.get_path().back() != '/')
         return ;
+    }
 
     std::vector<std::string> indexes = request.get_location().get_index();
     std::string path = request.get_location().get_location_path() + request.get_location().get_root();
@@ -24,8 +23,8 @@ void		IndexSelector::body(ActiveHTTP& actHTTP, Request& request, Response& respo
     }
 
     if (idx != "")
-        return ;
-    if (request.get_location().get_auto_index() == false)
+        request.set_path(idx);
+    if (request.get_location().get_auto_index() == false && idx != "")
         response.set_code(Response::Forbidden);
     next();
 }

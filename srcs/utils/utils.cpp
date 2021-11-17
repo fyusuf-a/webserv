@@ -96,27 +96,5 @@ namespace Utils
         for (; str[i] == find[i]; i++);
         return (i);
     }
-
-
-
-
-
-    template <typename T>
-    bool is_set(std::vector<T> value)
-    {
-        if (value.empty())
-            return (false);
-        return (true);
-
-    }
-    // bool is_set(std::string value)
-    // {
-    //     if (value.empty())
-    //     {
-    //         return (false);
-    //     }
-    //     return (true);
-
-    // }
 }
 

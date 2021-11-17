@@ -26,7 +26,7 @@ void	req_check_syntax(std::string str, WebServ &webserv) {
 	
 	CheckSyntax		csx;
 	BlockSelector	bs;
-	MethodsCheker  mc;
+	MethodChecker  mc;
 
 	// while (1) {
 	// 	if (!_still_parsing)

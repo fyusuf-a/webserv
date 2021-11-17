@@ -45,6 +45,8 @@ class Response
 	
 	private:
 		http_code	_code;
+		std::string _body;
+
 		bool		_ready;
 
 	public:
@@ -55,9 +57,15 @@ class Response
 		Response( Response const & src );
 		Response & operator=( Response const & rhs );
 
-		void		set_code(http_code code);
+		http_code		get_code(void) const;
+		void			set_code(http_code code);
+
+		std::string	get_body(void) const;
+		void			set_body(std::string body);
+
+
+
 		void		send();
-		http_code	get_code(void) const;
 		void		reinitialize();
 		bool		get_ready();
 };
