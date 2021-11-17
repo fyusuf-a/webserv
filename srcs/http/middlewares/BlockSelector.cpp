@@ -76,6 +76,7 @@ void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 	if (set == false) {
 		response.set_code(Response::BadRequest);
 		next();
+		return ;
 	}
 	else
 		set = false;

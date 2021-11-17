@@ -49,6 +49,7 @@ class Request
 		int									get_head(void) const;
 		bool								get_over(void) const;
 		void								set_over(bool over);
+		void								set_path(std::string path);
 
 		void 								set_server(ServerBlock server);
 		ServerBlock	const 					&get_server(void);

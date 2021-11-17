@@ -29,7 +29,7 @@ class CheckSyntax : public Middleware, public Singleton<CheckSyntax>
 	public:
 		CheckSyntax();
 		virtual	~CheckSyntax() {};
-		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
 
 class BlockSelector : public Middleware, public Singleton<BlockSelector>
@@ -37,7 +37,7 @@ class BlockSelector : public Middleware, public Singleton<BlockSelector>
 	public:
 		BlockSelector();
 		virtual	~BlockSelector() {};
-		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
 
 class MethodChecker : public Middleware, public Singleton<MethodChecker>
@@ -45,7 +45,7 @@ class MethodChecker : public Middleware, public Singleton<MethodChecker>
 	public:
 		MethodChecker();
 		virtual	~MethodChecker() {};
-		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
 
 class IndexSelector : public Middleware, public Singleton<IndexSelector>
@@ -63,13 +63,20 @@ class MethodGET : public Middleware, public Singleton<MethodGET>
 		virtual	~MethodGET() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
+class AbsolutePathConcatenator : public Middleware, public Singleton<AbsolutePathConcatenator>
+{
+	public:
+		AbsolutePathConcatenator();
+		virtual	~AbsolutePathConcatenator() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+};
 
 class Sender : public Middleware, public Singleton<Sender>
 {
 	public:
 		Sender();
 		virtual	~Sender() {};
-		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
  
 

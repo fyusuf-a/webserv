@@ -53,7 +53,6 @@ class Response
 		static std::string http_code_to_str(http_code);
 	
 		Response();
-		Response(ActiveHTTP* callback);
 		~Response();
 		Response( Response const & src );
 		Response & operator=( Response const & rhs );

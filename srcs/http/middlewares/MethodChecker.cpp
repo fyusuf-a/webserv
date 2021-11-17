@@ -1,14 +1,20 @@
 #include "Middleware.hpp"
+#include "MiddlewareChain.hpp"
 
 //405
+
+MethodChecker::MethodChecker() {
+}
 void		MethodChecker::body(ActiveHTTP& actHTTP, Request& request, Response& response, MiddlewareChain& next) {
 
 
 	(void)response;
 	(void)actHTTP;
 
-    if (response.get_code() >= 400)
+    if (response.get_code() >= 400){
         next();
+        return ;
+    }
 
 	bool set = false;
 

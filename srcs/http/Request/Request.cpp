@@ -4,6 +4,10 @@ void								Request::set_over(bool over) {
 	this->_over = over;
 }
 
+void								Request::set_path(std::string path) {
+	this->_path = path;
+}
+
 std::string							Request::get_method(void) const {
 	return this->_method;
 }
