@@ -48,14 +48,13 @@ ActiveHTTP& ActiveHTTP::operator=(const ActiveHTTP& src) {
 }
 
 ActiveHTTP::~ActiveHTTP() {
+	if (_chain)
+		delete _chain;
 }
 
 bool	ActiveHTTP::on_readable(int fd) {
 	time(&_last_time_active);
-	if (_closing)
-		return (false);
 	if (!ActiveServer::on_readable(fd)) {
-		_closing = true;
 		return (false);
 	}
 	std::ostringstream	ss;
@@ -104,6 +103,11 @@ bool	ActiveHTTP::always(int fd) {
 		if (!_reqs.front().get_treated_by_middlewares())
 		{
 			Request* req = &_reqs.front();
+			if (_chain)
+			{
+				delete _chain;
+				_chain = NULL;
+			}
 			_chain = new MiddlewareChain(this, req, &_resp);
 			req->set_treated_by_middlewares(true);
 			(*_chain)();
@@ -116,10 +120,8 @@ bool	ActiveHTTP::always(int fd) {
 	return (true);
 }
 
-bool	ActiveHTTP::on_close(int fd) {
-	_closing = true;
-	if (_reqs.empty())
-		ActiveServer::on_close(fd);
+bool	ActiveHTTP::on_close(int) {
+	delete this;
 	return (false);
 }
 
