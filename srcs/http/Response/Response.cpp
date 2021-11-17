@@ -124,8 +124,9 @@ bool Response::get_ready() {
 }
 
 std::ostream& operator<<(std::ostream& os, const Response& resp) {
-	os << resp.get_code() << " "
+	os << "HTTP/1.1 " << resp.get_code() << " "
 		<< Response::http_code_to_str(resp.get_code())
-		<< "\r\n\r\n";
+		<< "\r\nContent-Length: " << resp.get_body().length()
+		<< "\r\n\r\n" << resp.get_body();
 	return os;
 }
