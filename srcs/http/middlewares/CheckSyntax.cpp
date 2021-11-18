@@ -24,20 +24,14 @@ void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & respo
 	std::map<std::string, std::string>::const_iterator	it;
 	std::string										whitespaces = " \n\r\v\t\f";
 	int												host = 0;
-		bool set = false;
 
-//----
-	for (it = request.get_header().begin(); it != request.get_header().end(); ++it){
-		if (it->first == "Host")
-			set = true;
+	if (request.get_header().size() == 0) {
+		response.set_code(Response::BadRequest);
+		next();
+		return ;
 	}
-	//if (set == false)
-	//	request.get_header()["Host"] = "test";
-// ----
 		
-
 	for (it = request.get_header().begin(); it != request.get_header().end(); ++it){
-
 	    if (response.get_code() >= 400) {
 	        next();
 	        return ;
@@ -49,8 +43,6 @@ void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & respo
 		else if (whitespaces.find_first_of(it->first[it->first.length()]) != std::string::npos)
 			response.set_code(Response::BadRequest);
 	}
-
-
 
 	if (response.get_code() < 400 && host != 1)
 		response.set_code(Response::BadRequest);
