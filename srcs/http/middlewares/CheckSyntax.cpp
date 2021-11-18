@@ -31,8 +31,8 @@ void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & respo
 		if (it->first == "Host")
 			set = true;
 	}
-	if (set == false)
-		request.get_header()["Host"] = "test";
+	//if (set == false)
+	//	request.get_header()["Host"] = "test";
 // ----
 		
 
