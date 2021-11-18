@@ -1,9 +1,9 @@
 #include "Middleware.hpp"
 # include <stdio.h>
-#define MYPATH "/Users/simoulin/Desktop/webserv/test/File/index.html"
+#define MYPATH "/Users/jdyer/dev/webserv/Makefile"
 
 //405
-void		MethodGET::body(ActiveHTTP&, Request&, Response& response, MiddlewareChain& next) {
+void		MethodGET::body(ActiveHTTP&, Request& request, Response& response, MiddlewareChain& next) {
 
     if (response.get_code() >= 400)
         next();
@@ -18,7 +18,7 @@ void		MethodGET::body(ActiveHTTP&, Request&, Response& response, MiddlewareChain
 			std::string  body;
 			std::string  result;
 
-			std::ifstream fd(MYPATH);
+			std::ifstream fd(request.get_path());
 
 			if (!fd.is_open() || !fd.good())
 				response.set_code(Response::Forbidden);
