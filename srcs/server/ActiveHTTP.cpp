@@ -89,7 +89,7 @@ bool	ActiveHTTP::on_readable(int fd) {
 bool	ActiveHTTP::always(int fd) {
 	(void)fd;
 
-	sleep(2);
+	//sleep(2);
 	size_t i = 0;
 	LOG.debug() << "----------------- all requests" << std::endl;
 	for (std::list<Request>::const_iterator it = _reqs.begin(); it != _reqs.end(); it++) {

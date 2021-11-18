@@ -8,16 +8,16 @@ void		MethodGET::body(ActiveHTTP&, Request& request, Response& response, Middlew
         next();
 	else
 	{
-		if (access((request.get_path()).c_str(), 0) != 0)
+		if (access(request.get_path().c_str(), 0) != 0)
 			response.set_code(Response::NotFound);
-		else if (access((request.get_path()).c_str(), 4) != 0)
+		else if (access(request.get_path().c_str(), 4) != 0)
 			response.set_code(Response::Forbidden);
 		else
 		{
 			std::string  body;
 			std::string  result;
 
-			std::ifstream fd(request.get_path());
+			std::ifstream fd(request.get_path().c_str());
 
 			if (!fd.is_open() || !fd.good())
 				response.set_code(Response::Forbidden);

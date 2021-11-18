@@ -15,13 +15,13 @@ Socket::Socket(const Socket& src) {
 Socket& Socket::operator=(const Socket& src) {
 	if (this != &src) {
 		_fd = src._fd;
-		_address = src._address;
+		_interface = src._interface;
 	}
 	return (*this);
 }
 
 void Socket::init(const IPAddress& ip, uint16_t port, bool nonblocking) {
-	_address = INetAddress(ip, port);
+	_interface = INetAddress(ip, port);
 	if ((_fd = socket(PF_INET, SOCK_STREAM, 0)) < 0)
 	{
 		std::ostringstream oss;
@@ -29,39 +29,39 @@ void Socket::init(const IPAddress& ip, uint16_t port, bool nonblocking) {
 		throw std::runtime_error(oss.str());
 	}
 	int yes = 1;
-	LOG.debug() << "Initialized socket (address " << _address << ')' << std::endl;
+	LOG.debug() << "Initialized socket (address " << _interface << ')' << std::endl;
 	if (setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes) < 0)
 	{
 		std::ostringstream oss;
-		oss << "setsockopt: unexpected error while setting socket options (address: " << _address << ')';
+		oss << "setsockopt: unexpected error while setting socket options (address: " << _interface << ')';
 		throw std::runtime_error(oss.str());
 	}
-	LOG.debug() << "Options set (address " << _address << ')' << std::endl;
+	LOG.debug() << "Options set (address " << _interface << ')' << std::endl;
 	if (nonblocking)
 	{
 		if (fcntl(_fd, F_SETFL, O_NONBLOCK) < 0)
 		{
 			std::ostringstream oss;
-			oss << "cannot set socket to be not blocking (address: " << _address << ')';
+			oss << "cannot set socket to be not blocking (address: " << _interface << ')';
 			throw std::runtime_error(oss.str());
 		}
-		LOG.debug() << "Socket set as nonblocking (address " << _address << ')' << std::endl;
+		LOG.debug() << "Socket set as nonblocking (address " << _interface << ')' << std::endl;
 	}
 	struct sockaddr_in my_struct;
-	_address.to_sockaddr_in(&my_struct);
+	_interface.to_sockaddr_in(&my_struct);
 	if (bind(_fd, (struct sockaddr*)&my_struct, sizeof my_struct) < 0)
 	{
 		std::ostringstream oss;
 		if (errno == EACCES)
-			LOG.error() << "Access denied on address " << _address << std::endl;
+			LOG.error() << "Access denied on address " << _interface << std::endl;
 		else if (errno == EADDRINUSE)
-			LOG.debug() << "Address already in use " << _address << std::endl;
+			LOG.debug() << "Address already in use " << _interface << std::endl;
 		else if (errno == EADDRNOTAVAIL)
-			LOG.error() << "Address " << _address << " is not available" << std::endl;
-		oss << "cannot bind socket (address: " << _address << ')';
+			LOG.error() << "Address " << _interface << " is not available" << std::endl;
+		oss << "cannot bind socket (address: " << _interface << ')';
 		throw std::runtime_error(oss.str());
 	}
-	LOG.debug() << "Socket bound (address " << _address << ')' << std::endl;
+	LOG.debug() << "Socket bound (address " << _interface << ')' << std::endl;
 }
 
 Socket::Socket(const IPAddress& ip, uint16_t port, bool nonblocking) { //:	_port(port)  {
@@ -80,10 +80,10 @@ void	Socket::listen() {
 	if (::listen(_fd, SOMAXCONN) < 0)
 	{
 		std::ostringstream oss;
-		oss << "Cannot listen on socket (address: " << _address << ')';
+		oss << "Cannot listen on socket (address: " << _interface << ')';
 		throw std::runtime_error(oss.str());
 	}
-	LOG.info() << "Listening on " << _address << std::endl;
+	LOG.info() << "Listening on " << _interface << std::endl;
 }
 
 Socket*	 Socket::accept() const //throw (std::runtime_error)
@@ -97,8 +97,11 @@ Socket*	 Socket::accept() const //throw (std::runtime_error)
 		throw std::runtime_error("accept: error");
 	Socket *newSocket = new Socket();
 	newSocket->_fd = newfd;
-	newSocket->_address.setPort((*reinterpret_cast<struct sockaddr_in*>(&address)).sin_port);
-	LOG.debug() << "New active socket on: " << newSocket->_address << std::endl;
+	newSocket->_interface.setPort(reinterpret_cast<struct sockaddr_in&>(address).sin_port);
+	IPAddress new_addr = ntohl(reinterpret_cast<struct sockaddr_in&>(address).sin_addr.s_addr);
+	newSocket->_interface.setAddress(new_addr);
+	//newSocket->_i.setInterface(INetAddress((reinterpret_cast<struct sockaddr_in&>(address)).sin_addr.s_addr), (reinterpret_cast<struct sockaddr_in&>(address)).sin_port);
+	LOG.debug() << "New active socket on: " << newSocket->_interface << std::endl;
 	return (newSocket);
 }
 
@@ -136,12 +139,12 @@ int Socket::getFd() const {
 	return _fd;
 }
 
-INetAddress Socket::getAddress() const {
-	return _address;
+INetAddress Socket::getInterface() const {
+	return _interface;
 }
 
-void Socket::setAddress(const INetAddress& addr) {
-	_address = addr;
+void Socket::setInterface(const INetAddress& interface) {
+	_interface = interface;
 }
 
 void Socket::setFd(const int& fd) {
@@ -149,5 +152,5 @@ void Socket::setFd(const int& fd) {
 }
 
 void Socket::setPort(uint16_t port) {
-	_address.setPort(port);
+	_interface.setPort(port);
 }
