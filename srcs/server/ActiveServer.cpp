@@ -30,7 +30,7 @@ ActiveServer& ActiveServer::operator=(const ActiveServer& src) {
 }
 
 ActiveServer::~ActiveServer() {
-	LOG.info() << "Connection closed with " << _socket->getAddress() << std::endl;
+	LOG.info() << "Connection closed with " << _socket->getInterface() << std::endl;
 	NIOSelector::getInstance().remove(_socket->getFd());
 	delete _socket;
 }

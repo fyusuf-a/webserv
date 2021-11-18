@@ -54,14 +54,14 @@ public:
 	ssize_t			recv(void *buf, int maxlen, int flags = 0);
 
 	int				getFd() const;
-	INetAddress 	getAddress() const;
+	INetAddress 	getInterface() const;
 	void			setFd(const int&);
-	void			setAddress(const INetAddress&);
+	void			setInterface(const INetAddress&);
 	void			setPort(u_int16_t port);
 
 public:
 	int		_fd;
-	INetAddress	_address;
+	INetAddress	_interface;
 
 private:
 	void	init(const IPAddress& ip, uint16_t port, bool nonblocking);
