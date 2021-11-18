@@ -74,13 +74,23 @@ std::string Response::http_code_to_str(http_code code) {
 	}
 }
 
-void				Response::set_code(Response::http_code code) {
+void					Response::set_code(Response::http_code code) {
 	this->_code = code;
 }
-
-Response::http_code					Response::get_code(void) const {
+Response::http_code		Response::get_code(void) const {
 	return this->_code;
 }
+
+std::string		Response::get_body(void) const {
+	return this->_body;
+}
+void			Response::set_body(std::string body)
+{
+	this->_body = body;
+}
+
+
+
 
 Response & 		Response::operator=( Response const & rhs ){
 	if (this != &rhs)
@@ -114,8 +124,9 @@ bool Response::get_ready() {
 }
 
 std::ostream& operator<<(std::ostream& os, const Response& resp) {
-	os << resp.get_code() << " "
+	os << "HTTP/1.1 " << resp.get_code() << " "
 		<< Response::http_code_to_str(resp.get_code())
-		<< "\r\n\r\n";
+		<< "\r\nContent-Length: " << resp.get_body().length() + 1
+		<< "\r\n\r\n" << resp.get_body() << std::endl; 
 	return os;
 }

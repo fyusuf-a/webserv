@@ -1,6 +1,6 @@
 #include "Middlewares.hpp"
 
-void		IndexSelector::body(ActiveHTTP& actHTTP, Request& request, Response& response, Middleware* next) {
+void		IndexSelector::body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next) {
 
     (void)response;
     (void)interface;

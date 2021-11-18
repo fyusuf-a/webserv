@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-
+#include <unistd.h>
 
 
 namespace Utils
@@ -27,8 +27,6 @@ namespace Utils
     bool is_set(std::vector<T> value);
 
     int ft_find(std::string str, std::string find);
-
-
 
 
 

@@ -4,6 +4,10 @@
 # include "../Request/Request.hpp"
 # include "../Response/Response.hpp"
 # include "../../utils/Singleton.hpp"
+# include "../../webserv/webserv.hpp"
+# include "../../ipaddress/INetAddress.hpp"
+# include "MiddlewareChain.hpp"
+# include "../../server/ActiveHTTP.hpp"
 
 class MiddlewareChain;
 class ActiveHTTP;
@@ -25,7 +29,7 @@ class CheckSyntax : public Middleware, public Singleton<CheckSyntax>
 	public:
 		CheckSyntax();
 		virtual	~CheckSyntax() {};
-		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
 
 class BlockSelector : public Middleware, public Singleton<BlockSelector>
@@ -33,7 +37,7 @@ class BlockSelector : public Middleware, public Singleton<BlockSelector>
 	public:
 		BlockSelector();
 		virtual	~BlockSelector() {};
-		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
 
 class MethodChecker : public Middleware, public Singleton<MethodChecker>
@@ -41,15 +45,30 @@ class MethodChecker : public Middleware, public Singleton<MethodChecker>
 	public:
 		MethodChecker();
 		virtual	~MethodChecker() {};
-		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
 
+class IndexSelector : public Middleware, public Singleton<IndexSelector>
+{
+	public:
+		IndexSelector(){};
+		virtual	~IndexSelector() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+};
+
+class MethodGET : public Middleware, public Singleton<MethodGET>
+{
+	public:
+		MethodGET(){};
+		virtual	~MethodGET() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+};
 class AbsolutePathConcatenator : public Middleware, public Singleton<AbsolutePathConcatenator>
 {
 	public:
 		AbsolutePathConcatenator();
 		virtual	~AbsolutePathConcatenator() {};
-		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
 
 class Sender : public Middleware, public Singleton<Sender>
@@ -57,7 +76,10 @@ class Sender : public Middleware, public Singleton<Sender>
 	public:
 		Sender();
 		virtual	~Sender() {};
-		void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
  
+
+
+
 #endif

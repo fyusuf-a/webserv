@@ -1,7 +1,11 @@
-#include "Middlewares.hpp"
+#include "Middleware.hpp"
+#include "MiddlewareChain.hpp"
 
 //405
-void		MethodChecker::body(ActiveHTTP& actHTTP, Request& request, Response& response, Middleware* next) {
+
+MethodChecker::MethodChecker() {
+}
+void		MethodChecker::body(ActiveHTTP& actHTTP, Request& request, Response& response, MiddlewareChain& next) {
 
 
 	(void)response;
