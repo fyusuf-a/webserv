@@ -45,7 +45,7 @@ void		Request::parse(std::string& buffer) {
 	_over = true;
 	std::string tmp;
 
-	if (buffer[0] == '\0') {
+	if (buffer[_lctr] == '\0') {
 		if (_head == 5)
 			++_head;
 		else
