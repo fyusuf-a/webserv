@@ -1,15 +1,6 @@
-#include "Middlewares.hpp"
+#include "Middleware.hpp"
 
-IndexSelector::IndexSelector() {
-
-}
-
-void		IndexSelector::body(ActiveHTTP&, Request& request, Response&, MiddlewareChain& next) {
-
-    (void)response;
-    (void)interface;
-    (void)request;
-    (void)serverBlocks;
+void		IndexSelector::body(ActiveHTTP&, Request& request, Response&response, MiddlewareChain& next) {
 
     if (response.get_code() >= 400 || request.get_path().back() != '/'){
         next();

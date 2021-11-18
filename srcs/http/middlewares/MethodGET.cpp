@@ -1,6 +1,5 @@
 #include "Middleware.hpp"
 # include <stdio.h>
-#define MYPATH "/Users/jdyer/dev/webserv/Makefile"
 
 //405
 void		MethodGET::body(ActiveHTTP&, Request& request, Response& response, MiddlewareChain& next) {
@@ -9,9 +8,9 @@ void		MethodGET::body(ActiveHTTP&, Request& request, Response& response, Middlew
         next();
 	else
 	{
-		if (access(MYPATH, 0) != 0)
+		if (access((request.get_path()).c_str(), 0) != 0)
 			response.set_code(Response::NotFound);
-		else if (access(MYPATH, 4) != 0)
+		else if (access((request.get_path()).c_str(), 4) != 0)
 			response.set_code(Response::Forbidden);
 		else
 		{
@@ -29,9 +28,7 @@ void		MethodGET::body(ActiveHTTP&, Request& request, Response& response, Middlew
                 result += body;
             }
 			response.set_body(result);
-
 		}
-
 	}
 	next();
 }
