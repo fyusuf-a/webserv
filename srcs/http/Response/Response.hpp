@@ -46,7 +46,7 @@ class Response
 	private:
 		http_code	_code;
 		std::string _body;
-
+		std::map<std::string, std::string>	_header;
 		bool		_ready;
 
 	public:

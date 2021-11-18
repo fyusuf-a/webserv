@@ -1,36 +1,35 @@
 #include "Middleware.hpp"
-
-#define MYPATH ""
+# include <stdio.h>
+#define MYPATH "/Users/simoulin/Desktop/webserv/test/File/index.html"
 
 //405
-void		MethodGET::body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next) {
-	(void)response;
-	(void)actHTTP;
+void		MethodGET::body(ActiveHTTP&, Request&, Response& response, MiddlewareChain& next) {
 
     if (response.get_code() >= 400)
         next();
 	else
 	{
-		if (_access_s(MYPATH.c_str(), 0) != 0)
+		if (access(MYPATH, 0) != 0)
 			response.set_code(Response::NotFound);
-		else if (_access_s(MYPATH.c_str(), 4) != 0)
+		else if (access(MYPATH, 4) != 0)
 			response.set_code(Response::Forbidden);
 		else
 		{
 			std::string  body;
 			std::string  result;
 
-			std::ifstream fd(MYPATH.c_str());
+			std::ifstream fd(MYPATH);
 
 			if (!fd.is_open() || !fd.good())
 				response.set_code(Response::Forbidden);
-			for (int i = 0; getline(fd, tmp); i++)
+			for (int i = 0; getline(fd, body); i++)
             {
                 if (i)
-                	body += '\n';
-                body += tmp;
+                	result += '\n';
+                result += body;
             }
-			response.set_body(body);
+			response.set_body(result);
+
 		}
 
 	}
