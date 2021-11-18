@@ -16,6 +16,7 @@ ServerLocation &ServerLocation::operator=(const ServerLocation &other)
     if (this != &other)
 	{
 		_index = other._index;
+		_root = other._root;
 		_methods = other._methods;
 		_cgi_ext = other._cgi_ext;
 		_cgi_bin = other._cgi_bin;
@@ -31,7 +32,9 @@ ServerLocation &ServerLocation::operator=(const ServerLocation &other)
 
 void                             ServerLocation::set_index(std::vector<std::string> const &index){ this->_index = index; }
 void                             ServerLocation::set_methods(std::vector<std::string> const &methods){ this->_methods = methods; }
+
 void                             ServerLocation::set_root(std::string const &root){ this->_root = root; }
+
 void                             ServerLocation::set_cgi_ext(std::string const &cgi_ext){ this->_cgi_ext = cgi_ext; }
 void                             ServerLocation::set_cgi_bin(std::string const &cgi_bin){ this->_cgi_bin = cgi_bin; }
 void                             ServerLocation::set_language(std::string const &language){ this->_language = language; }
@@ -43,7 +46,9 @@ void                             ServerLocation::set_body_size(size_t val){ this
 
 std::vector<std::string> const   &ServerLocation::get_index(void) const{ return (this->_index); }
 std::vector<std::string> const   &ServerLocation::get_methods(void) const{ return (this->_methods); }
+
 std::string const                &ServerLocation::get_root(void) const{ return (this->_root); }
+
 std::string const                &ServerLocation::get_cgi_ext(void) const{ return (this->_cgi_ext); }
 std::string const                &ServerLocation::get_cgi_bin(void) const{ return (this->_cgi_bin); }
 std::string const                &ServerLocation::get_language(void) const{ return (this->_language); }
@@ -68,6 +73,10 @@ std::ostream& operator<<(std::ostream& os, const ServerLocation& location) {
 	
 	if (!location.get_methods().empty())
 		os << "methods\t" << location.get_methods() << ";" << std::endl;
+	if (!location.get_root().empty())
+		os << "root\t" << location.get_root() << ";" << std::endl;
+
+
 	if (!location.get_cgi_ext().empty())
 		os << "cgi_extension\t" << location.get_cgi_ext() << ";" << std::endl;
 	if (!location.get_cgi_bin().empty())

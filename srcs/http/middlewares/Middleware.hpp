@@ -63,6 +63,15 @@ class MethodGET : public Middleware, public Singleton<MethodGET>
 		virtual	~MethodGET() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
+
+class MethodDELETE : public Middleware, public Singleton<MethodGET>
+{
+	public:
+		MethodDELETE(){};
+		virtual	~MethodDELETE() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+};
+
 class AbsolutePathConcatenator : public Middleware, public Singleton<AbsolutePathConcatenator>
 {
 	public:

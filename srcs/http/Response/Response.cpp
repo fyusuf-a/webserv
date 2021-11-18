@@ -117,6 +117,7 @@ void Response::send() {
 void Response::reinitialize() {
 	_code = OK;
 	_ready = false;
+	_body = "";
 }
 
 bool Response::get_ready() {

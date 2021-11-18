@@ -1,9 +1,10 @@
 # include "Middleware.hpp"
 # include <stdio.h>
-#define MYPATH "/Users/simoulin/Desktop/webserv/test/File/index.html"
+
+# define ERROR_PATH
 
 //405
-void		MethodGET::body(ActiveHTTP&, Request& r, Response& response, MiddlewareChain& next) {
+void		MethodDELETE::body(ActiveHTTP&, Request&, Response& response, MiddlewareChain& next) {
 
     if (response.get_code() >= 400)
         next();
