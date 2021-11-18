@@ -21,7 +21,7 @@ void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & respo
         return ;
     }
 
-	std::map<std::string, std::string>::iterator	it;
+	std::map<std::string, std::string>::const_iterator	it;
 	std::string										whitespaces = " \n\r\v\t\f";
 	int												host = 0;
 	for (it = request.get_header().begin(); it != request.get_header().end(); ++it){
