@@ -20,13 +20,13 @@ void	req_check_syntax(std::string str, WebServ &webserv) {
 	Request		req;
 	Response 	resp;
 
-	std::list<IMiddlewares *> middlewares;
-	std::list<IMiddlewares *>::iterator it;
+	std::list<Middleware *> middlewares;
+	std::list<Middleware *>::iterator it;
 	std::map<std::string, std::string>::iterator it2;
 	
 	CheckSyntax		csx;
 	BlockSelector	bs;
-	MethodsCheker  mc;
+	MethodChecker  mc;
 
 	// while (1) {
 	// 	if (!_still_parsing)

@@ -35,9 +35,9 @@ PassiveHTTP<T>& PassiveHTTP<T>::operator=(const PassiveHTTP& src) {
 }
 
 template<typename T>
-PassiveHTTP<T>::PassiveHTTP(const INetAddress& address, const std::vector<ServerBlock>* server_blocks, bool nonblocking)
-	: PassiveServer<T>(address, nonblocking)
-	, _interface(address)
+PassiveHTTP<T>::PassiveHTTP(const INetAddress& interface, const std::vector<ServerBlock>* server_blocks, bool nonblocking)
+	: PassiveServer<T>(interface, nonblocking)
+	, _interface(interface)
 	, _server_blocks(server_blocks)
 {
 }
@@ -47,7 +47,6 @@ PassiveHTTP<T>::PassiveHTTP(uint32_t ip, uint16_t port, const std::vector<Server
 	: PassiveServer<T>(ip, port, nonblocking)
 	, _interface(INetAddress(ip, port))
 	, _server_blocks(server_blocks) {
-	std::cout << "lol" << _interface << std::endl;
 	//_server_block = ServerBlock(server_block);
 }*/
 
@@ -58,10 +57,10 @@ PassiveHTTP<T>::~PassiveHTTP() {
 template<typename T>
 bool PassiveHTTP<T>::on_readable(int fd) {
 	(void)fd;
-	LOG.info() << "New connection on " << this->_socket->getAddress() << std::endl;
+	LOG.info() << "New connection on " << this->_socket->getInterface() << std::endl;
 	T* activeServer = new T(this->_socket->accept(), _interface, _server_blocks);
 	//activeServer->setServerBlocks(_server_blocks);
-	LOG.info() << "Transfering connection to " << activeServer->getSocket()->getAddress() << std::endl;
+	LOG.info() << "Transfering connection to " << activeServer->getSocket()->getInterface() << std::endl;
 	return (true);
 }
 

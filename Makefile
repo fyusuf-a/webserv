@@ -13,6 +13,13 @@ SRC = 	main.cpp\
 	srcs/ipaddress/IPAddress.cpp\
 	srcs/ipaddress/INetAddress.cpp\
 	srcs/http/middlewares/CheckSyntax.cpp\
+	srcs/http/middlewares/BlockSelector.cpp\
+	srcs/http/middlewares/MethodChecker.cpp\
+	srcs/http/middlewares/MethodGET.cpp\
+	srcs/http/middlewares/Sender.cpp\
+	srcs/http/middlewares/Middleware.cpp\
+	srcs/http/middlewares/MiddlewareChain.cpp\
+	srcs/http/middlewares/AbsolutePathConcatenator.cpp\
 	srcs/http/Request/Request.cpp\
 	srcs/http/Request/requestParsing.cpp\
 	srcs/http/Request/checkIncompleteRequest.cpp\
@@ -21,7 +28,7 @@ SRC = 	main.cpp\
 NAME = Webserv
 HEADERS = -Iincludes 
 CC = g++
-CFLAGS = -g -Wall -Wextra -Werror -std=c++98
+CFLAGS = -Wall -Wextra -Werror -std=c++98
 O_FILES = $(SRC:.cpp=.o)
 
 all : $(NAME)

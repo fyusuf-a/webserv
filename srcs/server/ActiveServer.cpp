@@ -4,7 +4,7 @@
 
 Log& ActiveServer::LOG = Log::getInstance();
 
-ActiveServer::ActiveServer() : Callback() {
+ActiveServer::ActiveServer() : Callback(), _closing(false) {
 	_socket = new Socket();
 	NIOSelector::getInstance().add(_socket->getFd(), *this, READ | WRITE);
 }
@@ -13,7 +13,7 @@ ActiveServer::ActiveServer(const ActiveServer& src) : Callback(src) {
 	*this = src;
 }
 
-ActiveServer::ActiveServer(Socket* socket) {
+ActiveServer::ActiveServer(Socket* socket) : _closing(false) {
 	_socket = socket;
 	NIOSelector::getInstance().add(_socket->getFd(), *this, READ | WRITE);
 }
@@ -24,13 +24,13 @@ ActiveServer& ActiveServer::operator=(const ActiveServer& src) {
 		_write_buffer = std::string(src._write_buffer);
 		_read_buffer = std::string(src._read_buffer);
 		_socket = new Socket(*src._socket);
+		_closing = src._closing;
 	}
 	return (*this);
 }
 
 ActiveServer::~ActiveServer() {
-	LOG.info() << "Connection closed with " << _socket->getAddress() << std::endl;
-	NIOSelector::getInstance().remove(_socket->getFd());
+	LOG.info() << "Connection closed with " << _socket->getInterface() << std::endl;
 	delete _socket;
 }
 
@@ -47,7 +47,9 @@ bool ActiveServer::on_readable(int fd) {
 			_read_buffer += _socket->recv(max_read);
 		}
 		catch (Socket::ConnectionClosed& e) {
+			//std::cerr << "here" << std::endl;
 			on_close(fd);
+			//std::cerr << "there" << std::endl;
 			return (false);
 		}
 		catch (std::exception& e) {
@@ -75,7 +77,8 @@ bool ActiveServer::on_writable(int fd) {
 	return (true);
 }
 
-bool ActiveServer::on_close(int) {
+bool ActiveServer::on_close(int fd) {
+	NIOSelector::getInstance().remove(fd);
 	delete (this);
 	return (false);
 }

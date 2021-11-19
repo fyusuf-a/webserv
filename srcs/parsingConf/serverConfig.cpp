@@ -4,7 +4,7 @@
 ServerConfig::ServerConfig() : _host(0), _name(), _error(), _server_root(), _port(80), _ip_already_set(false) {}
 
 ServerConfig::ServerConfig(const ServerConfig &other) : _host(other._host), _name(other._name), _error(other._error), _server_root(other._server_root), _port(other._port),
-	_ip_already_set(other._ip_already_set) {}
+	_ip_already_set(other._ip_already_set), _index(other._index) {}
 ServerConfig::~ServerConfig(){}
     
 ServerConfig &ServerConfig::operator=(const ServerConfig &other)
@@ -17,6 +17,8 @@ ServerConfig &ServerConfig::operator=(const ServerConfig &other)
 		_server_root = other._server_root;
 		_port = other._port;
 		_ip_already_set = other._ip_already_set;
+		_index = other._index;
+
 	}
     return (*this);
 }
@@ -27,13 +29,17 @@ void            ServerConfig::setName(std::string const &name){ this->_name = na
 void            ServerConfig::setError(std::string const &error){ this->_error = error; }
 void            ServerConfig::setRoot(std::string const &server_root){ this->_server_root = server_root; }
 void            ServerConfig::setIP_already_set(bool my_bool) {_ip_already_set = my_bool;}
+void            ServerConfig::setIndex(std::vector<std::string> const &index){ this->_index = index; }
 
-uint16_t             ServerConfig::getPort(void) const { return (this->_port); }
-IPAddress const   	&ServerConfig::getAddress(void) const { return (this->_host); }
-std::string const   &ServerConfig::getName(void) const { return (this->_name); }
-std::string const   &ServerConfig::getError(void) const { return (this->_error); }
-std::string const   &ServerConfig::getRoot(void) const { return (this->_server_root); }
-bool				ServerConfig::getIP_already_set(void) const { return (this->_ip_already_set); }
+
+uint16_t             			ServerConfig::getPort(void) const { return (this->_port); }
+IPAddress const   				&ServerConfig::getAddress(void) const { return (this->_host); }
+std::string const   			&ServerConfig::getName(void) const { return (this->_name); }
+std::string const   			&ServerConfig::getError(void) const { return (this->_error); }
+std::string const   			&ServerConfig::getRoot(void) const { return (this->_server_root); }
+bool							ServerConfig::getIP_already_set(void) const { return (this->_ip_already_set); }
+std::vector<std::string> const  &ServerConfig::getIndex(void) const{ return (this->_index); }
+
 
 std::ostream& operator<<(std::ostream& os, const ServerConfig& config) {
 	os << "listen\t" << config.getPort() << ";" << std::endl;

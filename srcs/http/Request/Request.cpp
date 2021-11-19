@@ -4,6 +4,10 @@ void								Request::set_over(bool over) {
 	this->_over = over;
 }
 
+void								Request::set_path(std::string path) {
+	this->_path = path;
+}
+
 std::string							Request::get_method(void) const {
 	return this->_method;
 }
@@ -16,7 +20,7 @@ std::string							Request::get_protocol(void) const {
 	return this->_protocol;
 }
 
-std::map<std::string, std::string>	Request::get_header(void) const {
+std::map<std::string, std::string>	const &Request::get_header(void) const {
 	return this->_header;
 }
 
@@ -50,6 +54,13 @@ ServerLocation const 				&Request::get_location(void){
 	return this->_location;
 }
 
+bool			Request::get_treated_by_middlewares(void) const {
+	return this->_treated_by_middlewares;
+}
+
+void 			Request::set_treated_by_middlewares(bool treated_by_middlewares) {
+	_treated_by_middlewares = treated_by_middlewares;
+}
 
 Request & 		Request::operator=( Request const & rhs ){
 	if (this != &rhs) {
@@ -60,18 +71,31 @@ Request & 		Request::operator=( Request const & rhs ){
 		this->_body = rhs.get_body();
 		this->_head = rhs.get_head();
 		this->_over = rhs.get_over();
+		this->_treated_by_middlewares = rhs._treated_by_middlewares;
 	}
 	return *this;
 }
 Request::Request( Request const & src ) {
 	*this = src;
-	return ;
 }
 
-Request::Request() : _head(0), _over(true) {
+void Request::reinitialize() {
+	_method = "";
+	_path = "";
+	_protocol = "";
+	_header.clear();
+	_body = "";
+	_head = 0;
+	_over = true;
+	_residual = "";
+	_field_name = "";
+	_treated_by_middlewares = false;
 }
 
-Request::Request(std::string& buffer) : _head(0), _over(true) {
+Request::Request() : _head(0), _over(true), _treated_by_middlewares(false) {
+}
+
+Request::Request(std::string& buffer) : _head(0), _over(true), _treated_by_middlewares(false) {
 	this->parse(buffer);
 }
 

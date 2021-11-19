@@ -1,18 +1,23 @@
-#include "Middlewares.hpp"
+#include "Middleware.hpp"
 
-void		BlockSelector::body(Request & request, Response & response, ServerBlocks const &serverBlocks, INetAddress const &interface) {
+BlockSelector::BlockSelector() {
+}
 
-	(void)response;
-	(void)interface;
+void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& response, MiddlewareChain& next) {
+
 	(void)request;
-	(void)serverBlocks;
+
+	if (response.get_code() >= 400)
+	{
+        next();
+        return ;
+	}
 
 	bool            set = false;
 	ServerBlocks    tmp_servers;
 	Locations       tmp_locations;
-
-	if (response.get_code() < 400)
-		std::cout << "bonjour" << std::endl;
+	ServerBlocks	serverBlocks = *actHTTP.getServerBlocks();
+	INetAddress		interface = actHTTP.getInterface();
 
 	// ---- Select server block
 
@@ -72,8 +77,11 @@ void		BlockSelector::body(Request & request, Response & response, ServerBlocks c
 			}
 		}
 	}
-	if (set == false)
-		throw (400);
+	if (set == false) {
+		response.set_code(Response::BadRequest);
+		next();
+		return ;
+	}
 	else
 		set = false;
 
@@ -123,5 +131,6 @@ void		BlockSelector::body(Request & request, Response & response, ServerBlocks c
 	}
 
 	if (set == false)
-		throw (404);
+		response.set_code(Response::NotFound);
+	next();
 }

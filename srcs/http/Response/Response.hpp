@@ -5,6 +5,8 @@
 
 
 
+class ActiveHTTP;
+
 class Response
 {
 	public:
@@ -24,29 +26,32 @@ class Response
 
 			// Erreur
 			BadRequest = 400,
-			Unauthoried = 401,
+			Unauthorized = 401,
 			Forbidden = 403,
 			NotFound = 404,
-			// MethodNotAllowed = 405,
-			MethodNotAllowed = 406,
+			MethodNotAllowed = 405,
+			NotAcceptable = 406,
 			RequestTime_out = 408,
 
 			// Erreur Server
-
+			NotImplemented = 501,
+			HTTPNotSupported = 505,
 			UnknownError = 520,
 			WebServerIsDown = 521,
 			ConnectionTimedOut = 522,
 			OriginIsUnreachable = 523,
 			ATimeoutOccurred = 524
-
 		};
 	
 	private:
 		http_code	_code;
-		
-
+		std::string _body;
+		std::map<std::string, std::string>	_header;
+		bool		_ready;
 
 	public:
+		static std::string http_code_to_str(http_code);
+	
 		Response();
 		~Response();
 		Response( Response const & src );
@@ -55,8 +60,16 @@ class Response
 		http_code		get_code(void) const;
 		void			set_code(http_code code);
 
+		std::string	get_body(void) const;
+		void			set_body(std::string body);
 
 
+
+		void		send();
+		void		reinitialize();
+		bool		get_ready();
 };
+
+std::ostream& operator<<(std::ostream&, const Response&);
 
 #endif
