@@ -75,8 +75,8 @@ class MethodDELETE : public Middleware, public Singleton<MethodDELETE>
 class MethodPOST : public Middleware, public Singleton<MethodPOST>
 {
 	public:
-		MethodDELETE();
-		virtual	~MethodDELETE() {};
+		MethodPOST();
+		virtual	~MethodPOST() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
 

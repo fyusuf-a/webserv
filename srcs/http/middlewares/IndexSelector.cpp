@@ -6,10 +6,6 @@ IndexSelector::IndexSelector() {
 
 void		IndexSelector::body(ActiveHTTP&, Request& request, Response&, MiddlewareChain& next) {
 
-    (void)response;
-    (void)interface;
-    (void)request;
-    (void)serverBlocks;
 
     if (response.get_code() >= 400 || request.get_path().back() != '/'){
         next();
@@ -28,7 +24,7 @@ void		IndexSelector::body(ActiveHTTP&, Request& request, Response&, MiddlewareCh
 
     if (idx != "")
         request.set_path(idx);
-    if (request.get_location().get_auto_index() == false && idx != "")
+    if (request.get_location().get_auto_index() == false)
         response.set_code(Response::Forbidden);
     next();
 }

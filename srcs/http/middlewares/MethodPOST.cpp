@@ -3,7 +3,7 @@
 
 //405
 
-MethodGET::MethodPOST() {
+MethodPOST::MethodPOST() {
 }
 
 void		MethodPOST::body(ActiveHTTP&, Request& request, Response& response, MiddlewareChain& next) {
@@ -12,7 +12,7 @@ void		MethodPOST::body(ActiveHTTP&, Request& request, Response& response, Middle
         next();
 	else
 	{
-        
+
 	}
 	next();
 }
