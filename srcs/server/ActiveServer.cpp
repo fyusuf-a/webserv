@@ -30,8 +30,7 @@ ActiveServer& ActiveServer::operator=(const ActiveServer& src) {
 }
 
 ActiveServer::~ActiveServer() {
-	LOG.info() << "Connection closed with " << _socket->getAddress() << std::endl;
-	NIOSelector::getInstance().remove(_socket->getFd());
+	LOG.info() << "Connection closed with " << _socket->getInterface() << std::endl;
 	delete _socket;
 }
 
@@ -48,7 +47,9 @@ bool ActiveServer::on_readable(int fd) {
 			_read_buffer += _socket->recv(max_read);
 		}
 		catch (Socket::ConnectionClosed& e) {
+			//std::cerr << "here" << std::endl;
 			on_close(fd);
+			//std::cerr << "there" << std::endl;
 			return (false);
 		}
 		catch (std::exception& e) {
@@ -76,7 +77,8 @@ bool ActiveServer::on_writable(int fd) {
 	return (true);
 }
 
-bool ActiveServer::on_close(int) {
+bool ActiveServer::on_close(int fd) {
+	NIOSelector::getInstance().remove(fd);
 	delete (this);
 	return (false);
 }

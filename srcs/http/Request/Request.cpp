@@ -20,7 +20,7 @@ std::string							Request::get_protocol(void) const {
 	return this->_protocol;
 }
 
-std::map<std::string, std::string>	Request::get_header(void) const {
+std::map<std::string, std::string>	const &Request::get_header(void) const {
 	return this->_header;
 }
 

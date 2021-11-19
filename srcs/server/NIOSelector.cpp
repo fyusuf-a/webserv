@@ -1,6 +1,7 @@
 #include "../server/NIOSelector.hpp"
 #include <poll.h>
 #include <stdexcept>
+#include <cassert>
 
 Log &NIOSelector::LOG = Log::getInstance();
 
@@ -39,9 +40,28 @@ void NIOSelector::setTimeout(int timeout) {
 	_timeout = timeout;
 }
 
+/*std::ostream& operator<<(std::ostream& os, const NIOSelector::t_action& action) {
+	return os << "(" << action.index << ", " << action.callback << ")";
+}
+
+std::ostream& operator<<(std::ostream& os, const std::map<int, NIOSelector::t_action>& map) {
+	for (std::map<int, NIOSelector::t_action>::const_iterator it = map.begin(); it != map.end(); it++)
+	{
+		os << "map[" << it->first << "] = ";
+		os << it->second << std::endl;
+	}
+	return os;
+}*/
+
+
 void	NIOSelector::add(int fd, Callback& callback, short operations) {
 	LOG.debug() << "Adding fd no " << fd << " to NIOSelector with operations "
 		<< (operations & READ ? "READ/" : "") << (operations & WRITE ? "WRITE/" : "")  << std::endl;
+	if (_actions.find(fd) != _actions.end())
+	{
+		LOG.error() << "fd=" << fd << " already existed in NIOSelector map" << std::endl;
+		remove(fd);
+	}
 	_actions[fd] = (t_action){_polled_fds.size(), &callback};
 	_polled_fds.push_back((struct pollfd)
 						{ fd
@@ -67,10 +87,12 @@ void	NIOSelector::remove(int fd) {
 	std::map<int, t_action>::const_iterator match = _actions.find(fd);
 	if (match != _actions.end())
 	{
+		//std::cerr << "removing i = " << _actions[fd].index << " and fd = " << fd << std::endl;
 		_polled_fds.erase(_polled_fds.begin() + _actions[fd].index);
+		size_t index_compared = match->second.index;
 		for (std::map<int, t_action>::iterator it = _actions.begin(); it != _actions.end(); it++)
 		{
-			if (it->second.index >= _actions[fd].index)
+			if (it->second.index >= index_compared)
 				it->second.index--;
 		}
 	}
@@ -93,6 +115,7 @@ void	NIOSelector::poll() {
 		fd = _polled_fds[i].fd;
 		revents = _polled_fds[i].revents;
 		action = _actions[fd];
+		//assert(i == action.index);
 		action.callback->always(fd);
 		if (revents & (POLLERR | POLLNVAL)) {
 			LOG.error() << "An error has occured in the connection with peer" << std::endl;

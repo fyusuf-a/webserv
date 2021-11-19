@@ -21,7 +21,7 @@ void		MethodGET::body(ActiveHTTP&, Request& request, Response& response, Middlew
 			std::string  body;
 			std::string  result;
 
-			std::ifstream fd(request.get_path());
+			std::ifstream fd(request.get_path().c_str());
 
 			if (!fd.is_open() || !fd.good())
 				response.set_code(Response::Forbidden);
