@@ -59,15 +59,23 @@ class IndexSelector : public Middleware, public Singleton<IndexSelector>
 class MethodGET : public Middleware, public Singleton<MethodGET>
 {
 	public:
-		MethodGET(){};
+		MethodGET();
 		virtual	~MethodGET() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
 
-class MethodDELETE : public Middleware, public Singleton<MethodGET>
+class MethodDELETE : public Middleware, public Singleton<MethodDELETE>
 {
 	public:
-		MethodDELETE(){};
+		MethodDELETE();
+		virtual	~MethodDELETE() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+};
+
+class MethodPOST : public Middleware, public Singleton<MethodPOST>
+{
+	public:
+		MethodDELETE();
 		virtual	~MethodDELETE() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };

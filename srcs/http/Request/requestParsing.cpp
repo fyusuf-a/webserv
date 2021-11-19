@@ -39,13 +39,14 @@ void		Request::parse(std::string& buffer) {
 	_lctr = 0;
 	while ((_head == 1 || _head == 2) && buffer[_lctr] == ' ')
 		++_lctr;
-	while (_head == 0 && (buffer[_lctr] == '\r' || buffer[_lctr] == '\n'))
+	while (_head == 0 && (buffer[_lctr] == '\r' || buffer[_lctr] == '\n')) {
 		++_lctr;
+	}
 	std::string field_value;
 	_over = true;
 	std::string tmp;
 
-	if (buffer[0] == '\0') {
+	if (buffer[_lctr] == '\0') {
 		buffer = buffer.substr(_lctr);
 		if (_head == 5)
 			++_head;

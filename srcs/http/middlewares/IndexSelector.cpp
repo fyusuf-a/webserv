@@ -1,6 +1,10 @@
 #include "Middlewares.hpp"
 
-void		IndexSelector::body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next) {
+IndexSelector::IndexSelector() {
+
+}
+
+void		IndexSelector::body(ActiveHTTP&, Request& request, Response&, MiddlewareChain& next) {
 
     (void)response;
     (void)interface;
@@ -13,7 +17,7 @@ void		IndexSelector::body(ActiveHTTP&, Request&, Response&, MiddlewareChain& nex
     }
 
     std::vector<std::string> indexes = request.get_location().get_index();
-    std::string path = request.get_location().get_location_path() + request.get_location().get_root();
+    std::string path = request.get_path();
     std::string idx;
 
     for (std::vector<std::string>::const_iterator it = indexes.begin(); it != indexes.end(); it++)

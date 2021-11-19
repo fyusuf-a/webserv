@@ -4,35 +4,27 @@
 # define ERROR_PATH
 
 //405
-void		MethodDELETE::body(ActiveHTTP&, Request&, Response& response, MiddlewareChain& next) {
+MethodDELETE::MethodDELETE(){
+	
+}
 
-    if (response.get_code() >= 400)
+void		MethodDELETE::body(ActiveHTTP&, Request& request, Response& response, MiddlewareChain& next) {
+
+
+// if body return 204
+    if (response.get_code() >= 400 || request.get_method() != "DELETE")
         next();
 	else
 	{
-		if (access(MYPATH, 0) != 0)
+		std::cout << request.get_path().c_str() << std::endl;
+		if (access(request.get_path().c_str(), 0) != 0)
 			response.set_code(Response::NotFound);
-		else if (access(MYPATH, 4) != 0)
+		else if (access(request.get_path().c_str(), 4) != 0)
 			response.set_code(Response::Forbidden);
-		else
+		else if ( remove(request.get_path().c_str()) != 0)
 		{
-			std::string  body;
-			std::string  result;
-
-			std::ifstream fd(MYPATH);
-
-			if (!fd.is_open() || !fd.good())
-				response.set_code(Response::Forbidden);
-			for (int i = 0; getline(fd, body); i++)
-            {
-                if (i)
-                	result += '\n';
-                result += body;
-            }
-			response.set_body(result);
-
+			std::cout << "error cant delete file" << std::endl;
 		}
-
 	}
 	next();
 }

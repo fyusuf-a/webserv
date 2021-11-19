@@ -26,6 +26,7 @@ ServerLocation &ServerLocation::operator=(const ServerLocation &other)
 		_auth_basic_file = other._auth_basic_file;
 		_body_size = other._body_size;
 		_location_path = other._location_path;
+		_root = other._root;
 	}
     return (*this);
 }
@@ -75,8 +76,6 @@ std::ostream& operator<<(std::ostream& os, const ServerLocation& location) {
 		os << "methods\t" << location.get_methods() << ";" << std::endl;
 	if (!location.get_root().empty())
 		os << "root\t" << location.get_root() << ";" << std::endl;
-
-
 	if (!location.get_cgi_ext().empty())
 		os << "cgi_extension\t" << location.get_cgi_ext() << ";" << std::endl;
 	if (!location.get_cgi_bin().empty())

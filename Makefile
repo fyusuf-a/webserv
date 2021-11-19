@@ -17,6 +17,7 @@ SRC = 	main.cpp\
 	srcs/http/middlewares/MethodChecker.cpp\
 	srcs/http/middlewares/MethodGET.cpp\
 	srcs/http/middlewares/MethodDELETE.cpp\
+	srcs/http/middlewares/MethodPOST.cpp\
 	srcs/http/middlewares/Sender.cpp\
 	srcs/http/middlewares/Middleware.cpp\
 	srcs/http/middlewares/MiddlewareChain.cpp\
