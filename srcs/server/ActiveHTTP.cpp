@@ -59,8 +59,8 @@ bool	ActiveHTTP::on_readable(int fd) {
 	}
 	std::ostringstream	ss;
 
-	std::cout << "readbuffer avant parsing:" << std::endl
-				  << "(" << _read_buffer << ")" << std::endl;
+	//std::cout << "readbuffer avant parsing:" << std::endl
+				  //<< "(" << _read_buffer << ")" << std::endl;
 
 	while (1) {
 		if (!_still_parsing)
@@ -77,12 +77,12 @@ bool	ActiveHTTP::on_readable(int fd) {
 		_still_parsing = !_parsed_request.get_over();
 	}
 
-	LOG.debug() << "----------------- parsed request" << std::endl;
-	std::cout << _parsed_request << std::endl;
+	//LOG.debug() << "----------------- parsed request" << std::endl;
+	//std::cout << _parsed_request << std::endl;
 
-	std::cout << "readbuffer after parsing: " << std::endl
-			  << "(" << _read_buffer << ")" << std::endl;
-	LOG.debug() << "end of parsing" << std::endl;
+	//std::cout << "readbuffer after parsing: " << std::endl
+			  //<< "(" << _read_buffer << ")" << std::endl;
+	//LOG.debug() << "end of parsing" << std::endl;
 	return (true);
 }
 
@@ -90,14 +90,14 @@ bool	ActiveHTTP::always(int fd) {
 	(void)fd;
 
 	//sleep(2);
-	size_t i = 0;
-	LOG.debug() << "----------------- all requests" << std::endl;
+	//size_t i = 0;
+	/*LOG.debug() << "----------------- all requests" << std::endl;
 	for (std::list<Request>::const_iterator it = _reqs.begin(); it != _reqs.end(); it++) {
 		LOG.debug() << "<<< request number " << i++ << std::endl
 					<< *it << (*it).get_over() << "//" << (*it).get_head() << std::endl
 					<< ">>>" << std::endl;
 	}
-	LOG.debug() << "----------------- end of all requests" << std::endl;
+	LOG.debug() << "----------------- end of all requests" << std::endl;*/
 
 	if (!_reqs.empty())
 	{
@@ -121,8 +121,9 @@ bool	ActiveHTTP::always(int fd) {
 	return (true);
 }
 
-bool	ActiveHTTP::on_close(int) {
-	delete this;
+bool	ActiveHTTP::on_close(int fd) {
+	NIOSelector::getInstance().remove(fd);
+	delete (this);
 	return (false);
 }
 

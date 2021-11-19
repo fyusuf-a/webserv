@@ -4,7 +4,6 @@
 #include <unistd.h>
 #include <iostream>
 #include <map>
-#include <stdexcept>
 #include <vector>
 #include <poll.h>
 #include "../utils/Singleton.hpp"
