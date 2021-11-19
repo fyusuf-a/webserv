@@ -9,20 +9,33 @@ MiddlewareChain::MiddlewareChain(ActiveHTTP* callback, Request* req, Response* r
 }
 
 void MiddlewareChain::init() {
-	CheckSyntax& 					check_syntax = CheckSyntax::getInstance();
 	Sender& 						sender = Sender::getInstance();
 	BlockSelector& 					block_selector = BlockSelector::getInstance();
-	MethodChecker& 					method_checker = MethodChecker::getInstance();
-	MethodGET&	 					method_get = MethodGET::getInstance();
-	MethodDELETE&	 				method_delete = MethodDELETE::getInstance();
 	AbsolutePathConcatenator& 		apc = AbsolutePathConcatenator::getInstance();
 
-	_chain.push_back(&check_syntax);
+	#ifdef CS_FLAG
+		CheckSyntax& 					check_syntax = CheckSyntax::getInstance();
+		_chain.push_back(&check_syntax);
+	#endif
+
 	_chain.push_back(&block_selector);
 	_chain.push_back(&apc);
-	_chain.push_back(&method_checker);
-	_chain.push_back(&method_get);
-	_chain.push_back(&method_delete);
+
+	#ifdef MC_FLAG
+		MethodChecker& 					method_checker = MethodChecker::getInstance();
+		_chain.push_back(&method_checker);
+	#endif
+
+	#ifdef MG_FLAG
+		MethodGET&	 					method_get = MethodGET::getInstance();
+		_chain.push_back(&method_get);
+	#endif
+
+	#ifdef MD_FLAG
+		MethodDELETE&	 				method_delete = MethodDELETE::getInstance();
+		_chain.push_back(&method_delete);
+	#endif
+
 	_chain.push_back(&sender);
 }
 
