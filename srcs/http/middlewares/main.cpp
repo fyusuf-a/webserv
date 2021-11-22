@@ -28,7 +28,7 @@ int launch_the_test(std::string path, std::string reqstr, int supposed_response_
 
 int main()
 {
-	launch_the_test("conf/is_good.conf", "GET /README HTTP/1.1\r\nHost:test\r\n\r\n", 200);
+	launch_the_test("conf/is_good.conf", "GET /InstallHistory.plist HTTP/1.1\r\nHost:test\r\n\r\n", 200);
 
 	#ifdef CS_FLAG
 		if ( launch_the_test("conf/is_good.conf", "GET / HTTP/11\r\nHost:test\r\n\r\n", 505) ||
@@ -41,8 +41,10 @@ int main()
 			return (1);
 	#endif
 	#ifdef APC_FLAG
-		if ( launch_the_test("conf/apcconf1.conf", "GET /AppendToPath HTTP/1.1\r\nHost:test\r\n\r\n", 505) ||
-			launch_the_test("conf/apcconf1.conf", "GET /pip-20.1-py2.7.egg/pip/__init.py__ HTTP/1.1\r\nHost:test\r\n\r\n", 505))
+		if ( launch_the_test("conf/apcconf1.conf", "GET /AppendToPath HTTP/1.1\r\nHost:test\r\n\r\n", 200) ||
+			launch_the_test("conf/apcconf1.conf", "GET /Printers/InstalledPrinters.plist HTTP/1.1\r\nHost:test\r\n\r\n", 200) ||
+			launch_the_test("conf/apcconf2.conf", "GET / HTTP/1.1\r\nHost:test\r\n\r\n", 200) || 
+			launch_the_test("conf/apcconf1.conf", "GET /MunkiReport/Logs/errors.log HTTP/1.1\r\nHost:test\r\n\r\n", 405))
 			return (1);
 	#endif
  	return (0);
