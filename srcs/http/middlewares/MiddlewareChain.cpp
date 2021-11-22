@@ -10,16 +10,21 @@ MiddlewareChain::MiddlewareChain(ActiveHTTP* callback, Request* req, Response* r
 
 void MiddlewareChain::init() {
 	Sender& 						sender = Sender::getInstance();
-	BlockSelector& 					block_selector = BlockSelector::getInstance();
-	AbsolutePathConcatenator& 		apc = AbsolutePathConcatenator::getInstance();
 
 	#ifdef CS_FLAG
 		CheckSyntax& 					check_syntax = CheckSyntax::getInstance();
 		_chain.push_back(&check_syntax);
 	#endif
 
-	_chain.push_back(&block_selector);
-	_chain.push_back(&apc);
+	#if !defined(CS_FLAG) || defined(BS_FLAG) || defined(CS_FLAG)
+		BlockSelector& 					block_selector = BlockSelector::getInstance();
+		_chain.push_back(&block_selector);
+	#endif
+
+	#if !defined(BS_FLAG) || defined(APC_FLAG)
+		AbsolutePathConcatenator& 		apc = AbsolutePathConcatenator::getInstance();
+		_chain.push_back(&apc);
+	#endif
 
 	#ifdef MC_FLAG
 		MethodChecker& 					method_checker = MethodChecker::getInstance();
