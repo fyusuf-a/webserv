@@ -35,18 +35,16 @@ public:
 	INetAddress getInterface() const;
 	void setServerBlocks(std::vector<ServerBlock> const*);
 	time_t const& get_last_time_active() const;
-	const std::list<Request>& get_reqs() const;
-	const Response& get_resp() const;
+	Request& get_request();
+	Response& get_response();
 	void send_response();
 
 protected:
-	bool								_still_parsing;
 	time_t								_last_time_active;
 	INetAddress							_interface;
 	std::vector<ServerBlock> const *	_server_blocks;
-	std::list<Request>					_reqs;
-	Request								_parsed_request;
-	Response							_resp;
+	Request								_request;
+	Response							_response;
 	MiddlewareChain						*_chain;
 	virtual bool						on_readable(int fd);
 	virtual bool						on_close(int fd);

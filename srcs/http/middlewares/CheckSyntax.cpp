@@ -20,7 +20,8 @@ void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & respo
         next();
         return ;
     }
-	std::map<std::string, std::string>::iterator	it;
+
+	std::map<std::string, std::string>::const_iterator	it;
 	std::string										whitespaces = " \n\r\v\t\f";
 	int												host = 0;
 

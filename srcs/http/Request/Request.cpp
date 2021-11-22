@@ -20,7 +20,7 @@ std::string							Request::get_protocol(void) const {
 	return this->_protocol;
 }
 
-std::map<std::string, std::string>	Request::get_header(void) const {
+std::map<std::string, std::string>	const &Request::get_header(void) const {
 	return this->_header;
 }
 
@@ -87,6 +87,7 @@ void Request::reinitialize() {
 	_body = "";
 	_head = 0;
 	_over = true;
+	//_no_more_parsing = true;
 	_residual = "";
 	_field_name = "";
 	_treated_by_middlewares = false;
