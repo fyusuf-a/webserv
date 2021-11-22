@@ -8,6 +8,8 @@
 # include "../../ipaddress/INetAddress.hpp"
 # include "MiddlewareChain.hpp"
 # include "../../server/ActiveHTTP.hpp"
+# include "../../server/NIOSelector.hpp"
+
 
 class MiddlewareChain;
 class ActiveHTTP;
