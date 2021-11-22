@@ -87,6 +87,7 @@ void Request::reinitialize() {
 	_body = "";
 	_head = 0;
 	_over = true;
+	//_no_more_parsing = true;
 	_residual = "";
 	_field_name = "";
 	_treated_by_middlewares = false;
