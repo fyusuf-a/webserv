@@ -25,6 +25,10 @@ void		MethodGET::body(ActiveHTTP&, Request& request, Response& response, Middlew
 
 			if (!fd.is_open() || !fd.good())
 				response.set_code(Response::Forbidden);
+
+			NIOSelector::getInstance()->add(fd, GETTask, READ)
+
+
 			for (int i = 0; getline(fd, body); i++)
             {
                 if (i)
