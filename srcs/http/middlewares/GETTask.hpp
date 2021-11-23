@@ -1,6 +1,8 @@
 #ifndef GETTASK_HPP
 #define GETTASK_HPP
 #include "../../server/NIOSelector.hpp"
+#include "../../utils/Log.hpp"
+
 #include "MiddlewareChain.hpp"
 
 class GETTask : public NIOSelector::Callback
@@ -9,8 +11,13 @@ class GETTask : public NIOSelector::Callback
         MiddlewareChain  *_chain;
 
     public:
-        GETTask(int, MiddlewareChain *);
+        GETTask();
         ~GETTask();
+        GETTask(const GETTask&);
+        GETTask(int, MiddlewareChain *);
+
+		static Log& LOG;
+
 
     protected:
     virtual bool   on_readable(int fd);

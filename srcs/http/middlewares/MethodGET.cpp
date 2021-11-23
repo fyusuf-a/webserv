@@ -27,7 +27,7 @@ void		MethodGET::body(ActiveHTTP&, Request& request, Response& response, Middlew
 			if ((fd = open(request.get_path().c_str(), O_RDONLY )) < 0 )
 				response.set_code(Response::Forbidden);
 			else
-				GETTask test(fd, &next);
+				new GETTask(fd, &next);
 			
 		}
 
