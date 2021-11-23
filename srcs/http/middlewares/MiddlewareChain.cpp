@@ -31,6 +31,11 @@ void MiddlewareChain::init() {
 		_chain.push_back(&method_checker);
 	#endif
 
+	#ifdef IS_FLAG
+		IndexSelector& 					index_selector = IndexSelector::getInstance();
+		_chain.push_back(&index_selector);
+	#endif
+
 	#ifdef MG_FLAG
 		MethodGET&	 					method_get = MethodGET::getInstance();
 		_chain.push_back(&method_get);

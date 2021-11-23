@@ -130,7 +130,9 @@ void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 		}
 	}
 
-	if (set == false)
+	if (set == false) {
+		std::cout << "in" << std::endl;
 		response.set_code(Response::NotFound);
+	}
 	next();
 }

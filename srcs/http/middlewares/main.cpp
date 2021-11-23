@@ -42,9 +42,16 @@ int main()
 	#endif
 	#ifdef APC_FLAG
 		if ( launch_the_test("conf/apcconf1.conf", "GET /AppendToPath HTTP/1.1\r\nHost:test\r\n\r\n", 200) ||
-			launch_the_test("conf/apcconf1.conf", "GET /Printers/InstalledPrinters.plist HTTP/1.1\r\nHost:test\r\n\r\n", 200) ||
+			launch_the_test("conf/apcconf1.conf", "GET /Printers/ HTTP/1.1\r\nHost:test\r\n\r\n", 200) ||
 			launch_the_test("conf/apcconf2.conf", "GET / HTTP/1.1\r\nHost:test\r\n\r\n", 200) || 
 			launch_the_test("conf/apcconf1.conf", "GET /MunkiReport/Logs/errors.log HTTP/1.1\r\nHost:test\r\n\r\n", 405))
+			return (1);
+	#endif
+	#ifdef IS_FLAG
+		if ( launch_the_test("conf/index_selector.conf", "GET / HTTP/1.1\r\nHost:test\r\n\r\n", 200) ||
+			launch_the_test("conf/index_selector.conf", "GET /manual/ HTTP/1.1\r\nHost:test\r\n\r\n", 200) ||
+			launch_the_test("conf/index_selector.conf", "GET /images/ HTTP/1.1\r\nHost:test\r\n\r\n", 200)||
+			launch_the_test("conf/index_selector.conf", "GET /manual HTTP/1.1\r\nHost:test\r\n\r\n", 200))
 			return (1);
 	#endif
  	return (0);

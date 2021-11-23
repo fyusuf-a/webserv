@@ -22,6 +22,7 @@ SRC = 	main.cpp\
 	Middleware.cpp\
 	MiddlewareChain.cpp\
 	AbsolutePathConcatenator.cpp\
+	IndexSelector.cpp\
 	../Request/Request.cpp\
 	../Request/requestParsing.cpp\
 	../Request/checkIncompleteRequest.cpp\
