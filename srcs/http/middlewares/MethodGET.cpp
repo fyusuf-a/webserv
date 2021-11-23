@@ -1,5 +1,6 @@
 # include "Middleware.hpp"
 # include <stdio.h>
+# include "GETTask.hpp"
 
 //405
 
@@ -21,22 +22,13 @@ void		MethodGET::body(ActiveHTTP&, Request& request, Response& response, Middlew
 			std::string  body;
 			std::string  result;
 
-			std::ifstream fd(request.get_path().c_str());
+			int  	fd;
 
-			if (!fd.is_open() || !fd.good())
+			if ((fd = open(request.get_path().c_str(), O_RDONLY )) < 0 )
 				response.set_code(Response::Forbidden);
-
-			NIOSelector::getInstance()->add(fd, GETTask, READ);
-
-
-			for (int i = 0; getline(fd, body); i++)
-            {
-                if (i)
-                	result += '\n';
-                result += body;
-            }
-			response.set_body(result);
-
+			else
+				GETTask test(fd, &next);
+			
 		}
 
 	}
