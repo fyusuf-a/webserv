@@ -50,8 +50,8 @@ int main()
 	#ifdef IS_FLAG
 		if ( launch_the_test("conf/index_selector.conf", "GET / HTTP/1.1\r\nHost:test\r\n\r\n", 200) ||
 			launch_the_test("conf/index_selector.conf", "GET /manual/ HTTP/1.1\r\nHost:test\r\n\r\n", 200) ||
-			launch_the_test("conf/index_selector.conf", "GET /images/ HTTP/1.1\r\nHost:test\r\n\r\n", 200)||
-			launch_the_test("conf/index_selector.conf", "GET /manual HTTP/1.1\r\nHost:test\r\n\r\n", 200))
+			launch_the_test("conf/index_selector.conf", "GET /images/ HTTP/1.1\r\nHost:test\r\n\r\n", 403)||
+			launch_the_test("conf/index_selector.conf", "GET /images HTTP/1.1\r\nHost:test\r\n\r\n", 200))
 			return (1);
 	#endif
  	return (0);
