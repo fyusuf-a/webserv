@@ -1,4 +1,5 @@
 #include "MiddlewareChain.hpp"
+#include "Middleware.hpp"
 
 MiddlewareChain::MiddlewareChain() : _activeHTTP(NULL), _req(NULL), _resp(NULL) {
 	init();
@@ -14,15 +15,22 @@ void MiddlewareChain::init() {
 	BlockSelector& 					block_selector = BlockSelector::getInstance();
 	MethodChecker& 					method_checker = MethodChecker::getInstance();
 	MethodGET&	 					method_get = MethodGET::getInstance();
+	CGIRunner&	 					cgi_runner = CGIRunner::getInstance();
 
 
 	 AbsolutePathConcatenator& 		apc = AbsolutePathConcatenator::getInstance();
 
-	_chain.push_back(&check_syntax);
-	_chain.push_back(&block_selector);
-	_chain.push_back(&apc);
-	_chain.push_back(&method_checker);
-	_chain.push_back(&method_get);
+	 (void)apc;
+	 (void)check_syntax;
+	 (void)block_selector;
+	 (void)method_checker;
+	 (void)method_get;
+	//_chain.push_back(&check_syntax);
+	//_chain.push_back(&block_selector);
+	//_chain.push_back(&apc);
+	//_chain.push_back(&method_checker);
+	//_chain.push_back(&method_get);
+	_chain.push_back(&cgi_runner);
 	_chain.push_back(&sender);
 }
 

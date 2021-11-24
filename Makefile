@@ -20,6 +20,7 @@ SRC = 	main.cpp\
 	srcs/http/middlewares/Middleware.cpp\
 	srcs/http/middlewares/MiddlewareChain.cpp\
 	srcs/http/middlewares/AbsolutePathConcatenator.cpp\
+	srcs/http/middlewares/CGIRunner.cpp\
 	srcs/http/Request/Request.cpp\
 	srcs/http/Request/requestParsing.cpp\
 	srcs/http/Request/checkIncompleteRequest.cpp\

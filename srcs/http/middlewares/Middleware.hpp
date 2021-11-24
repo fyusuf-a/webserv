@@ -63,11 +63,20 @@ class MethodGET : public Middleware, public Singleton<MethodGET>
 		virtual	~MethodGET() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
+
 class AbsolutePathConcatenator : public Middleware, public Singleton<AbsolutePathConcatenator>
 {
 	public:
 		AbsolutePathConcatenator();
 		virtual	~AbsolutePathConcatenator() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+};
+
+class CGIRunner : public Middleware, public Singleton<CGIRunner>
+{
+	public:
+		CGIRunner(){};
+		virtual	~CGIRunner() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
 
