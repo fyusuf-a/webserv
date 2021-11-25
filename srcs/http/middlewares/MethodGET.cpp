@@ -1,10 +1,15 @@
-#include "Middleware.hpp"
+# include "Middleware.hpp"
 # include <stdio.h>
+# include "GETTask.hpp"
 
 //405
+
+MethodGET::MethodGET() {
+}
+
 void		MethodGET::body(ActiveHTTP&, Request& request, Response& response, MiddlewareChain& next) {
 
-    if (response.get_code() >= 400)
+    if (response.get_code() >= 400 || request.get_method() != "GET")
         next();
 	else
 	{
@@ -17,18 +22,13 @@ void		MethodGET::body(ActiveHTTP&, Request& request, Response& response, Middlew
 			std::string  body;
 			std::string  result;
 
-			std::ifstream fd(request.get_path().c_str());
+			int  	fd;
 
-			if (!fd.is_open() || !fd.good())
+			if ((fd = open(request.get_path().c_str(), O_RDONLY )) < 0 )
 				response.set_code(Response::Forbidden);
-			for (int i = 0; getline(fd, body); i++)
-            {
-                if (i)
-                	result += '\n';
-                result += body;
-            }
-			response.set_body(result);
-
+			else
+				new GETTask(fd, &next);
+			
 		}
 
 	}

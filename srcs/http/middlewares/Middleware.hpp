@@ -8,6 +8,8 @@
 # include "../../ipaddress/INetAddress.hpp"
 # include "MiddlewareChain.hpp"
 # include "../../server/ActiveHTTP.hpp"
+# include "../../server/NIOSelector.hpp"
+
 
 class MiddlewareChain;
 class ActiveHTTP;
@@ -59,10 +61,27 @@ class IndexSelector : public Middleware, public Singleton<IndexSelector>
 class MethodGET : public Middleware, public Singleton<MethodGET>
 {
 	public:
-		MethodGET(){};
+		MethodGET();
 		virtual	~MethodGET() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
+
+class MethodDELETE : public Middleware, public Singleton<MethodDELETE>
+{
+	public:
+		MethodDELETE();
+		virtual	~MethodDELETE() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+};
+
+class MethodPOST : public Middleware, public Singleton<MethodPOST>
+{
+	public:
+		MethodPOST();
+		virtual	~MethodPOST() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+};
+
 class AbsolutePathConcatenator : public Middleware, public Singleton<AbsolutePathConcatenator>
 {
 	public:
