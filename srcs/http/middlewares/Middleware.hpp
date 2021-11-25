@@ -8,6 +8,7 @@
 # include "../../ipaddress/INetAddress.hpp"
 # include "MiddlewareChain.hpp"
 # include "../../server/ActiveHTTP.hpp"
+# include "../../utils/Log.hpp"
 
 class MiddlewareChain;
 class ActiveHTTP;
@@ -75,6 +76,7 @@ class AbsolutePathConcatenator : public Middleware, public Singleton<AbsolutePat
 class CGIRunner : public Middleware, public Singleton<CGIRunner>
 {
 	public:
+		static Log& LOG;
 		CGIRunner(){};
 		virtual	~CGIRunner() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
