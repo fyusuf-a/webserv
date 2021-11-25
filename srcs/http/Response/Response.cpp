@@ -104,7 +104,7 @@ Response::Response( Response const & src ) {
 	*this = src;
 }
 
-Response::Response() : _code(OK), _ready(false) {
+Response::Response() : _code(OK), _ready(false), _partial_send(false), _headers_sent(false), _body_sent_up_to(0) {
 }
 
 Response::~Response() {
@@ -118,6 +118,9 @@ void Response::reinitialize() {
 	_code = OK;
 	_ready = false;
 	_body = "";
+	_partial_send = false;
+	_headers_sent = false;
+	_body_sent_up_to = 0;
 }
 
 bool Response::get_ready() {

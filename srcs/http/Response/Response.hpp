@@ -48,6 +48,9 @@ class Response
 		std::string _body;
 		std::map<std::string, std::string>	_header;
 		bool		_ready;
+		bool		_partial_send;
+		bool		_headers_sent;
+		size_t		_body_sent_up_to;
 
 	public:
 		static std::string http_code_to_str(http_code);
