@@ -7,7 +7,7 @@
 MethodGET::MethodGET() {
 }
 
-void		MethodGET::body(ActiveHTTP&, Request& request, Response& response, MiddlewareChain& next) {
+void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, MiddlewareChain& next) {
 
     if (response.get_code() >= 400 || request.get_method() != "GET")
         next();
@@ -27,10 +27,10 @@ void		MethodGET::body(ActiveHTTP&, Request& request, Response& response, Middlew
 			if ((fd = open(request.get_path().c_str(), O_RDONLY )) < 0 )
 				response.set_code(Response::Forbidden);
 			else
-				new GETTask(fd, &next);
+				new GETTask(fd, &next, &response, &serv);
 			
 		}
 
 	}
-	next();
+	// next();
 }

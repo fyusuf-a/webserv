@@ -13,8 +13,8 @@ void MiddlewareChain::init() {
 	BlockSelector& 					block_selector = BlockSelector::getInstance();
 	MethodChecker& 					method_checker = MethodChecker::getInstance();
 	MethodGET&	 					method_get = MethodGET::getInstance();
-	// MethodDELETE&	 			method_delete = MethodDELETE::getInstance();
-	// Sender& 						sender = Sender::getInstance();
+	MethodDELETE&	 			method_delete = MethodDELETE::getInstance();
+	Sender& 						sender = Sender::getInstance();
 	AbsolutePathConcatenator& 		apc = AbsolutePathConcatenator::getInstance();
 
 	_chain.push_back(&check_syntax);
@@ -22,8 +22,8 @@ void MiddlewareChain::init() {
 	_chain.push_back(&apc);
 	_chain.push_back(&method_checker);
 	_chain.push_back(&method_get);
-	// _chain.push_back(&method_delete);
-	// _chain.push_back(&sender);
+	_chain.push_back(&method_delete);
+	_chain.push_back(&sender);
 }
 
 MiddlewareChain::MiddlewareChain(const MiddlewareChain& src) {

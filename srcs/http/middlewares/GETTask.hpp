@@ -9,12 +9,15 @@ class GETTask : public NIOSelector::Callback
 {
     private: 
         MiddlewareChain  *_chain;
+        ActiveHTTP       *_serv;
+
+        Response         *_resp;
 
     public:
         GETTask();
         ~GETTask();
         GETTask(const GETTask&);
-        GETTask(int, MiddlewareChain *);
+        GETTask(int fd, MiddlewareChain *chain, Response *resp, ActiveHTTP *serv);
 
 		static Log& LOG;
 
