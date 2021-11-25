@@ -86,7 +86,7 @@ std::string		Response::get_body(void) const {
 }
 void			Response::set_body(std::string body)
 {
-	this->_body = body;
+	this->_body += body;
 }
 
 

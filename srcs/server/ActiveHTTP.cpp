@@ -97,7 +97,10 @@ bool	ActiveHTTP::always(int fd) {
 		(*_chain)();
 	}
 	if (_response.get_ready())
+	{
+		std::cout << "bijour" << std::endl;
 		send_response();
+	}
 	if (!check_timeout(fd))
 		return (false);
 	return (true);
@@ -146,7 +149,7 @@ bool	ActiveHTTP::check_timeout(int fd) {
 	return (true);
 }
 
-void	ActiveHTTP::send_response() {
+void	ActiveHTTP::send_response() {	
 	//_reqs.pop_front();
 	std::ostringstream oss;
 	oss << _response;
