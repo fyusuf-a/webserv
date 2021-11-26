@@ -1,6 +1,8 @@
-# include "Middleware.hpp"
-# include <stdio.h>
-# include "GETTask.hpp"
+#include "Middleware.hpp"
+#include <sstream>
+#include <stdio.h>
+#include <string>
+#include "GETTask.hpp"
 
 //405
 
@@ -9,7 +11,7 @@ MethodGET::MethodGET() {
 
 void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, MiddlewareChain& next) {
 
-    if (response.get_code() >= 400 || request.get_method() != "GET")
+	if (response.get_code() >= 400 || request.get_method() != "GET")
         next();
 	else
 	{
@@ -22,15 +24,27 @@ void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, Mid
 			std::string  body;
 			std::string  result;
 
-			int  	fd;
+			std::string	filepath = request.get_path();
 
-			if ((fd = open(request.get_path().c_str(), O_RDONLY )) < 0 )
+			//Get file size
+			std::ifstream* file = new std::ifstream(filepath.c_str(), std::ios::binary);
+			file->seekg(0, std::ios::end);
+			ssize_t file_size = file->tellg();
+			delete file;
+
+			int  	fd;
+			if ((fd = open(filepath.c_str(), O_RDONLY )) < 0)
 				response.set_code(Response::Forbidden);
 			else
-				new GETTask(fd, &next, &response, &serv);
-			
+			{
+				std::ostringstream os;
+				os << file_size;
+				response.delete_header("Transfer-Encoding");
+				response.set_header("Content-Length", os.str());
+				//new GETTask(fd, &serv, file_size);
+				new GETTask(fd, &serv);
+			}
 		}
-
 	}
-	// next();
+	next();
 }

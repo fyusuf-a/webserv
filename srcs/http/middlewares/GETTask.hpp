@@ -2,22 +2,23 @@
 #define GETTASK_HPP
 #include "../../server/NIOSelector.hpp"
 #include "../../utils/Log.hpp"
+#include "../../defines.hpp"
 
 #include "MiddlewareChain.hpp"
 
 class GETTask : public NIOSelector::Callback
 {
     private: 
-        MiddlewareChain  *_chain;
-        ActiveHTTP       *_serv;
-
-        Response         *_resp;
+        ActiveHTTP		*_serv;
+		bool			_finished;
+		//ssize_t			_size;
 
     public:
         GETTask();
         ~GETTask();
         GETTask(const GETTask&);
-        GETTask(int fd, MiddlewareChain *chain, Response *resp, ActiveHTTP *serv);
+        GETTask(int fd, ActiveHTTP *serv);
+        //GETTask(int fd, ActiveHTTP *serv, ssize_t file_size);
 
 		static Log& LOG;
 

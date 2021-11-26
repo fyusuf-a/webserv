@@ -37,7 +37,12 @@ public:
 	time_t const& get_last_time_active() const;
 	Request& get_request();
 	Response& get_response();
+	std::string& get_write_buffer();
+	char			*get_tmp();
+
 	void send_response();
+	void send_partial_response(const std::string&);
+	void postpone_timeout();
 
 protected:
 	time_t								_last_time_active;
@@ -46,6 +51,7 @@ protected:
 	Request								_request;
 	Response							_response;
 	MiddlewareChain						*_chain;
+	char								_tmp[BUFFER_LENGTH];
 	virtual bool						on_readable(int fd);
 	virtual bool						on_close(int fd);
 	virtual bool						always(int fd);

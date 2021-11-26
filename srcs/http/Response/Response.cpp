@@ -1,6 +1,8 @@
 #include "Response.hpp"
 #include "../../server/ActiveHTTP.hpp"
 
+Log &Response::LOG = Log::getInstance();
+
 std::string Response::http_code_to_str(http_code code) {
 	switch (code) {
 		case 200:
@@ -84,6 +86,19 @@ Response::http_code		Response::get_code(void) const {
 std::string		Response::get_body(void) const {
 	return this->_body;
 }
+
+const std::map<std::string, std::string>& Response::get_headers() const {
+	return _header;
+}
+
+void	Response::set_header(const std::string& key, const std::string& value) {
+	_header[key] = value;
+}
+
+void	Response::delete_header(const std::string& key) {
+	_header.erase(key);
+}
+
 void			Response::set_body(std::string body)
 {
 	this->_body += body;
@@ -104,13 +119,16 @@ Response::Response( Response const & src ) {
 	*this = src;
 }
 
-Response::Response() : _code(OK), _ready(false), _partial_send(false), _headers_sent(false), _body_sent_up_to(0) {
+Response::Response() : _code(OK), _ready(false), _beginning_sent(false)
+					   , _sent(false)
+					   , _delegated_to_task(false) {
 }
 
 Response::~Response() {
 }
 
-void Response::send() {
+void Response::ready() {
+	LOG.debug() << "Response is ready" << std::endl;
 	_ready = true;
 }
 
@@ -118,19 +136,58 @@ void Response::reinitialize() {
 	_code = OK;
 	_ready = false;
 	_body = "";
-	_partial_send = false;
-	_headers_sent = false;
-	_body_sent_up_to = 0;
+	_beginning_sent = false;
+	_sent = false;
+	_delegated_to_task = false;
 }
 
 bool Response::get_ready() {
 	return _ready;
 }
 
+bool Response::get_beginning_sent() const {
+	return _beginning_sent;
+}
+
+bool Response::get_sent() const {
+	return _sent;
+}
+
+bool Response::get_delegated_to_task() const {
+	return _delegated_to_task;
+}
+
+void Response::set_beginning_sent(bool set) {
+	_beginning_sent = set;
+}
+
+void Response::set_sent(bool set) {
+	_sent = set;
+}
+
+void Response::set_delegated_to_task(bool set) {
+	_delegated_to_task = set;
+}
+
+/*static std::ostream& put_headers(std::ostream& os, const Response& resp) {
+	for (std::map<std::string, std::string>::const_iterator it =
+			resp.get_headers().begin(); it != resp.get_headers().end(); ++it)
+		os << it->first << ":" << it->second << "\r\n";
+	return os;
+}*/
+
 std::ostream& operator<<(std::ostream& os, const Response& resp) {
+	os < resp;
+	os << resp.get_body(); 
+	return os;
+}
+
+std::ostream& operator<(std::ostream& os, const Response& resp) {
 	os << "HTTP/1.1 " << resp.get_code() << " "
-		<< Response::http_code_to_str(resp.get_code())
-		<< "\r\nContent-Length: " << resp.get_body().length()
-		<< "\r\n\r\n" << resp.get_body(); 
+		<< Response::http_code_to_str(resp.get_code()) << "\r\n";
+	for (std::map<std::string, std::string>::const_iterator it =
+			resp.get_headers().begin(); it != resp.get_headers().end(); ++it)
+		os << it->first << ":" << it->second << "\r\n";
+	os << "\r\n";
 	return os;
 }
