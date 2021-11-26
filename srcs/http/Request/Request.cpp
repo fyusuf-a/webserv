@@ -99,6 +99,8 @@ void Request::reinitialize() {
 	_method = "";
 	_path = "";
 	_protocol = "";
+	_query = "";
+	_extra_path = "";
 	_header.clear();
 	_body = "";
 	_head = 0;
