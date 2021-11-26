@@ -12,7 +12,7 @@ void								Request::set_query(std::string query) {
 	this->_query = query;
 }
 
-void								Request::set_path(std::string extra_path) {
+void								Request::set_extra_path(std::string extra_path) {
 	this->_extra_path = extra_path;
 }
 

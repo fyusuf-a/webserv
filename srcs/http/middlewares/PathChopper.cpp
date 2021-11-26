@@ -18,7 +18,10 @@ void		PathChopper::body(ActiveHTTP&, Request& request, Response& response, Middl
     std::string cgi_ext = request.get_location().get_cgi_ext();
     loc = path.find(cgi_ext);
     if (loc != std::string::npos &&
-        ( path[loc + cgi_ext.length()] == '/' || loc + cgi_ext.length() == path.length()))
-            request.set_extra_path(path + loc + cgi_ext.length());
+        (path[loc + cgi_ext.length()] == '/' || loc + cgi_ext.length() == path.length())) {
+            request.set_extra_path(path.substr(loc + cgi_ext.length()));
+            request.set_path(path.substr(0, loc + cgi_ext.length()));
+        }
+    std::cout << request.get_path() << "//" << request.get_extra_path() << "//" << request.get_query() << std::endl;
 
 }
