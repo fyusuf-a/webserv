@@ -8,6 +8,22 @@ void								Request::set_path(std::string path) {
 	this->_path = path;
 }
 
+void								Request::set_query(std::string query) {
+	this->_query = query;
+}
+
+void								Request::set_path(std::string extra_path) {
+	this->_extra_path = extra_path;
+}
+
+std::string							Request::get_query(void) const {
+	return this->_query;
+}
+
+std::string							Request::get_extra_path(void) const {
+	return this->_extra_path;
+}
+
 std::string							Request::get_method(void) const {
 	return this->_method;
 }

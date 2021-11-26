@@ -71,6 +71,14 @@ class AbsolutePathConcatenator : public Middleware, public Singleton<AbsolutePat
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
 
+class PathChopper : public Middleware, public Singleton<PathChopper>
+{
+	public:
+		PathChopper() {};
+		virtual	~PathChopper() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+};
+
 class Sender : public Middleware, public Singleton<Sender>
 {
 	public:

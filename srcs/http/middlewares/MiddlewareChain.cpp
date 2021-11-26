@@ -14,12 +14,14 @@ void MiddlewareChain::init() {
 	BlockSelector& 					block_selector = BlockSelector::getInstance();
 	MethodChecker& 					method_checker = MethodChecker::getInstance();
 	MethodGET&	 					method_get = MethodGET::getInstance();
+	PathChopper&	 				path_chopper = PathChopper::getInstance();
 
 
 	 AbsolutePathConcatenator& 		apc = AbsolutePathConcatenator::getInstance();
 
 	_chain.push_back(&check_syntax);
 	_chain.push_back(&block_selector);
+	_chain.push_back(&path_chopper);
 	_chain.push_back(&apc);
 	_chain.push_back(&method_checker);
 	_chain.push_back(&method_get);
