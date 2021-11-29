@@ -87,7 +87,7 @@ class Sender : public Middleware, public Singleton<Sender>
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
  
-
+std::string get_absolute_path(Request &request, std::string &path);
 
 
 #endif

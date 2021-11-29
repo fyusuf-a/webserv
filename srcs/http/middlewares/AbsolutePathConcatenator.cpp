@@ -4,6 +4,18 @@
 AbsolutePathConcatenator::AbsolutePathConcatenator() {
 }
 
+std::string get_absolute_path(Request &request, std::string &path) {
+	std::string absolute_path;
+
+	if (request.get_location().get_root() != "")
+		absolute_path = request.get_location().get_root() + path;
+	else if (request.get_server().get_server_conf().getRoot() == "")
+		absolute_path = "";
+	else
+		absolute_path = request.get_server().get_server_conf().getRoot() + path;
+	return (absolute_path);
+}
+
 void		AbsolutePathConcatenator::body(ActiveHTTP& actHTTP, Request& request, Response& response, MiddlewareChain& next) {
 	
 	(void)response;
@@ -14,20 +26,7 @@ void		AbsolutePathConcatenator::body(ActiveHTTP& actHTTP, Request& request, Resp
         return ;
     }
 
-	std::string absolute_path;
-	//std::cout<<request.get_server()<<"//////"<<std::endl;
-	//std::cout << request.get_location().get_root() << std::endl;
-	//std::cout << request.get_location().get_location_path() << std::endl;
-	//std::cout << request.get_location().get_auto_index() << std::endl;
-	//std::cout << request.get_location().get_cgi_ext() << std::endl;
-	if (request.get_location().get_root() != "")
-		absolute_path = request.get_location().get_root() + request.get_path();
-	else if (request.get_server().get_server_conf().getRoot() == "")
-		absolute_path = "";
-	else
-		absolute_path = request.get_server().get_server_conf().getRoot() + request.get_path();
-
-	request.set_path(absolute_path);
-	//std::cout << absolute_path << std::endl;
+    std::string path = request.get_path();
+	request.set_path(get_absolute_path(request, path));
 	next();
 }

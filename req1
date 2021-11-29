@@ -1,4 +1,4 @@
-GET /srcs/test.php/oui/non?ceciestest HTTP/1.1
+GET /test.php/oui/non?ceciestest HTTP/1.1
 Host: localhost:8001
 header2: value2
 
@@ -6,7 +6,7 @@ GET /srcs/test.phpdss/oui/non?ceciestest HTTP/1.1
 Host: localhost:8001
 header2: value2
 
-GET /.php/oui/non?ceciestest HTTP/1.1
+GET /test.php/ok.php/oui/non?ceciestest HTTP/1.1
 Host: localhost:8001
 header2: value2
 
