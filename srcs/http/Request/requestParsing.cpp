@@ -81,8 +81,9 @@ void		Request::parse(std::string& buffer) {
 			break;
 		case 5:
 			++_head;
-			if (_header.find("Content-Length") == _header.end() && _header.find("Transfer-Encoding") == _header.end())
+			if (_header.find("Content-Length") == _header.end() && _header.find("Transfer-Encoding") == _header.end()) {
 				break;
+			}
 			if (buffer.find("\r\n\r\n") == std::string::npos && _method == "POST") {
 				_over = false;
 				--_head;

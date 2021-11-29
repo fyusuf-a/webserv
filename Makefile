@@ -20,6 +20,7 @@ SRC = 	main.cpp\
 	srcs/http/middlewares/MethodPOST.cpp\
 	srcs/http/middlewares/Sender.cpp\
 	srcs/http/middlewares/GETTask.cpp\
+	srcs/http/middlewares/POSTTask.cpp\
 	srcs/http/middlewares/Middleware.cpp\
 	srcs/http/middlewares/MiddlewareChain.cpp\
 	srcs/http/middlewares/AbsolutePathConcatenator.cpp\
