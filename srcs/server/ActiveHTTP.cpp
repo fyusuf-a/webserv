@@ -73,6 +73,11 @@ bool	ActiveHTTP::on_readable(int fd) {
 	return (true);
 }
 
+bool	ActiveHTTP::on_writable(int fd) {
+	postpone_timeout();
+	return ActiveServer::on_writable(fd);
+}
+
 bool	ActiveHTTP::always(int fd) {
 	(void)fd;
 

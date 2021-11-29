@@ -1,6 +1,6 @@
 #ifndef DEFINES_HPP
 #define DEFINES_HPP
 
-#define BUFFER_LENGTH 100
+#define BUFFER_LENGTH 100000
 
 #endif

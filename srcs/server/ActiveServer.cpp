@@ -47,9 +47,7 @@ bool ActiveServer::on_readable(int fd) {
 			_read_buffer += _socket->recv(max_read);
 		}
 		catch (Socket::ConnectionClosed& e) {
-			//std::cerr << "here" << std::endl;
 			on_close(fd);
-			//std::cerr << "there" << std::endl;
 			return (false);
 		}
 		catch (std::exception& e) {
@@ -63,17 +61,18 @@ bool ActiveServer::on_readable(int fd) {
 
 bool ActiveServer::on_writable(int fd) {
 	(void)fd;
+	ssize_t sent;
 	if (_write_buffer.empty())
 		return (true);
 	try {
-		ssize_t sent = _socket->send(_write_buffer);
-		_write_buffer = _write_buffer.substr(sent);
+		sent = _socket->send(_write_buffer);
 	}
 	catch (std::exception& e) {
 		LOG.error() << "An error occured while using send" << std::endl;
 		on_close(fd);
 		return (false);
 	}
+	_write_buffer = _write_buffer.substr(sent);
 	return (true);
 }
 

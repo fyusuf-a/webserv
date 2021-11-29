@@ -11,14 +11,14 @@ class GETTask : public NIOSelector::Callback
     private: 
         ActiveHTTP		*_serv;
 		bool			_finished;
-		//ssize_t			_size;
+		ssize_t			_file_size;
 
     public:
         GETTask();
         ~GETTask();
         GETTask(const GETTask&);
-        GETTask(int fd, ActiveHTTP *serv);
-        //GETTask(int fd, ActiveHTTP *serv, ssize_t file_size);
+        //GETTask(int fd, ActiveHTTP *serv);
+		GETTask(int fd, ActiveHTTP *serv, ssize_t file_size);
 
 		static Log& LOG;
 
