@@ -1,6 +1,6 @@
 #include "POSTTask.hpp"
 #include <unistd.h>
-
+#include <cerrno>
 Log &POSTTask::LOG = Log::getInstance();
 
 
@@ -25,9 +25,12 @@ bool POSTTask::on_readable(int) {
 bool POSTTask::on_writable(int fd) {
 	Request request = _serv->get_request();
 	Response resp = _serv->get_response();
-
+	const char *str;
 	std::cout << "test " << request.get_body() << std::endl;
-	ssize_t ret = write(fd, request.get_body().c_str() + _head, BUFFER_LENGTH);
+	str = request.get_body().c_str() + _head;
+	std::cout << fcntl(fd, F_GETFD) << std::endl;
+	ssize_t ret = write(fd, str, BUFFER_LENGTH);
+	std::perror("fail");
 	_head += ret;
 	if (ret <= 0)
 	{
@@ -40,6 +43,7 @@ bool POSTTask::on_writable(int fd) {
 
 bool POSTTask::always(int fd) {
 	if (_serv->get_response().get_sent()) {
+		std::cout << "low" << std::endl;
 		LOG.debug() << "Deleting GETTask because the response is totally written on ActiveHTTP write buffer" << std::endl;
 		on_close(fd);
 		return (false);
