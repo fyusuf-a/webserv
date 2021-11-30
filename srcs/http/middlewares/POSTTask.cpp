@@ -25,10 +25,11 @@ bool POSTTask::on_readable(int) {
 bool POSTTask::on_writable(int fd) {
 	Request request = _serv->get_request();
 	Response resp = _serv->get_response();
+	std::string body = request.get_body();
 	const char *str;
+
 	std::cout << "test " << request.get_body() << std::endl;
-	str = request.get_body().c_str() + _head;
-	std::cout << fcntl(fd, F_GETFD) << std::endl;
+	str = body.c_str() + _head;
 	ssize_t ret = write(fd, str, BUFFER_LENGTH);
 	std::perror("fail");
 	_head += ret;
