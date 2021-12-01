@@ -39,9 +39,7 @@ Socket *ActiveServer::getSocket() {
 }
 
 bool ActiveServer::on_readable(int fd) {
-	(void)fd;
-	ssize_t max_read = BUFFER_LENGTH - _read_buffer.length();
-	if (max_read > 0)
+	if (BUFFER_LENGTH > 0)
 	{
 		try {
 			_read_buffer += _socket->recv(max_read);

@@ -112,6 +112,10 @@ Response & 		Response::operator=( Response const & rhs ){
 	{
 		this->_code = rhs._code;
 		_ready = rhs._ready;
+		_body = rhs._body;
+		_beginning_sent = rhs._beginning_sent;
+		_sent = rhs._sent;
+		_delegated_to_task = rhs._delegated_to_task;
 	}
 	return *this;
 }

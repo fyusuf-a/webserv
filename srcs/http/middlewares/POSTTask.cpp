@@ -26,35 +26,31 @@ bool POSTTask::on_writable(int fd) {
 	Request request = _serv->get_request();
 	Response resp = _serv->get_response();
 	std::string body = request.get_body();
-	const char *str;
+	const char *str = body.c_str() + _head;
 
-	std::cout << "test " << request.get_body() << std::endl;
-	str = body.c_str() + _head;
-	ssize_t ret = write(fd, str, BUFFER_LENGTH);
-	std::perror("fail");
+	ssize_t body_length = body.length() - _head;
+	ssize_t write_length = BUFFER_LENGTH > body_length ? body_length : BUFFER_LENGTH;
+	ssize_t ret = write(fd, str, write_length);
+
 	_head += ret;
-	if (ret <= 0)
+	if (ret == 0)
 	{
-		resp.set_sent(true);
+		if (ret < 0)
+			resp.set_code(Response::UnknownError);
 		on_close(fd);
 		return (false);
 	}
 	return (true);
 }
 
-bool POSTTask::always(int fd) {
-	if (_serv->get_response().get_sent()) {
-		std::cout << "low" << std::endl;
-		LOG.debug() << "Deleting GETTask because the response is totally written on ActiveHTTP write buffer" << std::endl;
-		on_close(fd);
-		return (false);
-	}
+bool POSTTask::always(int) {
 	return (true);
 }
 
 bool	POSTTask::on_close(int fd) { 
 	LOG.debug() << "Deleting the POSTTask" << std::endl;
     NIOSelector::getInstance().remove(fd);
+   	close(fd);
 	delete (this);
 	return (false);
 }

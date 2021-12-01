@@ -9,8 +9,10 @@ std::string	ft_strtrim(std::string str) {
 std::string	Request::extract_attribute(std::string& buffer, std::string terminating) {
 	std::size_t	length = 0;
 
-	if (buffer.find("\r\n", _lctr) < buffer.find(terminating, _lctr))
-		throw (400);
+	//if (buffer.find("\r\n", _lctr) < buffer.find(terminating, _lctr)) {
+//		std::cout << buffer << std::endl;
+//		throw (400);
+//	}
 	length = buffer.find(terminating, _lctr) - _lctr;
 	if (length == std::string::npos) {
 		_over = false;
