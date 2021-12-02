@@ -23,8 +23,8 @@ bool POSTTask::on_readable(int) {
 }
 
 bool POSTTask::on_writable(int fd) {
-	Request request = _serv->get_request();
-	Response resp = _serv->get_response();
+	Request &request = _serv->get_request();
+	Response &resp = _serv->get_response();
 	std::string body = request.get_body();
 	const char *str = body.c_str() + _head;
 
@@ -35,6 +35,7 @@ bool POSTTask::on_writable(int fd) {
 	_head += ret;
 	if (ret == 0)
 	{
+		resp.set_sent(true);
 		if (ret < 0)
 			resp.set_code(Response::UnknownError);
 		on_close(fd);

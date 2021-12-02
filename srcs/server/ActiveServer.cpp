@@ -42,7 +42,7 @@ bool ActiveServer::on_readable(int fd) {
 	if (BUFFER_LENGTH > 0)
 	{
 		try {
-			_read_buffer += _socket->recv(max_read);
+			_read_buffer += _socket->recv(BUFFER_LENGTH);
 		}
 		catch (Socket::ConnectionClosed& e) {
 			on_close(fd);

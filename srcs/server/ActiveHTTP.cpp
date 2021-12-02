@@ -65,7 +65,6 @@ bool	ActiveHTTP::on_readable(int fd) {
 	}
 
 	//LOG.debug() << "----------------- parsed request" << std::endl;
-	//std::cout << _request << std::endl;
 
 	//std::cout << "readbuffer after parsing: " << std::endl
 	//	  << "(" << _read_buffer << ")" << std::endl;
