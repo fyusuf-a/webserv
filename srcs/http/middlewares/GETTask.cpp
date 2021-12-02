@@ -22,7 +22,6 @@ GETTask::~GETTask(){}
 
 bool GETTask::on_readable(int fd) {
 	Response resp = _serv->get_response();
-	std::cout << resp.get_beginning_sent() << std::endl;
 	if (resp.get_beginning_sent()) {
 		std::string& write_buffer = _serv->get_write_buffer();
 		char* tmp = _serv->get_tmp();
@@ -59,7 +58,6 @@ bool GETTask::always(int fd) {
 }
 
 bool	GETTask::on_close(int fd) { 
-	std::cout << _serv->get_write_buffer() << std::endl;
 	LOG.debug() << "Deleting the GETTask" << std::endl;
     NIOSelector::getInstance().remove(fd);
 	delete (this);
