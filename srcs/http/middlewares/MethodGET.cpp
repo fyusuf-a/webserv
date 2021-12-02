@@ -37,10 +37,8 @@ void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, Mid
 				response.set_code(Response::Forbidden);
 			else
 			{
-				std::cout << "ah" << std::endl;
 				std::ostringstream os;
 				os << file_size;
-				std::cout << "bon" << std::endl;
 				response.delete_header("Transfer-Encoding");
 				response.set_header("Content-Length", os.str());
 				new GETTask(fd, &serv, file_size);
