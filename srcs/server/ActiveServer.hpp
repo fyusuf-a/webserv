@@ -1,10 +1,9 @@
 #ifndef ACTIVESERVER_HPP
 #define ACTIVESERVER_HPP
 
-#define BUFFER_LENGTH 4096
-
 #include "Socket.hpp"
 #include "NIOSelector.hpp"
+#include "../defines.hpp"
 
 class ActiveServer : public NIOSelector::Callback {
 

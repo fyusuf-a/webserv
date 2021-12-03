@@ -1,6 +1,6 @@
-GET / HTTP/1.1
-header1: value1
-header2: value2
+POST /testt HTTP/1.1
+Host: test
+Content-Length: 9
 
-PUT /toto.txt HTTP/1.1
-header3: va
+azertyuiop
+

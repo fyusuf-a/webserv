@@ -46,6 +46,9 @@ class NIOSelector : public Singleton<NIOSelector> {
 
 		void	setTimeout(int timeout);
 		void	add(int fd, Callback&, short operations=READ | WRITE);
+
+		void	my_add(int fd, Callback&, short operations=READ | WRITE);
+
 		void	updateOps(int fd, short operations=READ | WRITE);
 		void	removeOps(int fd, short operations=READ | WRITE);
 		void	remove(int fd);

@@ -9,8 +9,10 @@ std::string	ft_strtrim(std::string str) {
 std::string	Request::extract_attribute(std::string& buffer, std::string terminating) {
 	std::size_t	length = 0;
 
-	if (buffer.find("\r\n", _lctr) < buffer.find(terminating, _lctr))
-		throw (400);
+	if (buffer.find("\r\n\r\n", _lctr) < buffer.find(terminating, _lctr)) {
+		_head = 6;
+		terminating = "\r\n\r\n";
+	}
 	length = buffer.find(terminating, _lctr) - _lctr;
 	if (length == std::string::npos) {
 		_over = false;
@@ -48,7 +50,7 @@ void		Request::parse(std::string& buffer) {
 
 	if (buffer[_lctr] == '\0') {
 		buffer = buffer.substr(_lctr);
-		if (_head == 5)
+		if (_head == 5 && _header.find("Content-Length") == _header.end() && _header.find("Transfer-Encoding") == _header.end())
 			++_head;
 		else
 			_over = false;
@@ -66,10 +68,8 @@ void		Request::parse(std::string& buffer) {
 			_protocol = ft_strtrim(_protocol);
 			break;
 		case 3:
-			if (buffer.find("\r\n", _lctr) == 0) {
-				_head = 6;
-				_lctr += 2;
-			}
+			if (buffer.find("\r\n", _lctr) == 0)
+				_head = 4;
 			else
 				_field_name = extract_attribute(buffer, ":");
 			break;
@@ -81,9 +81,10 @@ void		Request::parse(std::string& buffer) {
 			break;
 		case 5:
 			++_head;
-			if (_header.find("Content-Length") == _header.end() && _header.find("Transfer-Encoding") == _header.end())
+			if (_header.find("Content-Length") == _header.end() && _header.find("Transfer-Encoding") == _header.end()) {
 				break;
-			if (buffer.find("\r\n\r\n") == std::string::npos && _method == "POST") {
+			}
+			if (buffer.find("\r\n\r\n") == std::string::npos) {
 				_over = false;
 				--_head;
 				break;
