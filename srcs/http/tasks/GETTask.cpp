@@ -30,7 +30,6 @@ bool GETTask::on_readable(int fd) {
 			on_close(fd);
 			return (false);
 		}
-		//Socket* sock = _serv->getSocket();
 		write_buffer.append(tmp, ret);
 	}
 	return (true);
