@@ -65,9 +65,6 @@ bool	ActiveHTTP::on_readable(int fd) {
 	}
 	std::ostringstream	ss;
 
-	//std::cout << "readbuffer avant parsing:" << std::endl
-				  //<< "(" << _read_buffer << ")" << std::endl;
-				  
 	if (_request.get_head() != 6) {
 		while (_request.get_head() < 6 && _request.get_over())
 			_request.parse(_read_buffer);
@@ -106,7 +103,7 @@ bool	ActiveHTTP::always(int fd) {
 	// only write the beginning of the response)
 	if (_response.get_ready() && _ongoing_task && !_response.get_beginning_written_on_write_buffer())
 		write_beginning_on_write_buffer();
-	if (_response.get_ready() && _ongoing_task && _response.get_written_on_write_buffer())
+	if (_response.get_ready() && !_ongoing_task && !_response.get_written_on_write_buffer())
 		write_all_on_write_buffer();
 
 	if (_response.get_written_on_write_buffer() && !_ongoing_task) {

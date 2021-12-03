@@ -11,10 +11,7 @@ GETTask::GETTask(const GETTask& src) : Task(src) {
 	*this = src;
 }
 
-GETTask::GETTask(int fd, ActiveHTTP *serv, ssize_t file_size) : Task(fd, serv) {
-	(void)file_size;
-	_finished = false;
-	//_file_size = file_size;
+GETTask::GETTask(int fd, ActiveHTTP *serv) : Task(fd, serv) {
 }
 
 GETTask::~GETTask(){}
@@ -32,7 +29,6 @@ bool GETTask::on_readable(int fd) {
 			on_close(fd);
 			return (false);
 		}
-		//Socket* sock = _serv->getSocket();
 		write_buffer.append(tmp, ret);
 	}
 	return (true);
