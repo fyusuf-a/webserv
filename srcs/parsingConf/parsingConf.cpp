@@ -315,7 +315,6 @@ void  ParsingConf::setup_server_directive(std::string const &line, ServerBlock &
 
     else if (directive == "host" && is_set(server._serverConf.getIP_already_set(), directive) )
     {
-        //std::cerr << "value to parse " << value << std::endl;
         server._serverConf.setAddress(IPAddress(value));
         //server._serverConf.set_host( parsing_host_value(value, directive) );
         // !!! catch preceding function's exceptions

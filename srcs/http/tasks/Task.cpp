@@ -15,7 +15,7 @@ Task::Task(int fd, ActiveHTTP* serv) : _fd(fd), _serv(serv) {
 }
 
 Task::~Task() {
-	LOG.debug() << "Deleting task (fd = " << _fd << std::endl;
+	LOG.debug() << "Deleting task (fd = " << _fd << ")" << std::endl;
     NIOSelector::getInstance().remove(_fd);
 	close(_fd);
 	_serv->set_ongoing_task(NULL);

@@ -105,7 +105,6 @@ void	NIOSelector::remove(int fd) {
 	std::map<int, t_action>::const_iterator match = _actions.find(fd);
 	if (match != _actions.end())
 	{
-		//std::cerr << "removing i = " << _actions[fd].index << " and fd = " << fd << std::endl;
 		_polled_fds.erase(_polled_fds.begin() + _actions[fd].index);
 		size_t index_compared = match->second.index;
 		for (std::map<int, t_action>::iterator it = _actions.begin(); it != _actions.end(); it++)
@@ -131,14 +130,10 @@ void	NIOSelector::poll() {
 		throw std::runtime_error("poll: unexpected error");
 	for (unsigned long i = 0; i < _polled_fds.size(); i++) {
 		fd = _polled_fds[i].fd;
-		//sleep(1);
-		//std::cerr << "poll : " << fd << std::endl;
 		revents = _polled_fds[i].revents;
 		action = _actions[fd];
 		//assert(i == action.index);
-		//std::cerr << "always : " << fd << std::endl;
 		action.callback->always(fd);
-		//std::cerr << "always ended : " << fd << std::endl;
 		if (revents & (POLLERR | POLLNVAL)) {
 			LOG.error() << "An error has occured in the connection with peer (fd = " << fd << ")" << std::endl;
 			action.callback->on_close(fd);
@@ -149,13 +144,9 @@ void	NIOSelector::poll() {
 			action.callback->on_close(fd);
 			continue;
 		}
-		//std::cerr << "maybe readable" << std::endl;
-		//std::cerr << "on object " << action.callback << std::endl;
 		if (revents & (POLLIN | POLLPRI) && !action.callback->on_readable(fd))
 			continue;
-		//std::cerr << "maybe writable" << std::endl;
 		if (revents & POLLOUT && !action.callback->on_writable(fd))
 			continue;
-		//std::cerr << "ended" << std::endl;
 	}
 }

@@ -29,8 +29,6 @@ ActiveHTTP::ActiveHTTP(Socket* socket, INetAddress const& interface, std::vector
 													, _chain(NULL)
 													, _ongoing_task(NULL)
 {
-	//std::cerr << "new server on " << _interface << ": its write_buffer was " << &_write_buffer << std::endl;
-	std::cerr << "new server : " << this << std::endl;
 	time(&_last_time_active);
 }
 
@@ -54,7 +52,6 @@ ActiveHTTP& ActiveHTTP::operator=(const ActiveHTTP& src) {
 }
 
 ActiveHTTP::~ActiveHTTP() {
-	std::cerr << "server deleted : " << this << std::endl;
 	if (_ongoing_task)
 		delete _ongoing_task;
 	if (_chain)
@@ -125,7 +122,6 @@ bool	ActiveHTTP::always(int fd) {
 }
 
 bool	ActiveHTTP::on_close(int fd) {
-	std::cerr << "connection closed on " << _interface << ": its write_buffer was " << &_write_buffer << std::endl;
 	NIOSelector::getInstance().remove(fd);
 	delete (this);
 	return (false);
