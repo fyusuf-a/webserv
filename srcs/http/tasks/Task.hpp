@@ -16,6 +16,7 @@ class Task : public NIOSelector::Callback {
 		Task(const Task&);
 		//Task& operator=(const Task&);
         virtual ~Task();
+		bool always(int fd);
 };
 
 #endif

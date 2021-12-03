@@ -20,3 +20,12 @@ Task::~Task() {
 	close(_fd);
 	_serv->set_ongoing_task(NULL);
 }
+
+bool Task::always(int fd) {
+	if (_serv->get_response().get_written_on_write_buffer()) {
+		on_close(fd);
+		return (false);
+	}
+	return (true);
+}
+	

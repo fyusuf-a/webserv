@@ -21,6 +21,7 @@ SRC = 	main.cpp\
 	srcs/http/middlewares/Sender.cpp\
 	srcs/http/tasks/Task.cpp\
 	srcs/http/tasks/GETTask.cpp\
+	srcs/http/tasks/POSTTask.cpp\
 	srcs/http/middlewares/Middleware.cpp\
 	srcs/http/middlewares/MiddlewareChain.cpp\
 	srcs/http/middlewares/AbsolutePathConcatenator.cpp\

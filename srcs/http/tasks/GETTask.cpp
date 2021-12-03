@@ -11,13 +11,11 @@ GETTask::GETTask(const GETTask& src) : Task(src) {
 	*this = src;
 }
 
-GETTask::GETTask(int fd, ActiveHTTP *serv, ssize_t file_size) : Task(fd, serv) {
-	(void)file_size;
-	_finished = false;
-	//_file_size = file_size;
+GETTask::GETTask(int fd, ActiveHTTP *serv) : Task(fd, serv) {
 }
 
-GETTask::~GETTask(){}
+GETTask::~GETTask(){
+}
 
 bool GETTask::on_readable(int fd) {
 	Response& resp = _serv->get_response();
@@ -43,10 +41,8 @@ bool GETTask::on_writable(int) {
 }
 
 bool GETTask::always(int fd) {
-	if (_serv->get_response().get_written_on_write_buffer()) {
-		on_close(fd);
+	if (Task::always(fd) == false)
 		return (false);
-	}
 	return (true);
 }
 

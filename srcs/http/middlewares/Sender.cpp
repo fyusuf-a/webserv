@@ -15,6 +15,5 @@ void Sender::body(ActiveHTTP& serv, Request&, Response& resp, MiddlewareChain&) 
 			resp.set_header("Content-Length", os.str()); 
 		}
 	}
-	//std::cout << resp.get_body()<<std::endl;;
 	resp.ready();
 }

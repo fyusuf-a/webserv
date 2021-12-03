@@ -66,18 +66,17 @@ bool	ActiveHTTP::on_readable(int fd) {
 	std::ostringstream	ss;
 
 	//std::cout << "readbuffer avant parsing:" << std::endl
-				  //<< "(" << _read_buffer << ")" << std::endl;
-				  
+	//			  << "(" << _read_buffer << ")" << std::endl;
+	_request.set_over(true);	  
 	if (_request.get_head() != 6) {
 		while (_request.get_head() < 6 && _request.get_over())
 			_request.parse(_read_buffer);
 	}
 
 	//LOG.debug() << "----------------- parsed request" << std::endl;
-	//std::cout << _parsed_request << std::endl;
 
 	//std::cout << "readbuffer after parsing: " << std::endl
-			  //<< "(" << _read_buffer << ")" << std::endl;
+	//	  << "(" << _read_buffer << ")" << std::endl;
 	//LOG.debug() << "end of parsing" << std::endl;
 	return (true);
 }
