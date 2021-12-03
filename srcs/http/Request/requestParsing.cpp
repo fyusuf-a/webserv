@@ -77,11 +77,11 @@ void		Request::parse(std::string& buffer) {
 			tmp = extract_attribute(buffer, "\r\n");
 			field_value = ft_strtrim(tmp);
 			if (_over)
-				_header.insert(std::pair<std::string, std::string>(_field_name, field_value));
+				_headers.insert(std::pair<std::string, std::string>(_field_name, field_value));
 			break;
 		case 5:
 			++_head;
-			if (_header.find("Content-Length") == _header.end() && _header.find("Transfer-Encoding") == _header.end())
+			if (_headers.find("Content-Length") == _headers.end() && _headers.find("Transfer-Encoding") == _headers.end())
 				break;
 			if (buffer.find("\r\n\r\n") == std::string::npos && _method == "POST") {
 				_over = false;

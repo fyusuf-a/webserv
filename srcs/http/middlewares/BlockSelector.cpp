@@ -29,7 +29,7 @@ void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 		}
 	}
 
-	std::map<std::string, std::string> rqt_host = request.get_header();
+	std::map<std::string, std::string> rqt_host = request.get_headers();
 
 	for (std::vector<ServerBlock>::const_iterator it = tmp_servers.begin(); it != tmp_servers.end(); it++)
 	{

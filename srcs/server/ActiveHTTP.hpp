@@ -13,6 +13,7 @@
 #define TIMEOUT 60.0
 
 class MiddlewareChain;
+class Task;
 
 class ActiveHTTP : public ActiveServer {
 
@@ -30,19 +31,24 @@ public:
 	virtual ~ActiveHTTP();
 
 	void add_response(const Response&);
-
-	std::vector<ServerBlock> const* getServerBlocks() const;
-	INetAddress getInterface() const;
-	void setServerBlocks(std::vector<ServerBlock> const*);
-	time_t const& get_last_time_active() const;
-	Request& get_request();
-	Response& get_response();
-	std::string& get_write_buffer();
-	char			*get_tmp();
-
-	void send_response();
-	void send_partial_response(const std::string&);
+	void write_all_on_write_buffer();
+	void write_beginning_on_write_buffer();
+	void launch_middleware_chain();
+	//void send_partial_response(const std::string&);
 	void postpone_timeout();
+
+	void setServerBlocks(std::vector<ServerBlock> const*);
+	void set_ongoing_task(Task*);
+
+	std::vector<ServerBlock> const*
+					getServerBlocks() const;
+	INetAddress		getInterface() const;
+	time_t const&	get_last_time_active() const;
+	Request&		get_request();
+	Response&		get_response();
+	std::string&	get_write_buffer();
+	char*			get_tmp();
+	Task const*		get_ongoing_task() const;		
 
 protected:
 	time_t								_last_time_active;
@@ -51,6 +57,8 @@ protected:
 	Request								_request;
 	Response							_response;
 	MiddlewareChain						*_chain;
+	bool								_task_ongoing;
+	Task*								_ongoing_task;
 	char								_tmp[BUFFER_LENGTH];
 	virtual bool						on_readable(int fd);
 	virtual bool						on_writable(int fd);

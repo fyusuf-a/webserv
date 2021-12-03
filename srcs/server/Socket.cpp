@@ -83,7 +83,7 @@ void	Socket::listen() {
 		oss << "Cannot listen on socket (address: " << _interface << ')';
 		throw std::runtime_error(oss.str());
 	}
-	LOG.info() << "Listening on " << _interface << std::endl;
+	LOG.info() << "Listening on " << _interface << " (fd " << _fd << ")" << std::endl;
 }
 
 Socket*	 Socket::accept() const //throw (std::runtime_error)
@@ -94,7 +94,10 @@ Socket*	 Socket::accept() const //throw (std::runtime_error)
 	addr_len = sizeof(address);
 	int newfd = ::accept(_fd, reinterpret_cast<struct sockaddr*>(&address), &addr_len);
 	if (newfd < 0)
+	{
+		LOG.debug() << "accept failed: " << strerror(errno) << std::endl;
 		throw std::runtime_error("accept: error");
+	}
 	Socket *newSocket = new Socket();
 	newSocket->_fd = newfd;
 	newSocket->_interface.setPort(reinterpret_cast<struct sockaddr_in&>(address).sin_port);

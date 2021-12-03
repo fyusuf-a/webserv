@@ -2,6 +2,8 @@
 #include <poll.h>
 #include <stdexcept>
 #include <cassert>
+#include <cstring>
+#include <cerrno>
 
 Log &NIOSelector::LOG = Log::getInstance();
 
@@ -129,23 +131,31 @@ void	NIOSelector::poll() {
 		throw std::runtime_error("poll: unexpected error");
 	for (unsigned long i = 0; i < _polled_fds.size(); i++) {
 		fd = _polled_fds[i].fd;
+		//sleep(1);
+		//std::cerr << "poll : " << fd << std::endl;
 		revents = _polled_fds[i].revents;
 		action = _actions[fd];
 		//assert(i == action.index);
+		//std::cerr << "always : " << fd << std::endl;
 		action.callback->always(fd);
+		//std::cerr << "always ended : " << fd << std::endl;
 		if (revents & (POLLERR | POLLNVAL)) {
-			LOG.error() << "An error has occured in the connection with peer" << std::endl;
+			LOG.error() << "An error has occured in the connection with peer (fd = " << fd << ")" << std::endl;
 			action.callback->on_close(fd);
 			continue;
 		}
 		if (revents & POLLHUP) {
-			LOG.info() << "Peer closed the connection" << std::endl << std::endl;
+			LOG.info() << "Peer closed the connection (fd = " << fd << ")" << std::endl;
 			action.callback->on_close(fd);
 			continue;
 		}
+		//std::cerr << "maybe readable" << std::endl;
+		//std::cerr << "on object " << action.callback << std::endl;
 		if (revents & (POLLIN | POLLPRI) && !action.callback->on_readable(fd))
 			continue;
+		//std::cerr << "maybe writable" << std::endl;
 		if (revents & POLLOUT && !action.callback->on_writable(fd))
 			continue;
+		//std::cerr << "ended" << std::endl;
 	}
 }

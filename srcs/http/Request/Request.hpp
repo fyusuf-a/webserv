@@ -13,7 +13,7 @@ class Request
 		std::string	_method;
 		std::string _path;
 		std::string _protocol;
-		std::map<std::string, std::string>	_header;
+		std::map<std::string, std::string>	_headers;
 		std::string _body;
 		int			_head;
 		bool		_over;
@@ -43,7 +43,7 @@ class Request
 		std::string							get_method(void) const;
 		std::string							get_path(void) const;
 		std::string							get_protocol(void) const;
-		std::map<std::string, std::string>	const& get_header(void) const;
+		std::map<std::string, std::string>	const& get_headers(void) const;
 		std::string							get_body(void) const;
 		std::string							get_residual(void) const;
 		int									get_head(void) const;

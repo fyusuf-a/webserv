@@ -12,6 +12,23 @@
 #define READ	POLLIN
 #define WRITE	POLLOUT
 
+	/*class Callback {
+	public:
+		Callback() : _closed(false){}
+		Callback(const Callback& src) : _closed(src._closed){}
+		Callback& operator=(const Callback& src) {_closed = src._closed; return *this;}
+		virtual ~Callback();
+		virtual bool	on_writable(int fd) = 0;
+		virtual bool	on_readable(int fd) = 0;
+		virtual bool	on_close(int fd) = 0;
+		virtual bool	always(int fd) = 0;
+		bool getClosed() {return _closed;};
+		void setClosed(bool closed) { _closed = closed;};
+
+	protected:
+		bool _closed;
+	};*/
+
 class NIOSelector : public Singleton<NIOSelector> {
 	public:
 	class Callback {

@@ -41,15 +41,15 @@ class Response
 	protected:
 		http_code	_code;
 		std::string _body;
-		std::map<std::string, std::string>	_header;
+		std::map<std::string, std::string>	_headers;
 		bool		_ready;
 		// If a task is running, enables it only if the first part of the
 		// request is sent
-		bool		_beginning_sent;
-		bool		_sent;
+		bool		_beginning_written_on_write_buffer;
+		bool		_written_on_write_buffer;
 		// A request body might be too long, in which case it is possible that the
 		// request may be sent to 
-		bool		_delegated_to_task;
+		//bool		_delegated_to_task;
 
 	public:
 		static std::string http_code_to_str(http_code);
@@ -71,16 +71,14 @@ class Response
 		void		delete_header(const std::string& key);
 		http_code	get_code(void) const;
 		bool		get_ready();
-		bool 		get_beginning_sent() const;
-		bool 		get_sent() const;
-		bool		get_delegated_to_task() const;
+		bool 		get_beginning_written_on_write_buffer() const;
+		bool 		get_written_on_write_buffer() const;
 
 		void		set_code(http_code code);
 		void		set_header(const std::string& key, const std::string& value);
 		void		set_body(std::string body);
-		void		set_beginning_sent(bool);
-		void 		set_sent(bool);
-		void		set_delegated_to_task(bool);
+		void		set_beginning_written_on_write_buffer(bool);
+		void 		set_written_on_write_buffer(bool);
 
 		static Log& LOG;
 };

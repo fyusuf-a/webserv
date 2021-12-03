@@ -3,13 +3,13 @@
 #include "../../server/NIOSelector.hpp"
 #include "../../utils/Log.hpp"
 #include "../../defines.hpp"
+#include "../middlewares/MiddlewareChain.hpp"
+#include "Task.hpp"
 
-#include "MiddlewareChain.hpp"
-
-class GETTask : public NIOSelector::Callback
+class GETTask : public Task
 {
     private: 
-        ActiveHTTP		*_serv;
+        //ActiveHTTP		*_serv;
 		bool			_finished;
 		ssize_t			_file_size;
 

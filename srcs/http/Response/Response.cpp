@@ -1,5 +1,6 @@
 #include "Response.hpp"
 #include "../../server/ActiveHTTP.hpp"
+#include <string>
 
 Log &Response::LOG = Log::getInstance();
 
@@ -88,15 +89,15 @@ std::string		Response::get_body(void) const {
 }
 
 const std::map<std::string, std::string>& Response::get_headers() const {
-	return _header;
+	return _headers;
 }
 
 void	Response::set_header(const std::string& key, const std::string& value) {
-	_header[key] = value;
+	_headers[key] = value;
 }
 
 void	Response::delete_header(const std::string& key) {
-	_header.erase(key);
+	_headers.erase(key);
 }
 
 void			Response::set_body(std::string body)
@@ -104,14 +105,15 @@ void			Response::set_body(std::string body)
 	this->_body += body;
 }
 
-
-
-
 Response & 		Response::operator=( Response const & rhs ){
 	if (this != &rhs)
 	{
-		this->_code = rhs._code;
+		_code = rhs._code;
+		_body = rhs._body;
+		_headers = rhs._headers;
 		_ready = rhs._ready;
+		_beginning_written_on_write_buffer = rhs._beginning_written_on_write_buffer;
+		_written_on_write_buffer = rhs._beginning_written_on_write_buffer;
 	}
 	return *this;
 }
@@ -119,9 +121,8 @@ Response::Response( Response const & src ) {
 	*this = src;
 }
 
-Response::Response() : _code(OK), _ready(false), _beginning_sent(false)
-					   , _sent(false)
-					   , _delegated_to_task(false) {
+Response::Response() : _code(OK), _ready(false), _beginning_written_on_write_buffer(false)
+					   , _written_on_write_buffer(false) {
 }
 
 Response::~Response() {
@@ -134,39 +135,31 @@ void Response::ready() {
 
 void Response::reinitialize() {
 	_code = OK;
-	_ready = false;
 	_body = "";
-	_beginning_sent = false;
-	_sent = false;
-	_delegated_to_task = false;
+	_headers.clear();
+	_ready = false;
+	_beginning_written_on_write_buffer = false;
+	_written_on_write_buffer = false;
 }
 
 bool Response::get_ready() {
 	return _ready;
 }
 
-bool Response::get_beginning_sent() const {
-	return _beginning_sent;
+bool Response::get_beginning_written_on_write_buffer() const {
+	return _beginning_written_on_write_buffer;
 }
 
-bool Response::get_sent() const {
-	return _sent;
+bool Response::get_written_on_write_buffer() const {
+	return _written_on_write_buffer;
 }
 
-bool Response::get_delegated_to_task() const {
-	return _delegated_to_task;
+void Response::set_beginning_written_on_write_buffer(bool set) {
+	_beginning_written_on_write_buffer = set;
 }
 
-void Response::set_beginning_sent(bool set) {
-	_beginning_sent = set;
-}
-
-void Response::set_sent(bool set) {
-	_sent = set;
-}
-
-void Response::set_delegated_to_task(bool set) {
-	_delegated_to_task = set;
+void Response::set_written_on_write_buffer(bool set) {
+	_written_on_write_buffer = set;
 }
 
 /*static std::ostream& put_headers(std::ostream& os, const Response& resp) {
