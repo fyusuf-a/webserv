@@ -1,8 +1,6 @@
 #include "GETTask.hpp"
 #include <unistd.h>
 
-Log &GETTask::LOG = Log::getInstance();
-
 
 GETTask::GETTask() : Task() {
 }

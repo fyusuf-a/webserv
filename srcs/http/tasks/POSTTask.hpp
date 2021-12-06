@@ -1,18 +1,24 @@
-#ifndef GETTASK_HPP
-#define GETTASK_HPP
+#ifndef POSTTASK_HPP
+#define POSTTASK_HPP
 #include "../../server/NIOSelector.hpp"
 #include "../../utils/Log.hpp"
 #include "../../defines.hpp"
+
 #include "../middlewares/MiddlewareChain.hpp"
 #include "Task.hpp"
 
-class GETTask : public Task
+
+class POSTTask : public Task
 {
+    private: 
+        ActiveHTTP	*_serv;
+		ssize_t     _head;      
+
     public:
-        GETTask();
-        ~GETTask();
-        GETTask(const GETTask&);
-        GETTask(int fd, ActiveHTTP *serv);
+        POSTTask();
+        ~POSTTask();
+        POSTTask(const POSTTask&);
+		POSTTask(int fd, ActiveHTTP *serv);
 
 
     protected:

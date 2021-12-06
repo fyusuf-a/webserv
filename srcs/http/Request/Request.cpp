@@ -111,6 +111,7 @@ std::ostream& operator<<(std::ostream& os, const Request& req) {
                        os << it->first << ": " << it->second << "\r\n";
                }
        }
+       os << "\r\n" << req.get_body();
        //os << "over = " << (req.get_over() ? "true" : "false") << std::endl;
        /*os << "\r\n" << req.get_body();
        os << std::endl << "Other stuff:" << std::endl;
