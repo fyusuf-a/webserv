@@ -9,7 +9,9 @@ void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & respo
 	
 	std::string met = request.get_method();
 
-	if (met != "GET" && met != "POST" && met != "DELETE")
+	if (request.get_wrong())
+		response.set_code(Response::BadRequest);
+	else if (met != "GET" && met != "POST" && met != "DELETE")
 		response.set_code(Response::NotImplemented);
 	else if (request.get_path()[0] != '/')
 		response.set_code(Response::BadRequest);

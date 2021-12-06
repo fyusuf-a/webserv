@@ -17,10 +17,12 @@ class Request
 		std::string _body;
 		int			_head;
 		bool		_over;
+		bool		_wrong;
 		std::string _residual;
 		std::string	_field_name;
 		size_t		_lctr;
 		bool		_treated_by_middlewares;
+		unsigned long	_to_read;
 
 
 		ServerBlock 	_server;
@@ -48,6 +50,7 @@ class Request
 		std::string							get_residual(void) const;
 		int									get_head(void) const;
 		bool								get_over(void) const;
+		bool								get_wrong(void) const;
 		void								set_over(bool over);
 		void								set_path(std::string path);
 

@@ -1,4 +1,5 @@
 #include "Request.hpp"
+#include <stdlib.h>
 
 std::string	ft_strtrim(std::string str) {
 	if (str == "" || str.find_first_not_of(" \n\r") == std::string::npos)
@@ -12,6 +13,7 @@ std::string	Request::extract_attribute(std::string& buffer, std::string terminat
 	if (buffer.find("\r\n\r\n", _lctr) < buffer.find(terminating, _lctr)) {
 		_head = 6;
 		terminating = "\r\n\r\n";
+		_wrong = true;
 	}
 	length = buffer.find(terminating, _lctr) - _lctr;
 	if (length == std::string::npos) {
@@ -24,6 +26,8 @@ std::string	Request::extract_attribute(std::string& buffer, std::string terminat
 
 void		Request::manage_head(std::string& buffer) {
 	if (_head == 6)
+		return ;
+	if (_head == 5)
 		return ;
 	if (_head == 4) {
 		if (buffer.find("\r\n", _lctr) == _lctr) {
@@ -81,16 +85,28 @@ void		Request::parse(std::string& buffer) {
 			break;
 		case 5:
 			++_head;
-			if (_headers.find("Content-Length") == _headers.end() && _headers.find("Transfer-Encoding") == _headers.end())
-				break;
-			if (buffer.find("\r\n\r\n") == std::string::npos) {
-				_over = false;
-				--_head;
-				break;
+			if (_method == "POST" && _headers.find("Content-Length") != _headers.end()) {
+				if (_to_read == 0)
+					_to_read = ::atoi(_headers["Content-Length"].c_str());
+				if (buffer.length() >= _to_read) {
+					_body += buffer.substr(_lctr, _to_read);
+					_lctr += _to_read;
+					_to_read = 0;
+				}
+				else {
+					_body += buffer.substr(_lctr, buffer.length());
+					_to_read -= buffer.length();
+					_lctr += buffer.length();
+					_over = false;
+					--_head;
+				}
 			}
-			_body = extract_attribute(buffer, "\r\n\r\n");
+			else if (_method == "POST" && _headers.find("Transfer-Encoding") != _headers.end()) {
+
+			}
 	}
 	manage_head(buffer);
+	std::cout << "bodysize: " << _body.length() << std::endl;
 	buffer = buffer.substr(_lctr);
 	return ;
 }

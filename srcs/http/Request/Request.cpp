@@ -40,6 +40,10 @@ bool								Request::get_over(void) const {
 	return this->_over;
 }
 
+bool								Request::get_wrong(void) const {
+	return this->_wrong;
+}
+
 void 								Request::set_server(ServerBlock server){
 	this->_server = server;
 }
@@ -71,6 +75,8 @@ Request & 		Request::operator=( Request const & rhs ){
 		this->_body = rhs.get_body();
 		this->_head = rhs.get_head();
 		this->_over = rhs.get_over();
+		this->_to_read = rhs._to_read;
+		this->_wrong= rhs._wrong;
 		this->_treated_by_middlewares = rhs._treated_by_middlewares;
 	}
 	return *this;
@@ -91,12 +97,14 @@ void Request::reinitialize() {
 	_residual = "";
 	_field_name = "";
 	_treated_by_middlewares = false;
+	_to_read = 0;
+	_wrong = false;
 }
 
-Request::Request() : _head(0), _over(true), _treated_by_middlewares(false) {
+Request::Request() : _head(0), _over(true), _wrong(false), _treated_by_middlewares(false), _to_read(0) {
 }
 
-Request::Request(std::string& buffer) : _head(0), _over(true), _treated_by_middlewares(false) {
+Request::Request(std::string& buffer) : _head(0), _over(true), _wrong(false), _treated_by_middlewares(false), _to_read(0) {
 	this->parse(buffer);
 }
 
