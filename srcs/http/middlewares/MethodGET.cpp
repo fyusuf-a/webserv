@@ -15,8 +15,12 @@ void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, Mid
         next();
 	else
 	{
-		if (access(request.get_path().c_str(), 0) != 0)
+		std::cout << "-->" << request.get_path() << std::endl;
+		if (!Utils::is_file(request.get_path().c_str()) || access(request.get_path().c_str(), 0) != 0)
+		{
+			std::cout << "is not file" << std::endl;
 			response.set_code(Response::NotFound);
+		}
 		else if (access(request.get_path().c_str(), 4) != 0)
 			response.set_code(Response::Forbidden);
 		else

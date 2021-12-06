@@ -96,5 +96,15 @@ namespace Utils
         for (; str[i] == find[i]; i++);
         return (i);
     }
+
+    bool         is_file(const char *path) 
+    {
+        struct stat s;
+
+        if (!stat(path, &s))
+            if (!(s.st_mode & S_IFDIR))
+                return (true);
+         return (false);
+    }
 }
 
