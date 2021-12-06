@@ -1,6 +1,4 @@
-POST /testt HTTP/1.1
+GET /home/lenpahtos/webserv/ HTTP/1.1
 Host: localhost:8001
-Content-Length: 9
-
-azertyuiop
+Content-lenght: 0
 

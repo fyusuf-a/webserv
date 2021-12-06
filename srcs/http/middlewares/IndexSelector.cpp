@@ -1,13 +1,10 @@
-#include "Middlewares.hpp"
-
-IndexSelector::IndexSelector() {
-
-}
-
-void		IndexSelector::body(ActiveHTTP&, Request& request, Response&, MiddlewareChain& next) {
+#include "Middleware.hpp"
 
 
-    if (response.get_code() >= 400 || request.get_path().back() != '/' || request.get_method() != "GET"){
+void		IndexSelector::body(ActiveHTTP&, Request& request, Response& response, MiddlewareChain& next) {
+
+
+    if (response.get_code() >= 400/* || request.get_path()[request.get_path().size()] != '/'*/ || request.get_method() != "GET"){
         next();
         return ;
     }
@@ -21,7 +18,7 @@ void		IndexSelector::body(ActiveHTTP&, Request& request, Response&, MiddlewareCh
         if ( access((path + *it).c_str(), F_OK ) != -1)
             idx = path + *it;
     }
-
+    std::cout << "--->" << idx << std::endl;
     if (idx != "")
         request.set_path(idx);
     if (request.get_location().get_auto_index() == false)

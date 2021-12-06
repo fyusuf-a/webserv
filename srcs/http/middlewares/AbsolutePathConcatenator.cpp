@@ -15,10 +15,9 @@ void		AbsolutePathConcatenator::body(ActiveHTTP& actHTTP, Request& request, Resp
     }
 
 	std::string absolute_path;
+
 	if (request.get_location().get_root() != "")
 		absolute_path = request.get_location().get_root() + request.get_path();
-	else if (request.get_server().get_server_conf().getRoot() == "")
-		absolute_path = "";
 	else
 		absolute_path = request.get_server().get_server_conf().getRoot() + request.get_path();
 
