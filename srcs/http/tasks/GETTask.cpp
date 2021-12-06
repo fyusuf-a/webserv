@@ -15,7 +15,10 @@ GETTask::GETTask(int fd, ActiveHTTP *serv) : Task(fd, serv) {
 GETTask::~GETTask(){}
 
 bool GETTask::on_readable(int fd) {
+
 	Response& resp = _serv->get_response();
+
+
 	if (resp.get_beginning_written_on_write_buffer()) {
 		std::string& write_buffer = _serv->get_write_buffer();
 		char* tmp = _serv->get_tmp();

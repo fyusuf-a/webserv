@@ -11,7 +11,6 @@
 class POSTTask : public Task
 {
     private: 
-        ActiveHTTP	*_serv;
 		ssize_t     _head;      
 
     public:

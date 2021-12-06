@@ -47,6 +47,11 @@ ActiveHTTP& ActiveHTTP::operator=(const ActiveHTTP& src) {
 		_last_time_active = src._last_time_active;
 		_interface = src._interface;
 		_server_blocks = src._server_blocks;
+		_request = src._request;
+		_response = src._response;
+		_chain = src._chain;
+		_task_ongoing = src._task_ongoing;
+		_ongoing_task = src._ongoing_task;
 	}
 	return (*this);
 }
@@ -105,6 +110,7 @@ bool	ActiveHTTP::always(int fd) {
 	// only write the beginning of the response)
 	if (_response.get_ready() && _ongoing_task && !_response.get_beginning_written_on_write_buffer())
 		write_beginning_on_write_buffer();
+		
 	if (_response.get_ready() && !_ongoing_task && !_response.get_written_on_write_buffer())
 		write_all_on_write_buffer();
 

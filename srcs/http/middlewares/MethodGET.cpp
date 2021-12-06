@@ -44,8 +44,8 @@ void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, Mid
 				//new GETTask(fd, &serv, file_size);
 				new GETTask(fd, &serv);
 			}
-			next();
 		}
 		next();
+
 	}
 }

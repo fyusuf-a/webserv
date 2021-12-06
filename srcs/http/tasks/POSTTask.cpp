@@ -6,11 +6,11 @@
 POSTTask::POSTTask() : Task() {
 }
 
-POSTTask::POSTTask(const POSTTask& src) : Task(src) {
+POSTTask::POSTTask(const POSTTask& src) : Task(src), _head(0) {
 	*this = src;
 }
 
-POSTTask::POSTTask(int fd, ActiveHTTP *serv) : Task(fd, serv){
+POSTTask::POSTTask(int fd, ActiveHTTP *serv) : Task(fd, serv), _head(0){
 }
 
 POSTTask::~POSTTask(){}
@@ -20,9 +20,15 @@ bool POSTTask::on_readable(int) {
 }
 
 bool POSTTask::on_writable(int fd) {
+
+
 	Request &request = _serv->get_request();
+	
 	Response &resp = _serv->get_response();
+
+
 	std::string body = request.get_body();
+
 	const char *str = body.c_str() + _head;
 
 	ssize_t body_length = body.length() - _head;
@@ -30,9 +36,12 @@ bool POSTTask::on_writable(int fd) {
 	ssize_t ret = write(fd, str, write_length);
 
 	_head += ret;
+
 	if (ret == 0)
 	{
 		resp.set_written_on_write_buffer(true);
+
+
 
 		on_close(fd);
 		return (false);
@@ -42,7 +51,11 @@ bool POSTTask::on_writable(int fd) {
 	return (true);
 }
 
-bool POSTTask::always(int) {
+bool POSTTask::always(int fd) {
+	if (_serv->get_response().get_written_on_write_buffer()) {
+			on_close(fd);
+		return (false);
+	}
 	return (true);
 }
 
