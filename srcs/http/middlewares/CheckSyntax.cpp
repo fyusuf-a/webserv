@@ -8,8 +8,6 @@ void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & respo
 	(void)actHTTP;
 	
 
-	std::cout << request << std::endl;
-	std::cout << "---------------" << std::endl;
 
 	std::string met = request.get_method();
 
