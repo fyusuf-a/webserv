@@ -10,7 +10,7 @@ POSTTask::POSTTask(const POSTTask& src) : Task(src), _head(0) {
 	*this = src;
 }
 
-POSTTask::POSTTask(int fd, ActiveHTTP *serv) : Task(fd, serv), _head(0){
+POSTTask::POSTTask(int fd, ActiveHTTP *serv) : Task(fd, serv, WRITE), _head(0) {
 }
 
 POSTTask::~POSTTask(){}

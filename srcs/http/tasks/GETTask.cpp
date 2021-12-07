@@ -9,7 +9,7 @@ GETTask::GETTask(const GETTask& src) : Task(src) {
 	*this = src;
 }
 
-GETTask::GETTask(int fd, ActiveHTTP *serv) : Task(fd, serv) {
+GETTask::GETTask(int fd, ActiveHTTP *serv) : Task(fd, serv, READ) {
 }
 
 GETTask::~GETTask(){}
