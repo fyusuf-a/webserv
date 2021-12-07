@@ -1,4 +1,2 @@
-GET /home/lenpahtos/webserv/ HTTP/1.1
-Host: localhost:8001
-Content-lenght: 0
+GET / HTTP/1.1Host: localhost:8001Content-lenght: 0
 
