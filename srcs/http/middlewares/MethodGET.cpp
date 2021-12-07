@@ -11,7 +11,6 @@ MethodGET::MethodGET() {
 
 void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, MiddlewareChain& next) {
 
-	std::cout << request.get_path() << std::endl;
 	if (response.get_code() >= 400 || request.get_method() != "GET")
         next();
 	else

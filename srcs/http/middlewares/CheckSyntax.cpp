@@ -7,7 +7,13 @@ CheckSyntax::CheckSyntax() {
 void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & response, MiddlewareChain& next) {
 	(void)actHTTP;
 	
+
+	std::cout << request << std::endl;
+	std::cout << "---------------" << std::endl;
+
 	std::string met = request.get_method();
+
+	
 
 	if (met != "GET" && met != "POST" && met != "DELETE")
 		response.set_code(Response::NotImplemented);
