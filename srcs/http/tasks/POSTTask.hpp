@@ -4,12 +4,13 @@
 #include "../../utils/Log.hpp"
 #include "../../defines.hpp"
 
-#include "MiddlewareChain.hpp"
+#include "../middlewares/MiddlewareChain.hpp"
+#include "Task.hpp"
 
-class POSTTask : public NIOSelector::Callback
+
+class POSTTask : public Task
 {
     private: 
-        ActiveHTTP	*_serv;
 		ssize_t     _head;      
 
     public:
@@ -18,14 +19,12 @@ class POSTTask : public NIOSelector::Callback
         POSTTask(const POSTTask&);
 		POSTTask(int fd, ActiveHTTP *serv);
 
-		static Log& LOG;
-
 
     protected:
-    virtual bool   on_readable(int fd);
-    virtual bool   on_writable(int);
-    virtual bool   on_close(int);
-    virtual bool   always(int);
+        virtual bool   on_readable(int fd);
+        virtual bool   on_writable(int);
+        virtual bool   on_close(int);
+        virtual bool   always(int);
 };
 
 #endif

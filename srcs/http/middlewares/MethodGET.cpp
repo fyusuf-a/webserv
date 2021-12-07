@@ -2,7 +2,7 @@
 #include <sstream>
 #include <stdio.h>
 #include <string>
-#include "GETTask.hpp"
+#include "../tasks/GETTask.hpp"
 
 //405
 
@@ -15,7 +15,7 @@ void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, Mid
         next();
 	else
 	{
-		if (access(request.get_path().c_str(), 0) != 0)
+		if (!Utils::is_file(request.get_path().c_str()) || access(request.get_path().c_str(), 0) != 0)
 			response.set_code(Response::NotFound);
 		else if (access(request.get_path().c_str(), 4) != 0)
 			response.set_code(Response::Forbidden);
@@ -38,13 +38,16 @@ void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, Mid
 			else
 			{
 				std::ostringstream os;
+
 				os << file_size;
+
 				response.delete_header("Transfer-Encoding");
 				response.set_header("Content-Length", os.str());
-				new GETTask(fd, &serv, file_size);
-				//new GETTask(fd, &serv);
+
+				new GETTask(fd, &serv);
 			}
-			next();
 		}
+		next();
+
 	}
 }

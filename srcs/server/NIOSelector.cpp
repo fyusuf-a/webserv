@@ -2,6 +2,8 @@
 #include <poll.h>
 #include <stdexcept>
 #include <cassert>
+#include <cstring>
+#include <cerrno>
 
 Log &NIOSelector::LOG = Log::getInstance();
 
@@ -103,7 +105,6 @@ void	NIOSelector::remove(int fd) {
 	std::map<int, t_action>::const_iterator match = _actions.find(fd);
 	if (match != _actions.end())
 	{
-		//std::cerr << "removing i = " << _actions[fd].index << " and fd = " << fd << std::endl;
 		_polled_fds.erase(_polled_fds.begin() + _actions[fd].index);
 		size_t index_compared = match->second.index;
 		for (std::map<int, t_action>::iterator it = _actions.begin(); it != _actions.end(); it++)
@@ -134,12 +135,12 @@ void	NIOSelector::poll() {
 		//assert(i == action.index);
 		action.callback->always(fd);
 		if (revents & (POLLERR | POLLNVAL)) {
-			LOG.error() << "An error has occured in the connection with peer" << std::endl;
+			LOG.error() << "An error has occured in the connection with peer (fd = " << fd << ")" << std::endl;
 			action.callback->on_close(fd);
 			continue;
 		}
 		if (revents & POLLHUP) {
-			LOG.info() << "Peer closed the connection" << std::endl << std::endl;
+			LOG.info() << "Peer closed the connection (fd = " << fd << ")" << std::endl;
 			action.callback->on_close(fd);
 			continue;
 		}

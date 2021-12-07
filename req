@@ -1,0 +1,3 @@
+GET /home/lenpahtos/webserv/ HTTP/1.1^M
+Accept-Encoding: gzip^M
+Host: localhost:8001^M^M

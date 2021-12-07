@@ -7,7 +7,11 @@ CheckSyntax::CheckSyntax() {
 void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & response, MiddlewareChain& next) {
 	(void)actHTTP;
 	
+
+
 	std::string met = request.get_method();
+
+	
 
 	if (met != "GET" && met != "POST" && met != "DELETE")
 		response.set_code(Response::NotImplemented);
@@ -25,13 +29,13 @@ void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & respo
 	std::string										whitespaces = " \n\r\v\t\f";
 	int												host = 0;
 
-	if (request.get_header().size() == 0) {
+	if (request.get_headers().size() == 0) {
 		response.set_code(Response::BadRequest);
 		next();
 		return ;
 	}
 		
-	for (it = request.get_header().begin(); it != request.get_header().end(); ++it){
+	for (it = request.get_headers().begin(); it != request.get_headers().end(); ++it){
 	    if (response.get_code() >= 400) {
 	        next();
 	        return ;

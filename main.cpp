@@ -2,7 +2,7 @@
 #include "srcs/webserv/webserv.hpp"
 #include "srcs/server/NIOSelector.hpp"
 #include "srcs/utils/Log.hpp"
-#define DEFAULT_PATH "conf/is_good.conf"
+#define DEFAULT_PATH "conf/config.conf"
 #define SERVER_PORT 500
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
@@ -16,7 +16,7 @@ int main(int ac, char **av)
 #ifdef DEBUG_FLAG
 	LOG.setLevel(DEBUG);
 #else
-	LOG.setLevel(ERROR);
+	LOG.setLevel(INFO);
 #endif
 	try
     {

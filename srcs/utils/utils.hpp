@@ -5,7 +5,9 @@
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
-
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 namespace Utils
 {
@@ -17,7 +19,7 @@ namespace Utils
     bool is_valid(std::string  &str, std::string const val);
     bool is_digits(std::string const &str);
     bool is_digit(char const c);
-
+    bool is_file(const char *s);
     void ft_trim(std::string &str);
     bool is_comentary(std::string &str);
 
