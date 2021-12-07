@@ -95,7 +95,7 @@ Socket*	 Socket::accept() const //throw (std::runtime_error)
 	int newfd = ::accept(_fd, reinterpret_cast<struct sockaddr*>(&address), &addr_len);
 	if (newfd < 0)
 	{
-		LOG.debug() << "accept failed: " << strerror(errno) << std::endl;
+		LOG.debug() << "accept failed: " << std::strerror(errno) << std::endl;
 		throw std::runtime_error("accept: error");
 	}
 	Socket *newSocket = new Socket();
