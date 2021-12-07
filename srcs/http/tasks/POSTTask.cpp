@@ -3,7 +3,7 @@
 #include <cerrno>
 
 
-POSTTask::POSTTask() : Task() {
+POSTTask::POSTTask() : Task(), _head(0) {
 }
 
 POSTTask::POSTTask(const POSTTask& src) : Task(src), _head(0) {
@@ -40,14 +40,13 @@ bool POSTTask::on_writable(int fd) {
 	if (ret == 0)
 	{
 		resp.set_written_on_write_buffer(true);
-
-
-
-		on_close(fd);
-		return (false);
+		return on_close(fd);
 	}
 	if (ret < 0)
+	{
 		resp.set_code(Response::UnknownError);
+		return on_close(fd);
+	}
 	return (true);
 }
 
