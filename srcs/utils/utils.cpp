@@ -101,8 +101,7 @@ namespace Utils
     {
         struct stat s;
 
-        if (!stat(path, &s))
-            if (!(s.st_mode & S_IFDIR))
+        if (!stat(path, &s) && !(s.st_mode & S_IFDIR))
                 return (true);
          return (false);
     }
