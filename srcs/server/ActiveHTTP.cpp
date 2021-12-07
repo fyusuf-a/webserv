@@ -16,9 +16,7 @@ ActiveHTTP::ActiveHTTP() : ActiveServer(), _server_blocks(NULL), _chain(NULL),
 	time(&_last_time_active);
 }
 
-ActiveHTTP::ActiveHTTP(const ActiveHTTP& src) : ActiveServer(src),
-	_server_blocks(src._server_blocks), _chain(NULL), _ongoing_task(NULL)
-{
+ActiveHTTP::ActiveHTTP(const ActiveHTTP& src) : ActiveServer(src) {
 	*this = src;
 }
 
@@ -50,7 +48,6 @@ ActiveHTTP& ActiveHTTP::operator=(const ActiveHTTP& src) {
 		_request = src._request;
 		_response = src._response;
 		_chain = src._chain;
-		_task_ongoing = src._task_ongoing;
 		_ongoing_task = src._ongoing_task;
 	}
 	return (*this);

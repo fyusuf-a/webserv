@@ -53,11 +53,10 @@ public:
 protected:
 	time_t								_last_time_active;
 	INetAddress							_interface;
-	std::vector<ServerBlock> const *	_server_blocks;
+	std::vector<ServerBlock> const*		_server_blocks;
 	Request								_request;
 	Response							_response;
-	MiddlewareChain						*_chain;
-	bool								_task_ongoing;
+	MiddlewareChain*					_chain;
 	Task*								_ongoing_task;
 	char								_tmp[BUFFER_LENGTH];
 	virtual bool						on_readable(int fd);
