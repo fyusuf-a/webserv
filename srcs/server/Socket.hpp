@@ -55,6 +55,7 @@ public:
 
 	int				getFd() const;
 	INetAddress 	getInterface() const;
+	INetAddress*	getPeer() const;
 	void			setFd(const int&);
 	void			setInterface(const INetAddress&);
 	void			setPort(u_int16_t port);
@@ -62,6 +63,7 @@ public:
 public:
 	int		_fd;
 	INetAddress	_interface;
+	INetAddress	*_peer;
 
 private:
 	void	init(const IPAddress& ip, uint16_t port, bool nonblocking);

@@ -5,10 +5,10 @@
 
 Log& Socket::LOG = Log::getInstance();
 
-Socket::Socket() {
+Socket::Socket() : _peer(NULL) {
 }
 
-Socket::Socket(const Socket& src) {
+Socket::Socket(const Socket& src) : _peer(NULL) {
 	*this = src;
 }
 
@@ -16,6 +16,9 @@ Socket& Socket::operator=(const Socket& src) {
 	if (this != &src) {
 		_fd = src._fd;
 		_interface = src._interface;
+		if (_peer)
+			delete _peer;
+		_peer = src._peer ? new INetAddress(*src._peer) : NULL;
 	}
 	return (*this);
 }
@@ -73,6 +76,8 @@ Socket::Socket(const INetAddress& address, bool nonblocking) {
 }
 
 Socket::~Socket() {
+	if (_peer)
+		delete _peer;
 	close(_fd);
 }
 
@@ -100,10 +105,23 @@ Socket*	 Socket::accept() const //throw (std::runtime_error)
 	}
 	Socket *newSocket = new Socket();
 	newSocket->_fd = newfd;
-	newSocket->_interface.setPort(reinterpret_cast<struct sockaddr_in&>(address).sin_port);
+
+	//Setting peer for active socket
+	newSocket->_peer = new INetAddress();
+	newSocket->_peer->setPort(reinterpret_cast<struct sockaddr_in&>(address).sin_port);
 	IPAddress new_addr = ntohl(reinterpret_cast<struct sockaddr_in&>(address).sin_addr.s_addr);
-	newSocket->_interface.setAddress(new_addr);
-	//newSocket->_i.setInterface(INetAddress((reinterpret_cast<struct sockaddr_in&>(address)).sin_addr.s_addr), (reinterpret_cast<struct sockaddr_in&>(address)).sin_port);
+	newSocket->_peer->setAddress(new_addr);
+
+	//Setting interface for active socket
+	int ret;
+	if ((ret = ::getsockname(newfd, reinterpret_cast<struct sockaddr*>(&address), &addr_len)) >= 0) {
+		newSocket->_interface.setPort(reinterpret_cast<struct sockaddr_in&>(address).sin_port);
+		IPAddress new_addr = ntohl(reinterpret_cast<struct sockaddr_in&>(address).sin_addr.s_addr);
+		newSocket->_interface.setAddress(new_addr);
+	}
+	else
+		LOG.warning() << "getsockname: " << ::strerror(ret) << std::endl;
+
 	LOG.debug() << "New active socket on: " << newSocket->_interface << std::endl;
 	return (newSocket);
 }
@@ -144,6 +162,10 @@ int Socket::getFd() const {
 
 INetAddress Socket::getInterface() const {
 	return _interface;
+}
+
+INetAddress *Socket::getPeer() const {
+	return _peer;
 }
 
 void Socket::setInterface(const INetAddress& interface) {

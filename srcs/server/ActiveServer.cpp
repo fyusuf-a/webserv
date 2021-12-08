@@ -30,7 +30,11 @@ ActiveServer& ActiveServer::operator=(const ActiveServer& src) {
 }
 
 ActiveServer::~ActiveServer() {
-	LOG.info() << "Connection closed with " << _socket->getInterface() << " (fd " << _socket->getFd() << ")" << std::endl;
+	std::ostringstream oss;
+	if (INetAddress* peer = _socket->getPeer())
+		oss << " with " << peer->getAddress();
+	LOG.info() << "Connection closed" << oss.str() << " on "
+		<< _socket->getInterface() << " (fd " << _socket->getFd() << ")" << std::endl;
 	delete _socket;
 }
 
