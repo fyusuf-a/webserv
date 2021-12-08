@@ -8,6 +8,22 @@ void								Request::set_path(std::string path) {
 	this->_path = path;
 }
 
+void								Request::set_query(std::string query) {
+	this->_query = query;
+}
+
+void								Request::set_extra_path(std::string extra_path) {
+	this->_extra_path = extra_path;
+}
+
+std::string							Request::get_query(void) const {
+	return this->_query;
+}
+
+std::string							Request::get_extra_path(void) const {
+	return this->_extra_path;
+}
+
 std::string							Request::get_method(void) const {
 	return this->_method;
 }
@@ -43,14 +59,14 @@ bool								Request::get_over(void) const {
 void 								Request::set_server(ServerBlock server){
 	this->_server = server;
 }
-ServerBlock const 					&Request::get_server(void){
+ServerBlock const 					&Request::get_server(void) const {
 	return this->_server;
 }
 
 void 								Request::set_location(ServerLocation location){
 	this->_location = location;
 }
-ServerLocation const 				&Request::get_location(void){
+ServerLocation const 				&Request::get_location(void) const {
 	return this->_location;
 }
 
@@ -83,6 +99,8 @@ void Request::reinitialize() {
 	_method = "";
 	_path = "";
 	_protocol = "";
+	_query = "";
+	_extra_path = "";
 	_headers.clear();
 	_body = "";
 	_head = 0;

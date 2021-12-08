@@ -12,6 +12,7 @@ MiddlewareChain::MiddlewareChain(ActiveHTTP* callback, Request* req, Response* r
 void MiddlewareChain::init() {
 	CheckSyntax& 					check_syntax = CheckSyntax::getInstance();
 	BlockSelector& 					block_selector = BlockSelector::getInstance();
+	PathChopper&	 				path_chopper = PathChopper::getInstance();
 	AbsolutePathConcatenator& 		apc = AbsolutePathConcatenator::getInstance();
 	IndexSelector& 					index = IndexSelector::getInstance();
 	MethodChecker& 					method_checker = MethodChecker::getInstance();
@@ -31,7 +32,8 @@ void MiddlewareChain::init() {
 	 (void)index;
 	 (void)sender;
 	//_chain.push_back(&check_syntax);
-	//_chain.push_back(&block_selector);
+	_chain.push_back(&block_selector);
+	_chain.push_back(&path_chopper);
 	//_chain.push_back(&apc);
 	//_chain.push_back(&index);
 	//_chain.push_back(&method_checker);

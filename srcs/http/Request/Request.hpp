@@ -21,7 +21,8 @@ class Request
 		std::string	_field_name;
 		size_t		_lctr;
 		bool		_treated_by_middlewares;
-
+		std::string _extra_path;
+		std::string _query;
 
 		ServerBlock 	_server;
 		ServerLocation	_location;
@@ -50,12 +51,16 @@ class Request
 		bool								get_over(void) const;
 		void								set_over(bool over);
 		void								set_path(std::string path);
+		void								set_query(std::string path);
+		void								set_extra_path(std::string path);
+		std::string							get_query(void) const;
+		std::string							get_extra_path(void) const;
 
 		void 								set_server(ServerBlock server);
-		ServerBlock	const 					&get_server(void);
+		ServerBlock	const 					&get_server(void) const;
 
 		void 								set_location(ServerLocation location);
-		ServerLocation const 				&get_location(void);
+		ServerLocation const 				&get_location(void) const;
 
 		bool								get_treated_by_middlewares(void) const;
 		void								set_treated_by_middlewares(bool);

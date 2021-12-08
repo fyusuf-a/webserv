@@ -92,10 +92,21 @@ class AbsolutePathConcatenator : public Middleware, public Singleton<AbsolutePat
 
 class CGIRunner : public Middleware, public Singleton<CGIRunner>
 {
+	private:
+		void set_env(std::map<std::string, std::string>& env, Request const& request);
+
 	public:
 		static Log& LOG;
 		CGIRunner(){};
 		virtual	~CGIRunner() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+};
+
+class PathChopper : public Middleware, public Singleton<PathChopper>
+{
+	public:
+		PathChopper() {};
+		virtual	~PathChopper() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
 
@@ -107,7 +118,7 @@ class Sender : public Middleware, public Singleton<Sender>
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
  
-
+std::string get_absolute_path(Request &request, std::string &path);
 
 
 #endif
