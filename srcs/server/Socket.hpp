@@ -54,7 +54,7 @@ public:
 	ssize_t			recv(void *buf, int maxlen, int flags = 0);
 
 	int				getFd() const;
-	INetAddress 	getInterface() const;
+	INetAddress const& 	getInterface() const;
 	INetAddress*	getPeer() const;
 	void			setFd(const int&);
 	void			setInterface(const INetAddress&);

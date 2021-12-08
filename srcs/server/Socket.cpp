@@ -160,7 +160,7 @@ int Socket::getFd() const {
 	return _fd;
 }
 
-INetAddress Socket::getInterface() const {
+INetAddress const& Socket::getInterface() const {
 	return _interface;
 }
 
