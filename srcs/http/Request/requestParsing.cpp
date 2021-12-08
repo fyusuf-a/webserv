@@ -49,6 +49,7 @@ void		Request::parse(std::string& buffer) {
 		++_lctr;
 	}
 	std::string field_value;
+	std::string body_chunk;
 	_over = true;
 	std::string tmp;
 
@@ -84,7 +85,7 @@ void		Request::parse(std::string& buffer) {
 				_headers.insert(std::pair<std::string, std::string>(_field_name, field_value));
 			break;
 		case 5:
-			++_head;
+		std::cout << "in" << std::endl;
 			if (_method == "POST" && _headers.find("Content-Length") != _headers.end()) {
 				if (_to_read == 0)
 					_to_read = ::atoi(_headers["Content-Length"].c_str());
@@ -92,21 +93,33 @@ void		Request::parse(std::string& buffer) {
 					_body += buffer.substr(_lctr, _to_read);
 					_lctr += _to_read;
 					_to_read = 0;
+					++_head;
 				}
 				else {
 					_body += buffer.substr(_lctr, buffer.length());
 					_to_read -= buffer.length();
 					_lctr += buffer.length();
 					_over = false;
-					--_head;
 				}
 			}
 			else if (_method == "POST" && _headers.find("Transfer-Encoding") != _headers.end()) {
-
+				if (_to_read == 0) {
+					_to_read = std::strtoul(extract_attribute(buffer, "\r\n").c_str(), NULL, 16);
+				}
+				std::cout << buffer.find("\r\n", _lctr) << buffer << "//" << std::endl;
+				if (!buffer.find("\r\n", _lctr)) {
+					_lctr += 2;
+					++_head;
+					break ;
+				}
+				body_chunk = extract_attribute(buffer, "\r\n");
+				_body += body_chunk;
+				if (body_chunk != "")
+					_to_read = 0;
 			}
 	}
 	manage_head(buffer);
-	std::cout << "bodysize: " << _body.length() << std::endl;
+	std::cout << "bodysize: " << _body.length() << _head << std::endl;
 	buffer = buffer.substr(_lctr);
 	return ;
 }
