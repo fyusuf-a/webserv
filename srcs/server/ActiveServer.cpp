@@ -30,7 +30,7 @@ ActiveServer& ActiveServer::operator=(const ActiveServer& src) {
 }
 
 ActiveServer::~ActiveServer() {
-	LOG.info() << "Connection closed with " << _socket->getInterface() << std::endl;
+	LOG.info() << "Connection closed with " << _socket->getInterface() << " (fd " << _socket->getFd() << ")" << std::endl;
 	delete _socket;
 }
 
@@ -39,17 +39,13 @@ Socket *ActiveServer::getSocket() {
 }
 
 bool ActiveServer::on_readable(int fd) {
-	(void)fd;
-	ssize_t max_read = BUFFER_LENGTH - _read_buffer.length();
-	if (max_read > 0)
+	if (BUFFER_LENGTH > 0)
 	{
 		try {
-			_read_buffer += _socket->recv(max_read);
+			_read_buffer += _socket->recv(BUFFER_LENGTH);
 		}
 		catch (Socket::ConnectionClosed& e) {
-			//std::cerr << "here" << std::endl;
 			on_close(fd);
-			//std::cerr << "there" << std::endl;
 			return (false);
 		}
 		catch (std::exception& e) {
@@ -63,17 +59,18 @@ bool ActiveServer::on_readable(int fd) {
 
 bool ActiveServer::on_writable(int fd) {
 	(void)fd;
+	ssize_t sent;
 	if (_write_buffer.empty())
 		return (true);
 	try {
-		ssize_t sent = _socket->send(_write_buffer);
-		_write_buffer = _write_buffer.substr(sent);
+		sent = _socket->send(_write_buffer);
 	}
 	catch (std::exception& e) {
 		LOG.error() << "An error occured while using send" << std::endl;
 		on_close(fd);
 		return (false);
 	}
+	_write_buffer = _write_buffer.substr(sent);
 	return (true);
 }
 

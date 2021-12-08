@@ -11,27 +11,35 @@ MiddlewareChain::MiddlewareChain(ActiveHTTP* callback, Request* req, Response* r
 
 void MiddlewareChain::init() {
 	CheckSyntax& 					check_syntax = CheckSyntax::getInstance();
-	Sender& 						sender = Sender::getInstance();
 	BlockSelector& 					block_selector = BlockSelector::getInstance();
+	AbsolutePathConcatenator& 		apc = AbsolutePathConcatenator::getInstance();
+	IndexSelector& 					index = IndexSelector::getInstance();
 	MethodChecker& 					method_checker = MethodChecker::getInstance();
 	MethodGET&	 					method_get = MethodGET::getInstance();
+	MethodPOST&	 					method_post = MethodPOST::getInstance();
+	MethodDELETE&	 				method_delete = MethodDELETE::getInstance();
 	CGIRunner&	 					cgi_runner = CGIRunner::getInstance();
-
-
-	 AbsolutePathConcatenator& 		apc = AbsolutePathConcatenator::getInstance();
+	Sender& 						sender = Sender::getInstance();
 
 	 (void)apc;
 	 (void)check_syntax;
 	 (void)block_selector;
 	 (void)method_checker;
 	 (void)method_get;
+	 (void)method_post;
+	 (void)method_delete;
+	 (void)index;
+	 (void)sender;
 	//_chain.push_back(&check_syntax);
 	//_chain.push_back(&block_selector);
 	//_chain.push_back(&apc);
+	//_chain.push_back(&index);
 	//_chain.push_back(&method_checker);
 	//_chain.push_back(&method_get);
+	//_chain.push_back(&method_post);
+	//_chain.push_back(&method_delete);
 	_chain.push_back(&cgi_runner);
-	_chain.push_back(&sender);
+	//_chain.push_back(&sender);
 }
 
 MiddlewareChain::MiddlewareChain(const MiddlewareChain& src) {

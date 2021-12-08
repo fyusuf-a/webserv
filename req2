@@ -1,6 +1,2 @@
-GET / HTTP/1.1
-header1: value1
-header2: value2
+GET / HTTP/1.1Host: localhost:8001Content-lenght: 0
 
-PUT /toto.txt HTTP/1.1
-header3: va

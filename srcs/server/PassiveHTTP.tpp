@@ -57,10 +57,14 @@ PassiveHTTP<T>::~PassiveHTTP() {
 template<typename T>
 bool PassiveHTTP<T>::on_readable(int fd) {
 	(void)fd;
-	LOG.info() << "New connection on " << this->_socket->getInterface() << std::endl;
 	T* activeServer = new T(this->_socket->accept(), _interface, _server_blocks);
 	//activeServer->setServerBlocks(_server_blocks);
-	LOG.info() << "Transfering connection to " << activeServer->getSocket()->getInterface() << std::endl;
+
+	Socket* old_socket = this->_socket;
+	Socket* new_socket = activeServer->getSocket();
+
+	LOG.info() << "New connection on " << old_socket->getInterface() << " (fd " << old_socket->getFd() << "), transfering connection to "<< new_socket->getInterface() << " (fd " << new_socket->getFd() << ")" << std::endl;
+	/*LOG.info() << "Transfering connection to " << activeServer->getSocket()->getInterface() << std::endl;*/
 	return (true);
 }
 

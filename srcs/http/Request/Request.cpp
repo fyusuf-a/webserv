@@ -20,8 +20,8 @@ std::string							Request::get_protocol(void) const {
 	return this->_protocol;
 }
 
-std::map<std::string, std::string>	const &Request::get_header(void) const {
-	return this->_header;
+std::map<std::string, std::string>	const &Request::get_headers(void) const {
+	return this->_headers;
 }
 
 std::string							Request::get_body(void) const {
@@ -67,7 +67,7 @@ Request & 		Request::operator=( Request const & rhs ){
 		this->_method = rhs.get_method();
 		this->_path = rhs.get_path();
 		this->_protocol = rhs.get_protocol();
-		this->_header = rhs.get_header();
+		this->_headers = rhs.get_headers();
 		this->_body = rhs.get_body();
 		this->_head = rhs.get_head();
 		this->_over = rhs.get_over();
@@ -83,7 +83,7 @@ void Request::reinitialize() {
 	_method = "";
 	_path = "";
 	_protocol = "";
-	_header.clear();
+	_headers.clear();
 	_body = "";
 	_head = 0;
 	_over = true;
@@ -105,12 +105,13 @@ Request::~Request() {
 
 std::ostream& operator<<(std::ostream& os, const Request& req) {
        os << req.get_method() << " " << req.get_path() << " " << req.get_protocol() << "\r\n";
-	   std::map<std::string, std::string> my_headers = req.get_header();
+	   std::map<std::string, std::string> my_headers = req.get_headers();
        if (! my_headers.empty()) {
                for (std::map<std::string, std::string>::const_iterator it = my_headers.begin(); it != my_headers.end() ; it++) {
                        os << it->first << ": " << it->second << "\r\n";
                }
        }
+       os << "\r\n" << req.get_body();
        //os << "over = " << (req.get_over() ? "true" : "false") << std::endl;
        /*os << "\r\n" << req.get_body();
        os << std::endl << "Other stuff:" << std::endl;

@@ -37,7 +37,7 @@ void		CGIRunner::body(ActiveHTTP& server, Request& request, Response& response, 
 		env_tab[i] = new char[tmp.size() + 1];
 		strcpy(env_tab[i], tmp.c_str()); }
 
-	int status;
+	//int status;
 	char* cgi_program  = (char*)"toto.php";
 	LOG.info() << "Launching php-cgi " << cgi_program << std::endl;
 	char *args[] = {(char*)"/usr/bin/php-cgi", cgi_program, 0};

@@ -2,6 +2,8 @@
 #include <poll.h>
 #include <stdexcept>
 #include <cassert>
+#include <cstring>
+#include <cerrno>
 
 Log &NIOSelector::LOG = Log::getInstance();
 
@@ -54,6 +56,22 @@ std::ostream& operator<<(std::ostream& os, const std::map<int, NIOSelector::t_ac
 }*/
 
 
+void	NIOSelector::my_add(int fd, Callback& callback, short operations) {
+	LOG.debug() << "Adding fd no " << fd << " to NIOSelector with operations "
+		<< (operations & READ ? "READ/" : "") << (operations & WRITE ? "WRITE/" : "")  << std::endl;
+	if (_actions.find(fd) != _actions.end())
+	{
+		LOG.error() << "fd=" << fd << " already existed in NIOSelector map" << std::endl;
+		remove(fd);
+	}
+	_actions[fd] = (t_action){_polled_fds.size(), &callback};
+	_polled_fds.push_back((struct pollfd)
+						{ fd
+						  , operations
+						  , 0});
+}
+
+
 void	NIOSelector::add(int fd, Callback& callback, short operations) {
 	LOG.debug() << "Adding fd no " << fd << " to NIOSelector with operations "
 		<< (operations & READ ? "READ/" : "") << (operations & WRITE ? "WRITE/" : "")  << std::endl;
@@ -87,7 +105,6 @@ void	NIOSelector::remove(int fd) {
 	std::map<int, t_action>::const_iterator match = _actions.find(fd);
 	if (match != _actions.end())
 	{
-		//std::cerr << "removing i = " << _actions[fd].index << " and fd = " << fd << std::endl;
 		_polled_fds.erase(_polled_fds.begin() + _actions[fd].index);
 		size_t index_compared = match->second.index;
 		for (std::map<int, t_action>::iterator it = _actions.begin(); it != _actions.end(); it++)
@@ -118,12 +135,12 @@ void	NIOSelector::poll() {
 		//assert(i == action.index);
 		action.callback->always(fd);
 		if (revents & (POLLERR | POLLNVAL)) {
-			LOG.error() << "An error has occured in the connection with peer" << std::endl;
+			LOG.error() << "An error has occured in the connection with peer (fd = " << fd << ")" << std::endl;
 			action.callback->on_close(fd);
 			continue;
 		}
 		if (revents & POLLHUP) {
-			LOG.info() << "Peer closed the connection" << std::endl << std::endl;
+			LOG.info() << "Peer closed the connection (fd = " << fd << ")" << std::endl;
 			action.callback->on_close(fd);
 			continue;
 		}

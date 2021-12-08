@@ -1,17 +1,10 @@
-#include "Middlewares.hpp"
+#include "Middleware.hpp"
 
-IndexSelector::IndexSelector() {
 
-}
+void		IndexSelector::body(ActiveHTTP&, Request& request, Response& response, MiddlewareChain& next) {
 
-void		IndexSelector::body(ActiveHTTP&, Request& request, Response&, MiddlewareChain& next) {
 
-    (void)response;
-    (void)interface;
-    (void)request;
-    (void)serverBlocks;
-
-    if (response.get_code() >= 400 || request.get_path().back() != '/'){
+    if (response.get_code() >= 400/* || request.get_path()[request.get_path().size()] != '/'*/ || request.get_method() != "GET"){
         next();
         return ;
     }
@@ -25,10 +18,9 @@ void		IndexSelector::body(ActiveHTTP&, Request& request, Response&, MiddlewareCh
         if ( access((path + *it).c_str(), F_OK ) != -1)
             idx = path + *it;
     }
-
     if (idx != "")
         request.set_path(idx);
-    if (request.get_location().get_auto_index() == false && idx != "")
+    if (request.get_location().get_auto_index() == false)
         response.set_code(Response::Forbidden);
     next();
 }

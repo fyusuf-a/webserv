@@ -1,5 +1,8 @@
 #include "Response.hpp"
 #include "../../server/ActiveHTTP.hpp"
+#include <string>
+
+Log &Response::LOG = Log::getInstance();
 
 std::string Response::http_code_to_str(http_code code) {
 	switch (code) {
@@ -84,19 +87,33 @@ Response::http_code		Response::get_code(void) const {
 std::string		Response::get_body(void) const {
 	return this->_body;
 }
-void			Response::set_body(std::string body)
-{
-	this->_body = body;
+
+const std::map<std::string, std::string>& Response::get_headers() const {
+	return _headers;
 }
 
+void	Response::set_header(const std::string& key, const std::string& value) {
+	_headers[key] = value;
+}
 
+void	Response::delete_header(const std::string& key) {
+	_headers.erase(key);
+}
 
+void			Response::set_body(std::string body)
+{
+	this->_body += body;
+}
 
 Response & 		Response::operator=( Response const & rhs ){
 	if (this != &rhs)
 	{
-		this->_code = rhs._code;
+		_code = rhs._code;
+		_body = rhs._body;
+		_headers = rhs._headers;
 		_ready = rhs._ready;
+		_beginning_written_on_write_buffer = rhs._beginning_written_on_write_buffer;
+		_written_on_write_buffer = rhs._beginning_written_on_write_buffer;
 	}
 	return *this;
 }
@@ -104,30 +121,66 @@ Response::Response( Response const & src ) {
 	*this = src;
 }
 
-Response::Response() : _code(OK), _ready(false) {
+Response::Response() : _code(OK), _ready(false), _beginning_written_on_write_buffer(false)
+					   , _written_on_write_buffer(false) {
 }
 
 Response::~Response() {
 }
 
-void Response::send() {
+void Response::ready() {
+	LOG.debug() << "Response is ready" << std::endl;
 	_ready = true;
 }
 
 void Response::reinitialize() {
 	_code = OK;
-	_ready = false;
 	_body = "";
+	_headers.clear();
+	_ready = false;
+	_beginning_written_on_write_buffer = false;
+	_written_on_write_buffer = false;
 }
 
 bool Response::get_ready() {
 	return _ready;
 }
 
+bool Response::get_beginning_written_on_write_buffer() const {
+	return _beginning_written_on_write_buffer;
+}
+
+bool Response::get_written_on_write_buffer() const {
+	return _written_on_write_buffer;
+}
+
+void Response::set_beginning_written_on_write_buffer(bool set) {
+	_beginning_written_on_write_buffer = set;
+}
+
+void Response::set_written_on_write_buffer(bool set) {
+	_written_on_write_buffer = set;
+}
+
+/*static std::ostream& put_headers(std::ostream& os, const Response& resp) {
+	for (std::map<std::string, std::string>::const_iterator it =
+			resp.get_headers().begin(); it != resp.get_headers().end(); ++it)
+		os << it->first << ":" << it->second << "\r\n";
+	return os;
+}*/
+
 std::ostream& operator<<(std::ostream& os, const Response& resp) {
+	os < resp;
+	os << resp.get_body(); 
+	return os;
+}
+
+std::ostream& operator<(std::ostream& os, const Response& resp) {
 	os << "HTTP/1.1 " << resp.get_code() << " "
-		<< Response::http_code_to_str(resp.get_code())
-		<< "\r\nContent-Length: " << resp.get_body().length()
-		<< "\r\n\r\n" << resp.get_body(); 
+		<< Response::http_code_to_str(resp.get_code()) << "\r\n";
+	for (std::map<std::string, std::string>::const_iterator it =
+			resp.get_headers().begin(); it != resp.get_headers().end(); ++it)
+		os << it->first << ":" << it->second << "\r\n";
+	os << "\r\n";
 	return os;
 }
