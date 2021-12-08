@@ -85,7 +85,6 @@ void		Request::parse(std::string& buffer) {
 				_headers.insert(std::pair<std::string, std::string>(_field_name, field_value));
 			break;
 		case 5:
-		std::cout << "in" << std::endl;
 			if (_method == "POST" && _headers.find("Content-Length") != _headers.end()) {
 				if (_to_read == 0)
 					_to_read = ::atoi(_headers["Content-Length"].c_str());
@@ -106,8 +105,7 @@ void		Request::parse(std::string& buffer) {
 				if (_to_read == 0) {
 					_to_read = std::strtoul(extract_attribute(buffer, "\r\n").c_str(), NULL, 16);
 				}
-				std::cout << buffer.find("\r\n", _lctr) << buffer << "//" << std::endl;
-				if (!buffer.find("\r\n", _lctr)) {
+				if (buffer.find("\r\n", _lctr) - _lctr == 0) {
 					_lctr += 2;
 					++_head;
 					break ;
@@ -119,7 +117,6 @@ void		Request::parse(std::string& buffer) {
 			}
 	}
 	manage_head(buffer);
-	std::cout << "bodysize: " << _body.length() << _head << std::endl;
 	buffer = buffer.substr(_lctr);
 	return ;
 }
