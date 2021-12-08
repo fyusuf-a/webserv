@@ -16,23 +16,23 @@ void								Request::set_extra_path(std::string extra_path) {
 	this->_extra_path = extra_path;
 }
 
-std::string							Request::get_query(void) const {
+std::string	const&					Request::get_query(void) const {
 	return this->_query;
 }
 
-std::string							Request::get_extra_path(void) const {
+std::string	const&					Request::get_extra_path(void) const {
 	return this->_extra_path;
 }
 
-std::string							Request::get_method(void) const {
+std::string const&					Request::get_method(void) const {
 	return this->_method;
 }
 
-std::string							Request::get_path(void) const {
+std::string const&					Request::get_path(void) const {
 	return this->_path;
 }
 
-std::string							Request::get_protocol(void) const {
+std::string const &					Request::get_protocol(void) const {
 	return this->_protocol;
 }
 
@@ -40,11 +40,11 @@ std::map<std::string, std::string>	const &Request::get_headers(void) const {
 	return this->_headers;
 }
 
-std::string							Request::get_body(void) const {
+std::string	const&					Request::get_body(void) const {
 	return this->_body;
 }
 
-std::string							Request::get_residual(void) const {
+std::string	const&					Request::get_residual(void) const {
 	return this->_residual;
 }
 

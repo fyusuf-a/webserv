@@ -41,20 +41,20 @@ class Request
 		std::string							extract_attribute(std::string& buffer, std::string terminating);
 		void								manage_head(std::string &buffer);
 		//void								checkIncompleteRequest(std::string& buffer) const;
-		std::string							get_method(void) const;
-		std::string							get_path(void) const;
-		std::string							get_protocol(void) const;
+		std::string const&					get_method(void) const;
+		std::string const&					get_path(void) const;
+		std::string const&					get_protocol(void) const;
 		std::map<std::string, std::string>	const& get_headers(void) const;
-		std::string							get_body(void) const;
-		std::string							get_residual(void) const;
+		std::string const&					get_body(void) const;
+		std::string const&					get_residual(void) const;
 		int									get_head(void) const;
 		bool								get_over(void) const;
 		void								set_over(bool over);
 		void								set_path(std::string path);
 		void								set_query(std::string path);
 		void								set_extra_path(std::string path);
-		std::string							get_query(void) const;
-		std::string							get_extra_path(void) const;
+		std::string const&					get_query(void) const;
+		std::string const&					get_extra_path(void) const;
 
 		void 								set_server(ServerBlock server);
 		ServerBlock	const 					&get_server(void) const;
