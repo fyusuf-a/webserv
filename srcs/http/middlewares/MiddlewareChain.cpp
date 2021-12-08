@@ -12,7 +12,6 @@ void MiddlewareChain::init() {
 	CheckSyntax& 					check_syntax = CheckSyntax::getInstance();
 	BlockSelector& 					block_selector = BlockSelector::getInstance();
 	IndexSelector& 					index = IndexSelector::getInstance();
-
 	MethodChecker& 					method_checker = MethodChecker::getInstance();
 	MethodGET&	 					method_get = MethodGET::getInstance();
 	MethodPOST&	 					method_post = MethodPOST::getInstance();
