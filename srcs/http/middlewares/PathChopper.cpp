@@ -40,12 +40,14 @@ void		PathChopper::body(ActiveHTTP&, Request& request, Response& response, Middl
                 return;
         }
         if (is_script(request, path.substr(0, loc + cgi_ext.length())))
+		{
+			request.set_is_script(true);
             break;
+		}
         head = loc + 1;
     }
     request.set_extra_path(path.substr(loc + cgi_ext.length()));
     request.set_path(path.substr(0, loc + cgi_ext.length()));
-    std::cout << request.get_path() << "||" << request.get_extra_path() << "||" << request.get_query() << std::endl;
-
+	//std::cout << request.get_path() << "||" << request.get_extra_path() << "||" << request.get_query() << std::endl;
     next();
 }

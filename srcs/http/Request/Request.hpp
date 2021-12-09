@@ -23,6 +23,7 @@ class Request
 		bool		_treated_by_middlewares;
 		std::string _extra_path;
 		std::string _query;
+		bool		_is_script;
 
 		ServerBlock 	_server;
 		ServerLocation	_location;
@@ -64,6 +65,9 @@ class Request
 
 		bool								get_treated_by_middlewares(void) const;
 		void								set_treated_by_middlewares(bool);
+
+		bool								get_is_script() const;
+		void								set_is_script(bool);
 };
 
 std::ostream& operator<<(std::ostream&, const Request&);

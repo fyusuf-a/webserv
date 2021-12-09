@@ -56,6 +56,10 @@ bool								Request::get_over(void) const {
 	return this->_over;
 }
 
+bool								Request::get_is_script() const {
+	return _is_script;
+}
+
 void 								Request::set_server(ServerBlock server){
 	this->_server = server;
 }
@@ -78,6 +82,11 @@ void 			Request::set_treated_by_middlewares(bool treated_by_middlewares) {
 	_treated_by_middlewares = treated_by_middlewares;
 }
 
+void			Request::set_is_script(bool set) {
+	_is_script = set;
+}
+
+
 Request & 		Request::operator=( Request const & rhs ){
 	if (this != &rhs) {
 		this->_method = rhs.get_method();
@@ -88,6 +97,7 @@ Request & 		Request::operator=( Request const & rhs ){
 		this->_head = rhs.get_head();
 		this->_over = rhs.get_over();
 		this->_treated_by_middlewares = rhs._treated_by_middlewares;
+		this->_is_script = rhs._is_script;
 	}
 	return *this;
 }
@@ -109,12 +119,13 @@ void Request::reinitialize() {
 	_residual = "";
 	_field_name = "";
 	_treated_by_middlewares = false;
+	_is_script = false;
 }
 
-Request::Request() : _head(0), _over(true), _treated_by_middlewares(false) {
+Request::Request() : _head(0), _over(true), _treated_by_middlewares(false), _is_script(false) {
 }
 
-Request::Request(std::string& buffer) : _head(0), _over(true), _treated_by_middlewares(false) {
+Request::Request(std::string& buffer) : _head(0), _over(true), _treated_by_middlewares(false), _is_script(false) {
 	this->parse(buffer);
 }
 
