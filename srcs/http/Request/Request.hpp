@@ -18,6 +18,7 @@ class Request
 		int			_head;
 		bool		_over;
 		bool		_wrong;
+		bool		_last_zero_read;
 		std::string _residual;
 		std::string	_field_name;
 		size_t		_lctr;

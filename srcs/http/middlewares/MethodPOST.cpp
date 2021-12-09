@@ -23,7 +23,6 @@ void		MethodPOST::body(ActiveHTTP& serv, Request& request, Response& response, M
 
 		int  	fd;
 		if ((fd = open(filepath.c_str(), O_RDWR | O_APPEND | O_CREAT, 0777)) < 0) {
-			std::cout << filepath << std::endl;
 			response.set_code(Response::Forbidden);
 		}
 		else

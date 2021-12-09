@@ -11,7 +11,6 @@ std::string	Request::extract_attribute(std::string& buffer, std::string terminat
 	std::size_t	length = 0;
 
 	if (buffer.find("\r\n\r\n", _lctr) < buffer.find(terminating, _lctr)) {
-		_head = 6;
 		terminating = "\r\n\r\n";
 		_wrong = true;
 	}
@@ -25,6 +24,8 @@ std::string	Request::extract_attribute(std::string& buffer, std::string terminat
 }
 
 void		Request::manage_head(std::string& buffer) {
+	if (_wrong == true)
+		_head = 6;
 	if (_head == 6)
 		return ;
 	if (_head == 5)
@@ -32,7 +33,10 @@ void		Request::manage_head(std::string& buffer) {
 	if (_head == 4) {
 		if (buffer.find("\r\n", _lctr) == _lctr) {
 			_lctr += 2;
-			_head++;
+			if (_headers.find("Content-Length") == _headers.end() && _headers.find("Transfer-Encoding") == _headers.end())
+				_head = 6;
+			else
+				_head++;
 		}
 		else if (_over)
 			_head--;
@@ -101,20 +105,32 @@ void		Request::parse(std::string& buffer) {
 					_over = false;
 				}
 			}
-			else if (_method == "POST" && _headers.find("Transfer-Encoding") != _headers.end()) {
-				if (_to_read == 0) {
-					_to_read = std::strtoul(extract_attribute(buffer, "\r\n").c_str(), NULL, 16);
+			else if (_method == "POST" && _headers.find("Transfer-Encoding") != _headers.end() && _headers["Transfer-Encoding"] == "chunked") {
+				if (_to_read == 0 && !_last_zero_read) {
+					field_value = extract_attribute(buffer, "\r\n");
+					if (field_value == "")
+						break;
+					if (field_value == "0")
+						_last_zero_read = true;
+					_to_read = std::strtoul(field_value.c_str(), NULL, 16);
 				}
-				if (buffer.find("\r\n", _lctr) - _lctr == 0) {
+				if (_last_zero_read && buffer.find("\r\n", _lctr) - _lctr == 0) {
 					_lctr += 2;
 					++_head;
 					break ;
 				}
-				body_chunk = extract_attribute(buffer, "\r\n");
-				_body += body_chunk;
-				if (body_chunk != "")
-					_to_read = 0;
+				if (!_last_zero_read)
+					body_chunk = extract_attribute(buffer, "\r\n");
+				if (body_chunk == "")
+					break;
+				if (body_chunk.length() != _to_read || _last_zero_read)
+					_wrong = true;
+				else
+					_body += body_chunk;
+				_to_read = 0;
 			}
+			else
+				++_head;
 	}
 	manage_head(buffer);
 	buffer = buffer.substr(_lctr);

@@ -43,7 +43,6 @@ MiddlewareChain::~MiddlewareChain() {
 }
 
 void MiddlewareChain::_next() {
-	std::cout << "NEXT!!" << std::endl;
 	if (_chain.empty())
 		return;
 	Middleware* middleware = _chain.front();

@@ -101,10 +101,10 @@ void Request::reinitialize() {
 	_wrong = false;
 }
 
-Request::Request() : _head(0), _over(true), _wrong(false), _treated_by_middlewares(false), _to_read(0) {
+Request::Request() : _head(0), _over(true), _wrong(false), _last_zero_read(false), _treated_by_middlewares(false), _to_read(0) {
 }
 
-Request::Request(std::string& buffer) : _head(0), _over(true), _wrong(false), _treated_by_middlewares(false), _to_read(0) {
+Request::Request(std::string& buffer) : _head(0), _over(true), _wrong(false), _last_zero_read(false), _treated_by_middlewares(false), _to_read(0) {
 	this->parse(buffer);
 }
 

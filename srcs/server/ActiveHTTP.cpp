@@ -74,12 +74,12 @@ bool	ActiveHTTP::on_readable(int fd) {
 	//			  << "(" << _read_buffer << ")" << std::endl;
 	_request.set_over(true);
 	if (_request.get_head() != 6) {
-		std::cout <<  "(" << _read_buffer.length() << ")" << std::endl;
+		//std::cout <<  "(" << _read_buffer.length() << ")" << std::endl;
 		while (_request.get_head() < 6 && _request.get_over())
 			_request.parse(_read_buffer);
 	}
 
-	LOG.debug() << "----------------- parsed request" << std::endl;
+	//LOG.debug() << "----------------- parsed request" << std::endl;
 	//std::cout << "readbuffer after parsing: " << std::endl
 	//LOG.debug() << "end of parsing" << std::endl;
 	return (true);
