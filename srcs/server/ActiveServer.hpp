@@ -15,7 +15,7 @@ public:
 	ActiveServer(Socket*);
 	ActiveServer& operator=(const ActiveServer&);
 	virtual ~ActiveServer();
-	Socket			*getSocket();
+	Socket			*getSocket() const;
 
 protected:
 	bool			_closing;

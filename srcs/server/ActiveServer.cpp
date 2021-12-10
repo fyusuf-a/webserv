@@ -38,7 +38,7 @@ ActiveServer::~ActiveServer() {
 	delete _socket;
 }
 
-Socket *ActiveServer::getSocket() {
+Socket *ActiveServer::getSocket() const {
 	return _socket;
 }
 
