@@ -11,7 +11,7 @@ MethodPOST::MethodPOST() {
 
 void		MethodPOST::body(ActiveHTTP& serv, Request& request, Response& response, MiddlewareChain& next) {
 
-	if (response.get_code() >= 400 || request.get_method() != "POST")
+	if (response.get_code() >= 400 || request.get_method() != "POST" || request.get_is_script())
         next();
 	else
 	{
