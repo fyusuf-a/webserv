@@ -4,10 +4,9 @@
 Sender::Sender() {
 }
 
-void Sender::body(ActiveHTTP& serv, Request& request, Response& resp, MiddlewareChain& next) {
+void Sender::body(ActiveHTTP& serv, Request&, Response& resp, MiddlewareChain& next) {
 	std::ostringstream oss;
 
-	std::cout << request.get_original_request_path() << std::endl;
 	// If there is no ongoing task, set the response length to the length of the body produced by the middlewares
 	if (!serv.get_ongoing_task()) {
 		std::map<std::string, std::string> const& headers = resp.get_headers();
