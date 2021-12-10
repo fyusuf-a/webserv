@@ -4,7 +4,7 @@
 AbsolutePathConcatenator::AbsolutePathConcatenator() {
 }
 
-std::string get_absolute_path(Request &request, std::string &path) {
+std::string get_absolute_path(Request &request, const std::string &path) {
 	std::string absolute_path;
 
 	if (request.get_location().get_root() != "")
@@ -26,7 +26,7 @@ void		AbsolutePathConcatenator::body(ActiveHTTP& actHTTP, Request& request, Resp
         return ;
     }
 
-    std::string path = request.get_path();
-	request.set_path(get_absolute_path(request, path));
+    request.set_original_request_path(request.get_path());
+	request.set_path(get_absolute_path(request, request.get_original_request_path()));
 	next();
 }
