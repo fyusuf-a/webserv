@@ -50,6 +50,7 @@ void		CGIRunner::set_env(std::map<std::string, std::string>& env, ActiveHTTP con
 
 	// Setting REMOTE_ADDR
 	INetAddress* peer = server.getSocket()->getPeer();
+	oss << peer->getAddress();
 	env["REMOTE_ADDR"] = peer ? oss.str() : "0.0.0.0";
 	oss.str("");
 
@@ -60,11 +61,17 @@ void		CGIRunner::set_env(std::map<std::string, std::string>& env, ActiveHTTP con
 	env["REQUEST_METHOD"] = request.get_method();
 
 	// Setting SCRIPT_NAME //Todo
+	std::cerr << request.get_path() << std::endl;
+	//http:://localhost/toto.php/extra?lol&toto=5
+		///home/florian/webserv/toto.php
 	env["SCRIPT_NAME"] = "toto.php";
 
-	INetAddress const& interface = server.getSocket()->getInterface();
+	// Setting SCRIPT_NAME //Todo
+	env["SCRIPT_FILENAME"] = "toto.php";
+
+	//INetAddress const& interface = server.getSocket()->getInterface();
 	// Setting SERVER_NAME
-	oss << interface.getAddress();
+	oss << request.get_server().get_server_conf().getName();
 	env["SERVER_NAME"] = oss.str();
 	oss.str("");
 
@@ -73,15 +80,18 @@ void		CGIRunner::set_env(std::map<std::string, std::string>& env, ActiveHTTP con
 	env["SERVER_PORT"] = oss.str();
 	oss.str("");
 
-	env["CHARSET"] = "utf-8";
+	env["SERVER_PROTOCOL"] = SERVER_PROTOCOL;
+
+	// For PHP CGI which throws a tantrum if this environment variable is unset
 	env["REDIRECT_STATUS"] = "200";
+	/*env["CHARSET"] = "utf-8";
 	env["DOCUMENT_URI"] = "toto.php";
 	env["DOCUMENT_ROOT"] = "toto.php";
 	env["SCRIPT_FILENAME"] = "toto.php";
 	env["ENCODING"] = "";
 	env["HOST"] = "my_server";
 	env["USER_AGENT"] = "Mozilla/5.0";
-	env["PHP_SELF"] = "/toto.php";
+	env["PHP_SELF"] = "/toto.php";*/
 
 }
 
