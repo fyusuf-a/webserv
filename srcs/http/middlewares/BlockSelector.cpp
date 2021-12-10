@@ -129,7 +129,6 @@ void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 			}
 		}
 	}
-	std::cout << "--->" << request.get_location() << std::endl; 
 	if (set == false)
 		response.set_code(Response::NotFound);
 	next();

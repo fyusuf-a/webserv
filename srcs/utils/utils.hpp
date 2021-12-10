@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <dirent.h>
 
 namespace Utils
 {
@@ -29,6 +30,7 @@ namespace Utils
     bool is_set(std::vector<T> value);
 
     int ft_find(std::string str, std::string find);
+    int is_dir(const char *name);
 
 
 

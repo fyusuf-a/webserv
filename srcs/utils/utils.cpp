@@ -108,5 +108,18 @@ namespace Utils
                 return (true);
          return (false);
     }
+    int is_dir(const char *name)
+    {
+        int ret = 0;
+        DIR* rep = opendir(name);
+        
+        if(rep != NULL)
+        {
+            closedir(rep);
+            ret = 1;
+        }
+    
+        return ret;
+    }
 }
 
