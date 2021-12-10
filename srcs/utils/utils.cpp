@@ -1,8 +1,63 @@
 #include "utils.hpp"
+#include <iomanip>
 
 
 namespace Utils
 {
+	std::string month_to_str(unsigned int i) {
+		static std::map<char, std::string> month_to_str;
+		if (month_to_str.empty()) {
+			month_to_str[0] = "Jan";
+			month_to_str[1] = "Feb";
+			month_to_str[2] = "Mar";
+			month_to_str[3] = "Apr";
+			month_to_str[4] = "May";
+			month_to_str[5] = "Jun";
+			month_to_str[6] = "Jul";
+			month_to_str[7] = "Aug";
+			month_to_str[8] = "Sep";
+			month_to_str[9] = "Oct";
+			month_to_str[10] = "Nov";
+			month_to_str[11] = "Dec";
+		}
+		if (i > 11)
+			return "";
+		return month_to_str[i];
+	}
+
+	std::string weekday_to_str(unsigned int i) {
+		static std::map<char, std::string> weekday_to_str;
+		if (weekday_to_str.empty()) {
+			weekday_to_str[0] = "Mon";
+			weekday_to_str[1] = "Tue";
+			weekday_to_str[2] = "Wed";
+			weekday_to_str[3] = "Thu";
+			weekday_to_str[4] = "Fri";
+			weekday_to_str[5] = "Sat";
+			weekday_to_str[6] = "Sun";
+		}
+		if (i > 11)
+			return "";
+		return weekday_to_str[i];
+	}
+
+	std::ostream & print_date(std::ostream& os, bool show_weekday, bool show_gmt) {
+		time_t rawtime;
+		time(&rawtime);
+		struct tm* t = localtime(&rawtime);
+		if (show_weekday)
+			os << weekday_to_str(t->tm_wday) << ", ";
+		os << std::setfill('0') << std::setw(2) << t->tm_mday << " "
+			<< std::setfill('0') << std::setw(2) << month_to_str(t->tm_mon)
+			<< " " << std::setw(4) << (1900 + t->tm_year) << " " 
+			<< std::setfill('0') << std::setw(2) << t->tm_hour << ":"
+			<< std::setfill('0') << std::setw(2) << t->tm_min << ":"
+			<< std::setfill('0') << std::setw(2) << t->tm_sec;
+		if (show_gmt)
+			os << " GMT";
+		return os;
+	}
+
     bool is_space(char c)
     {
         if ((c >= 9 && c <= 13) || c == 32 || c == '\t')
