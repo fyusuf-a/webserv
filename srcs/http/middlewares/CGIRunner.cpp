@@ -39,11 +39,12 @@ void		CGIRunner::set_env(std::map<std::string, std::string>& env, ActiveHTTP con
 	// Setting GATEWAY_INTERFACE
 	env["GATEWAY_INTERFACE"] = "CGI/1.1";
 
-	// Setting PATH_INFO //Todo
+	// Setting PATH_INFO
 	env["PATH_INFO"] = request.get_extra_path();
 
-	// Setting PATH_TRANSLATED //Todo
-	env["PATH_TRANSLATED"] = env["PATH_INFO"].empty() ? "" : request.get_location().get_location_path() + env["PATH_INFO"];
+	// Setting PATH_TRANSLATED (same as SCRIPT_FILENAME?)
+	env["PATH_TRANSLATED"] = env["PATH_INFO"].empty() ? "" : request.get_path();
+	//env["PATH_TRANSLATED"] = env["PATH_INFO"].empty() ? "" : request.get_location().get_location_path() + env["PATH_INFO"];
 
 	// Setting QUERY_STRING //Todo
 	env["QUERY_STRING"] = request.get_query();
@@ -60,14 +61,11 @@ void		CGIRunner::set_env(std::map<std::string, std::string>& env, ActiveHTTP con
 	// Setting REQUEST_METHOD
 	env["REQUEST_METHOD"] = request.get_method();
 
-	// Setting SCRIPT_NAME //Todo
-	std::cerr << request.get_path() << std::endl;
-	//http:://localhost/toto.php/extra?lol&toto=5
-		///home/florian/webserv/toto.php
-	env["SCRIPT_NAME"] = "toto.php";
+	// Setting SCRIPT_NAME (path from the URI)
+	env["SCRIPT_NAME"] = request.get_original_request_path();
 
-	// Setting SCRIPT_NAME //Todo
-	env["SCRIPT_FILENAME"] = "toto.php";
+	// Setting SCRIPT_FILENAME (path executed at the server)
+	env["SCRIPT_FILENAME"] = request.get_path();
 
 	//INetAddress const& interface = server.getSocket()->getInterface();
 	// Setting SERVER_NAME
