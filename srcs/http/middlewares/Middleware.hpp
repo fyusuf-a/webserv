@@ -61,6 +61,7 @@ class IndexSelector : public Middleware, public Singleton<IndexSelector>
 class MethodGET : public Middleware, public Singleton<MethodGET>
 {
 	public:
+		static Log& LOG;
 		MethodGET();
 		virtual	~MethodGET() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
@@ -93,7 +94,7 @@ class AbsolutePathConcatenator : public Middleware, public Singleton<AbsolutePat
 class CGIRunner : public Middleware, public Singleton<CGIRunner>
 {
 	private:
-		void set_env(std::map<std::string, std::string>& env, Request const& request);
+		void set_env(std::map<std::string, std::string>& env, ActiveHTTP const& server, Request const& request);
 
 	public:
 		static Log& LOG;

@@ -22,26 +22,17 @@ void MiddlewareChain::init() {
 	CGIRunner&	 					cgi_runner = CGIRunner::getInstance();
 	Sender& 						sender = Sender::getInstance();
 
-	 (void)apc;
-	 (void)check_syntax;
-	 (void)block_selector;
-	 (void)method_checker;
-	 (void)method_get;
-	 (void)method_post;
-	 (void)method_delete;
-	 (void)index;
-	 (void)sender;
-	//_chain.push_back(&check_syntax);
+	_chain.push_back(&check_syntax);
 	_chain.push_back(&block_selector);
 	_chain.push_back(&path_chopper);
-	//_chain.push_back(&apc);
-	//_chain.push_back(&index);
-	//_chain.push_back(&method_checker);
-	//_chain.push_back(&method_get);
-	//_chain.push_back(&method_post);
-	//_chain.push_back(&method_delete);
+	_chain.push_back(&apc);
+	_chain.push_back(&index);
+	_chain.push_back(&method_checker);
+	_chain.push_back(&method_get);
+	_chain.push_back(&method_post);
+	_chain.push_back(&method_delete);
 	_chain.push_back(&cgi_runner);
-	//_chain.push_back(&sender);
+	_chain.push_back(&sender);
 }
 
 MiddlewareChain::MiddlewareChain(const MiddlewareChain& src) {
