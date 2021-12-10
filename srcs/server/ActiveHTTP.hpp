@@ -38,7 +38,10 @@ public:
 	void postpone_timeout();
 
 	void setServerBlocks(std::vector<ServerBlock> const*);
-	void set_ongoing_task(Task*);
+	//void set_ongoing_tasks(std::list<Task*> const& tasks);
+	//void set_ongoing_task(Task*);
+	void add_ongoing_task(Task* const&);
+	void remove_ongoing_task(Task* const& task);
 
 	uint16_t		get_original_port() const;
 	INetAddress		getInterface() const;
@@ -49,7 +52,7 @@ public:
 	Response&		get_response();
 	std::string&	get_write_buffer();
 	char*			get_tmp();
-	Task const*		get_ongoing_task() const;		
+	std::list<Task*> const& get_ongoing_tasks() const;
 
 protected:
 	uint16_t							_original_port;
@@ -59,7 +62,8 @@ protected:
 	Request								_request;
 	Response							_response;
 	MiddlewareChain*					_chain;
-	Task*								_ongoing_task;
+	//Task*								_ongoing_task;
+	std::list<Task*>					_ongoing_tasks;
 	char								_tmp[BUFFER_LENGTH];
 	virtual bool						on_readable(int fd);
 	virtual bool						on_writable(int fd);

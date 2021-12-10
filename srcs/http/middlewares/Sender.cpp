@@ -8,7 +8,7 @@ void Sender::body(ActiveHTTP& serv, Request&, Response& resp, MiddlewareChain& n
 	std::ostringstream oss;
 
 	// If there is no ongoing task, set the response length to the length of the body produced by the middlewares
-	if (!serv.get_ongoing_task()) {
+	if (serv.get_ongoing_tasks().empty()) {
 		std::map<std::string, std::string> const& headers = resp.get_headers();
 		std::map<std::string, std::string>::const_iterator it = headers.find("Content-Length");
 		if (it == headers.end())
