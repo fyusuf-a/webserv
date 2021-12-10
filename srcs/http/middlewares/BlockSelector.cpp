@@ -109,7 +109,7 @@ void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 
 		for (std::vector<ServerLocation>::const_iterator it = tmp_locations.begin(); it != tmp_locations.end(); it++){
 
-			if ( Utils::ft_find(it->get_location_path(),  request.get_path()) > result)
+			if ( Utils::ft_find(it->get_location_path(),  request.get_path()) > result )
 			{
 				result =  Utils::ft_find(it->get_location_path(),  request.get_path());
 				request.set_location(*it);
@@ -129,7 +129,7 @@ void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 			}
 		}
 	}
-
+	std::cout << "--->" << request.get_location() << std::endl; 
 	if (set == false)
 		response.set_code(Response::NotFound);
 	next();
