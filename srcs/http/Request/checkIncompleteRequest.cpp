@@ -6,7 +6,7 @@
 		case 5:
 		case 4:
 		case 3:
-			if (_protocol != "HTTP/1.1")
+			if (_protocol != SERVER_PROTOCOL)
 				throw(505);
 		//
 		case 2:
@@ -21,7 +21,7 @@
 	if (_residual == "")
 		return ;
 
-	std::string http = "HTTP/1.1";
+	std::string http = SERVER_PROTOCOL;
 	std::string get = "GET";
 	std::string post = "POST";
 	std::string del = "DELETE";

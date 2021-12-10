@@ -176,7 +176,7 @@ std::ostream& operator<<(std::ostream& os, const Response& resp) {
 }
 
 std::ostream& operator<(std::ostream& os, const Response& resp) {
-	os << "HTTP/1.1 " << resp.get_code() << " "
+	os << SERVER_PROTOCOL << " " << resp.get_code() << " "
 		<< Response::http_code_to_str(resp.get_code()) << "\r\n";
 	for (std::map<std::string, std::string>::const_iterator it =
 			resp.get_headers().begin(); it != resp.get_headers().end(); ++it)
