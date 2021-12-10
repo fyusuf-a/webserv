@@ -1,32 +1,25 @@
-#include "GETTask.hpp"
+#include "CGITask.hpp"
 
-// Log &GETTask::LOG = Log::getInstance();
+// Log &CGITask::LOG = Log::getInstance();
 
+CGITask::CGITask() : Task() {
+}
 
-// GETTask::GETTask() : Callback() {
-// }
+CGITask::CGITask(const CGITask& src) : Task(src) {
+	*this = src;
+}
 
-// GETTask::GETTask(const GETTask& src) : Callback(src) {
-// 	*this = src;
-// }
+CGITask::CGITask(int fd, ActiveHTTP *serv) : Task(fd, serv, READ) {
+}
 
-// GETTask::GETTask(int fd, MiddlewareChain *chain) : _chain(chain) {
-// 	NIOSelector::getInstance().add(fd, *this, READ);
-// }
+CGITask::~CGITask(){}
 
-// GETTask::~GETTask(){}
-
-
-
-// bool GETTask::on_readable(int fd)
-// {
+bool CGITask::on_readable(int fd) {
 // 	int  ret;
 // 	char buf[1000];
 // 	std::string result;
 
 // 	memset(buf, '\0', 10);
-
-
 
 // 	if ((ret = read(fd, buf, 10)) == 0 )
 // 		std::cout << "end of file" << std::endl;
@@ -43,12 +36,18 @@
 // 	(void)fd;
 // 	(void)ret;
 // 	return (true);
+	return (true);
+}
 
-// }
-// bool    GETTask::on_writable(int) { return (true); };
-// bool	GETTask::on_close(int fd) { 
-//     NIOSelector::getInstance().remove(fd);
-// 	delete (this);
-// 	return (false);
-// }
-// bool    GETTask::always(int) { return (true); };
+bool    CGITask::on_writable(int) {
+	return (true);
+};
+
+bool	CGITask::always(int fd) {
+	return (true);
+}
+
+bool	CGITask::on_close(int) { 
+	delete (this);
+	return (false);
+}

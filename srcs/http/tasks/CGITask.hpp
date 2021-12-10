@@ -1,19 +1,18 @@
-#ifndef GETTASK_HPP
-#define GETTASK_HPP
+#ifndef CGITASK_HPP
+#define CGITASK_HPP
 #include "../../server/NIOSelector.hpp"
 #include "../../utils/Log.hpp"
 #include "../../defines.hpp"
 #include "../middlewares/MiddlewareChain.hpp"
 #include "Task.hpp"
 
-class GETTask : public Task
+class CGITask : public Task
 {
     public:
-        GETTask();
-        ~GETTask();
-        GETTask(const GETTask&);
-        GETTask(int fd, ActiveHTTP *serv);
-
+        CGITask();
+        ~CGITask();
+        CGITask(const CGITask&);
+        CGITask(int fd, ActiveHTTP *serv);
 
     protected:
         virtual bool   on_readable(int fd);
