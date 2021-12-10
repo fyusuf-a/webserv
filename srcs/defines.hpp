@@ -2,5 +2,6 @@
 #define DEFINES_HPP
 
 #define BUFFER_LENGTH 1000000
+#define NIO_SELECTOR_TIMEOUT 100
 
 #endif

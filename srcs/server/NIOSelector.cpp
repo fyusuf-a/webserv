@@ -1,4 +1,5 @@
 #include "../server/NIOSelector.hpp"
+#include "../defines.hpp"
 #include <poll.h>
 #include <stdexcept>
 #include <cassert>
@@ -20,7 +21,7 @@ NIOSelector::Callback& NIOSelector::Callback::operator=(const Callback&) {
 
 NIOSelector::Callback::~Callback() {}
 
-NIOSelector::NIOSelector() : _timeout(0) {
+NIOSelector::NIOSelector() : _timeout(NIO_SELECTOR_TIMEOUT) {
 }
 
 NIOSelector::NIOSelector(const NIOSelector& src) {
