@@ -16,6 +16,10 @@ void								Request::set_extra_path(std::string extra_path) {
 	this->_extra_path = extra_path;
 }
 
+void								Request::set_original_request_path(std::string original_path) {
+	this->_original_request_path = original_path;
+}
+
 std::string	const&					Request::get_query(void) const {
 	return this->_query;
 }
@@ -30,6 +34,10 @@ std::string const&					Request::get_method(void) const {
 
 std::string const&					Request::get_path(void) const {
 	return this->_path;
+}
+
+std::string const&					Request::get_original_request_path(void) const {
+	return this->_original_request_path;
 }
 
 std::string const &					Request::get_protocol(void) const {
@@ -98,6 +106,7 @@ Request & 		Request::operator=( Request const & rhs ){
 		this->_over = rhs.get_over();
 		this->_treated_by_middlewares = rhs._treated_by_middlewares;
 		this->_is_script = rhs._is_script;
+		this->_original_request_path = rhs._original_request_path;
 	}
 	return *this;
 }
@@ -111,6 +120,7 @@ void Request::reinitialize() {
 	_protocol = "";
 	_query = "";
 	_extra_path = "";
+	_original_request_path = "";
 	_headers.clear();
 	_body = "";
 	_head = 0;

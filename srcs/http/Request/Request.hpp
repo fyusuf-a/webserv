@@ -12,6 +12,7 @@ class Request
 	private:
 		std::string	_method;
 		std::string _path;
+		std::string _original_request_path;
 		std::string _protocol;
 		std::map<std::string, std::string>	_headers;
 		std::string _body;
@@ -52,10 +53,12 @@ class Request
 		bool								get_over(void) const;
 		void								set_over(bool over);
 		void								set_path(std::string path);
+		void								set_original_request_path(std::string path);
 		void								set_query(std::string path);
 		void								set_extra_path(std::string path);
 		std::string const&					get_query(void) const;
 		std::string const&					get_extra_path(void) const;
+		std::string const&					get_original_request_path(void) const;
 
 		void 								set_server(ServerBlock server);
 		ServerBlock	const 					&get_server(void) const;
