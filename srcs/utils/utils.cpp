@@ -92,8 +92,11 @@ namespace Utils
     }
     int ft_find(std::string str, std::string find)
     {
-        int i = 0;
+        size_t i = 0;
         for (; str[i] == find[i]; i++);
+
+        if (i < str.size())
+            return (0);
         return (i);
     }
 
