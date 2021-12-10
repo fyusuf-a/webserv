@@ -27,6 +27,7 @@ ActiveHTTP::ActiveHTTP(Socket* socket, INetAddress const& interface, std::vector
 													, _chain(NULL)
 													, _ongoing_task(NULL)
 {
+	_original_port = interface.getPort();
 	time(&_last_time_active);
 }
 
@@ -123,10 +124,14 @@ bool	ActiveHTTP::always(int fd) {
 	return (true);
 }
 
-bool	ActiveHTTP::on_close(int fd) {
+bool ActiveHTTP::on_close(int fd) {
 	NIOSelector::getInstance().remove(fd);
 	delete (this);
 	return (false);
+}
+
+uint16_t ActiveHTTP::get_original_port() const {
+	return _original_port;
 }
 
 std::vector<ServerBlock> const* ActiveHTTP::getServerBlocks() const {

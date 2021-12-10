@@ -40,9 +40,10 @@ public:
 	void setServerBlocks(std::vector<ServerBlock> const*);
 	void set_ongoing_task(Task*);
 
+	uint16_t		get_original_port() const;
+	INetAddress		getInterface() const;
 	std::vector<ServerBlock> const*
 					getServerBlocks() const;
-	INetAddress		getInterface() const;
 	time_t const&	get_last_time_active() const;
 	Request&		get_request();
 	Response&		get_response();
@@ -51,6 +52,7 @@ public:
 	Task const*		get_ongoing_task() const;		
 
 protected:
+	uint16_t							_original_port;
 	time_t								_last_time_active;
 	INetAddress							_interface;
 	std::vector<ServerBlock> const*		_server_blocks;
