@@ -9,6 +9,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <dirent.h>
+#include <sstream>
+
 
 namespace Utils
 {
@@ -31,6 +33,7 @@ namespace Utils
 
     int ft_find(std::string str, std::string find);
     int is_dir(const char *name);
+    std::string toString(int &i);
 
 
 

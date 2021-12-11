@@ -1,8 +1,5 @@
 #include "Middleware.hpp"
 
-Sender::Sender() {
-}
-
 void Sender::body(ActiveHTTP& serv, Request&, Response& resp, MiddlewareChain&) {
 	if (!serv.get_ongoing_task()) {
 		std::map<std::string, std::string> const& my_map = resp.get_headers();

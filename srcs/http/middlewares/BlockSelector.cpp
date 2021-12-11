@@ -1,8 +1,5 @@
 #include "Middleware.hpp"
 
-BlockSelector::BlockSelector() {
-}
-
 void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& response, MiddlewareChain& next) {
 
 	(void)request;

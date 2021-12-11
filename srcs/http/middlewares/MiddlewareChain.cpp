@@ -17,6 +17,7 @@ void MiddlewareChain::init() {
 	MethodPOST&	 					method_post = MethodPOST::getInstance();
 	MethodDELETE&	 				method_delete = MethodDELETE::getInstance();
 	Sender& 						sender = Sender::getInstance();
+	Error& 						error = Error::getInstance();
 	AbsolutePathConcatenator& 		apc = AbsolutePathConcatenator::getInstance();
 
 	_chain.push_back(&check_syntax);
@@ -27,6 +28,7 @@ void MiddlewareChain::init() {
 	_chain.push_back(&method_get);
 	_chain.push_back(&method_post);
 	_chain.push_back(&method_delete);
+	_chain.push_back(&error);
 	_chain.push_back(&sender);
 }
 

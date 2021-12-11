@@ -23,21 +23,21 @@ class Middleware
 		virtual ~Middleware();
 		Middleware& operator=(const Middleware& src);
 
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next) = 0;
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&) = 0;
 };
 
 class CheckSyntax : public Middleware, public Singleton<CheckSyntax>
 {
 	public:
-		CheckSyntax();
+		CheckSyntax(){};
 		virtual	~CheckSyntax() {};
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
 
 class BlockSelector : public Middleware, public Singleton<BlockSelector>
 {
 	public:
-		BlockSelector();
+		BlockSelector(){};
 		virtual	~BlockSelector() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
@@ -45,9 +45,9 @@ class BlockSelector : public Middleware, public Singleton<BlockSelector>
 class MethodChecker : public Middleware, public Singleton<MethodChecker>
 {
 	public:
-		MethodChecker();
+		MethodChecker(){};
 		virtual	~MethodChecker() {};
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
 
 class IndexSelector : public Middleware, public Singleton<IndexSelector>
@@ -55,47 +55,56 @@ class IndexSelector : public Middleware, public Singleton<IndexSelector>
 	public:
 		IndexSelector(){};
 		virtual	~IndexSelector() {};
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
 
 class MethodGET : public Middleware, public Singleton<MethodGET>
 {
 	public:
-		MethodGET();
+		MethodGET(){};
 		virtual	~MethodGET() {};
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
 
 class MethodDELETE : public Middleware, public Singleton<MethodDELETE>
 {
 	public:
-		MethodDELETE();
+		MethodDELETE(){};
 		virtual	~MethodDELETE() {};
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
 
 class MethodPOST : public Middleware, public Singleton<MethodPOST>
 {
 	public:
-		MethodPOST();
+		MethodPOST(){};
 		virtual	~MethodPOST() {};
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
 
 class AbsolutePathConcatenator : public Middleware, public Singleton<AbsolutePathConcatenator>
 {
 	public:
-		AbsolutePathConcatenator();
+		AbsolutePathConcatenator(){};
 		virtual	~AbsolutePathConcatenator() {};
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
+};
+
+class Error : public Middleware, public Singleton<Error>
+{
+	public:
+		Error(){};
+		virtual	~Error() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
+
 };
 
 class Sender : public Middleware, public Singleton<Sender>
 {
 	public:
-		Sender();
+		Sender(){};
 		virtual	~Sender() {};
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
  
 

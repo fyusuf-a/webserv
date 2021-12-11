@@ -1,9 +1,6 @@
 #include "Middleware.hpp"
 #include "MiddlewareChain.hpp"
 
-CheckSyntax::CheckSyntax() {
-}
-
 void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & response, MiddlewareChain& next) {
 	(void)actHTTP;
 	

@@ -6,9 +6,6 @@
 
 //405
 
-MethodGET::MethodGET() {
-}
-
 void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, MiddlewareChain& next) {
 
 	if (response.get_code() >= 400 || request.get_method() != "GET")

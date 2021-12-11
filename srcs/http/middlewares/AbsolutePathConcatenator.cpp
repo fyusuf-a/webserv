@@ -1,9 +1,6 @@
 #include "Middleware.hpp"
 #include "MiddlewareChain.hpp"
 
-AbsolutePathConcatenator::AbsolutePathConcatenator() {
-}
-
 void		AbsolutePathConcatenator::body(ActiveHTTP& actHTTP, Request& request, Response& response, MiddlewareChain& next) {
 	
 	(void)response;
@@ -58,6 +55,7 @@ void		AbsolutePathConcatenator::body(ActiveHTTP& actHTTP, Request& request, Resp
 		absolute_path = request.get_server().get_server_conf().getRoot() + request.get_path();
 
 	request.set_path(absolute_path);
+
 
 
 	next();
