@@ -20,7 +20,7 @@ bool GETTask::on_readable(int fd) {
 
 
 	if (resp.get_beginning_written_on_write_buffer()) {
-		std::string& write_buffer = _serv->get_write_buffer();
+		//std::string& write_buffer = _serv->get_write_buffer();
 		char* tmp = _serv->get_tmp();
 		ssize_t ret = read(fd, tmp, BUFFER_LENGTH);
 
@@ -30,7 +30,10 @@ bool GETTask::on_readable(int fd) {
 			on_close(fd);
 			return (false);
 		}
-		write_buffer.append(tmp, ret);
+		//write_buffer.append(tmp, ret);
+		std::cerr << _serv->get_write_stream().str();
+		_serv->get_write_stream().write(tmp, ret);
+		std::cerr << _serv->get_write_stream().str();
 	}
 	return (true);
 }

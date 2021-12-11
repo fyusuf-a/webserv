@@ -15,9 +15,9 @@ ActiveHTTP::ActiveHTTP() : ActiveServer(), _server_blocks(NULL), _chain(NULL)
 	time(&_last_time_active);
 }
 
-ActiveHTTP::ActiveHTTP(const ActiveHTTP& src) : ActiveServer(src) {
+/*ActiveHTTP::ActiveHTTP(const ActiveHTTP& src) : ActiveServer(src) {
 	*this = src;
-}
+}*/
 
 ActiveHTTP::ActiveHTTP(Socket* socket, INetAddress const& interface, std::vector<ServerBlock> const* server_blocks)
 													: ActiveServer(socket)
@@ -37,7 +37,7 @@ ActiveHTTP::ActiveHTTP(Socket* socket)
 	time(&_last_time_active);
 }
 
-ActiveHTTP& ActiveHTTP::operator=(const ActiveHTTP& src) {
+/*ActiveHTTP& ActiveHTTP::operator=(const ActiveHTTP& src) {
 	if (this != &src) {
 		ActiveServer::operator=(src);
 		_last_time_active = src._last_time_active;
@@ -49,7 +49,7 @@ ActiveHTTP& ActiveHTTP::operator=(const ActiveHTTP& src) {
 		_ongoing_tasks = src._ongoing_tasks;
 	}
 	return (*this);
-}
+}*/
 
 ActiveHTTP::~ActiveHTTP() {
 	if (!_ongoing_tasks.empty())
@@ -67,21 +67,11 @@ bool	ActiveHTTP::on_readable(int fd) {
 	if (!ActiveServer::on_readable(fd)) {
 		return (false);
 	}
-	std::ostringstream	ss;
-
-	//std::cout << "readbuffer avant parsing:" << std::endl
-	//			  << "(" << _read_buffer << ")" << std::endl;
 	_request.set_over(true);
 	if (_request.get_head() != 6) {
 		while (_request.get_head() < 6 && _request.get_over())
-			_request.parse(_read_buffer);
+			_request.parse(_read_stream);
 	}
-
-	//LOG.debug() << "----------------- parsed request" << std::endl;
-
-	//std::cout << "readbuffer after parsing: " << std::endl
-	//	  << "(" << _read_buffer << ")" << std::endl;
-	//LOG.debug() << "end of parsing" << std::endl;
 	return (true);
 }
 
@@ -175,9 +165,9 @@ Response &ActiveHTTP::get_response() {
 	return (_response);
 }
 
-std::string& ActiveHTTP::get_write_buffer() {
+/*std::string& ActiveHTTP::get_write_buffer() {
 	return (_write_buffer);
-}
+}*/
 
 char* ActiveHTTP::get_tmp() {
 	return (_tmp);
@@ -213,17 +203,19 @@ void	ActiveHTTP::launch_middleware_chain() {
 }
 
 void	ActiveHTTP::write_beginning_on_write_buffer() {	
-	std::ostringstream os;
-	os < _response;
-	_write_buffer += os.str();
+	//std::ostringstream os;
+	//os < _response;
+	//_write_buffer += os.str();
+	_write_stream < _response;
 	LOG.debug() << "Beginning of the request written on the write buffer" << std::endl;
 	_response.set_beginning_written_on_write_buffer(true);
 }
 
 void	ActiveHTTP::write_all_on_write_buffer() {	
-	std::ostringstream os;
-	os << _response;
-	_write_buffer += os.str();
+	//std::ostringstream os;
+	//os << _response;
+	//_write_buffer += os.str();
+	_write_stream << _response;
 	LOG.debug() << "Request totally written on the write buffer" << std::endl;
 	_response.set_written_on_write_buffer(true);
 }

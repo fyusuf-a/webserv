@@ -33,13 +33,14 @@ class Request
 
 	public:
 		Request();
-		Request(std::string& buffer);
+		//Request(std::string& buffer);
 		~Request();
 		Request( Request const & src );
 		Request & operator=( Request const & rhs );
 
 		void								reinitialize();
-		void								parse(std::string& buffer);
+		//void								parse(std::string& buffer);
+		void								parse(std::stringstream& buffer);
 		std::string							extract_attribute(std::string& buffer, std::string terminating);
 		void								manage_head(std::string &buffer);
 		//void								checkIncompleteRequest(std::string& buffer) const;

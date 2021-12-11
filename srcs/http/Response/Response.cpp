@@ -169,12 +169,14 @@ void Response::set_written_on_write_buffer(bool set) {
 	return os;
 }*/
 
+//Todo: beware of null characters in body
 std::ostream& operator<<(std::ostream& os, const Response& resp) {
 	os < resp;
 	os << resp.get_body(); 
 	return os;
 }
 
+//Todo: beware of null characters in headers
 std::ostream& operator<(std::ostream& os, const Response& resp) {
 	os << SERVER_PROTOCOL << " " << resp.get_code() << " "
 		<< Response::http_code_to_str(resp.get_code()) << "\r\n";

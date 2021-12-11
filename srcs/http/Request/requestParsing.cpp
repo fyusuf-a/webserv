@@ -1,4 +1,5 @@
 #include "Request.hpp"
+#include <sstream>
 
 std::string	ft_strtrim(std::string str) {
 	if (str == "" || str.find_first_not_of(" \n\r") == std::string::npos)
@@ -37,7 +38,8 @@ void		Request::manage_head(std::string& buffer) {
 		++_head;
 }
 
-void		Request::parse(std::string& buffer) {
+void		Request::parse(std::stringstream& stream) {
+	std::string buffer = stream.str();
 	_lctr = 0;
 	while ((_head == 1 || _head == 2) && buffer[_lctr] == ' ')
 		++_lctr;
@@ -50,6 +52,7 @@ void		Request::parse(std::string& buffer) {
 
 	if (buffer[_lctr] == '\0') {
 		buffer = buffer.substr(_lctr);
+		stream.str(buffer);
 		if (_head == 5 && _headers.find("Content-Length") == _headers.end() && _headers.find("Transfer-Encoding") == _headers.end())
 			++_head;
 		else
@@ -92,5 +95,6 @@ void		Request::parse(std::string& buffer) {
 	}
 	manage_head(buffer);
 	buffer = buffer.substr(_lctr);
+	stream.str(buffer);
 	return ;
 }

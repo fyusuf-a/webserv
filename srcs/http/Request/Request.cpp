@@ -135,9 +135,9 @@ void Request::reinitialize() {
 Request::Request() : _head(0), _over(true), _treated_by_middlewares(false), _is_script(false) {
 }
 
-Request::Request(std::string& buffer) : _head(0), _over(true), _treated_by_middlewares(false), _is_script(false) {
-	this->parse(buffer);
-}
+/*Request::Request(std::stringstream& stream) : _head(0), _over(true), _treated_by_middlewares(false), _is_script(false) {
+	this->parse(stream);
+}*/
 
 Request::~Request() {
 }

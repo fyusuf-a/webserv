@@ -24,10 +24,10 @@ public:
 	static Log& LOG;
 
 	ActiveHTTP();
-	ActiveHTTP(const ActiveHTTP&);
+	//ActiveHTTP(const ActiveHTTP&);
 	ActiveHTTP(Socket*);
 	ActiveHTTP(Socket*, INetAddress const&, std::vector<ServerBlock> const*);
-	ActiveHTTP& operator=(const ActiveHTTP&);
+	//ActiveHTTP& operator=(const ActiveHTTP&);
 	virtual ~ActiveHTTP();
 
 	void add_response(const Response&);
@@ -50,7 +50,7 @@ public:
 	time_t const&	get_last_time_active() const;
 	Request&		get_request();
 	Response&		get_response();
-	std::string&	get_write_buffer();
+	//std::string&	get_write_buffer();
 	char*			get_tmp();
 	std::list<Task*> const& get_ongoing_tasks() const;
 
