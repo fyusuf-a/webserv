@@ -18,7 +18,7 @@ void		Error::body(ActiveHTTP&, Request&, Response& response, MiddlewareChain& ne
         + Utils::toString(code) +
         " Not Found</title></head>\n<body><center><h1>"
         + Utils::toString(code) +
-        " Not Found</h1></center>\n<hr><center>webserv/1.0.1</center>\n</body>\n</html>";
+        " Not Found</h1></center>\n<hr><center>webserv/1.0.1</center>\n</body>\n</html>\n";
 
         response.set_body(error_body);
     }
