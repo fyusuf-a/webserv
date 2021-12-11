@@ -45,7 +45,7 @@ $(NAME) : $(O_FILES)
 	$(CC) $(CFLAGS) $(HEADERS) $(O_FILES) -o $(NAME)
 	@echo "\033[33;32mCompilation...\t""\033[33;31mDONE 🙃\033[0m"
 
-debug: CFLAGS += -g3
+debug: CFLAGS +=
 debug: CFLAGS += -D DEBUG_FLAG
 debug: all
 
