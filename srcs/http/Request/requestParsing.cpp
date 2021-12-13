@@ -31,7 +31,7 @@ void		Request::manage_head(std::string& buffer) {
 	if (_head == 4) {
 		if (buffer.find("\r\n", _lctr) == _lctr) {
 			_lctr += 2;
-			if (_headers.find("Content-Length") == _headers.end() && _headers.find("Transfer-Encoding") == _headers.end() && _headers["Transfer-Encoding"] == "chunked")
+			if (_headers.find("Content-Length") == _headers.end() && (_headers.find("Transfer-Encoding") == _headers.end() || _headers["Transfer-Encoding"] != "chunked"))
 				_head = 6;
 			else
 				_head++;
@@ -55,11 +55,11 @@ void		Request::parse(std::string& buffer) {
 	_over = true;
 	std::string tmp;
 
-	if (buffer[_lctr] == '\0') {
-		buffer = buffer.substr(_lctr);
-		_over = false;
-		return;
-	}
+	//if (buffer[_lctr] == '\0') {
+	//	buffer = buffer.substr(_lctr);
+	//	_over = false;
+	//	return;
+	//}
 	switch(this->get_head()) {
 		case 0:
 			_method = extract_attribute(buffer, " ");
@@ -114,11 +114,18 @@ void		Request::parse(std::string& buffer) {
 					++_head;
 					break ;
 				}
-				if (!_last_zero_read)
+				else if (_last_zero_read && (buffer.find("\r", _lctr) - _lctr == 0 || buffer.length() == _lctr)) {
+					_over = false;
+					break;
+				}
+				else if (_last_zero_read) {
+					_wrong = true;
+				}
+				else
 					body_chunk = extract_attribute(buffer, "\r\n");
 				if (body_chunk == "")
 					break;
-				if (body_chunk.length() != _to_read || _last_zero_read)
+				if (body_chunk.length() != _to_read)
 					_wrong = true;
 				else
 					_body += body_chunk;
