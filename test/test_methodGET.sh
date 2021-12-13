@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-rm Response/my_*
+rm Response/GET/my_*
 
 g++ -g3 -D ERROR_FLAG -I../includes -Wall -Werror -Wextra --std=c++98 ../main.cpp\
 	../srcs/parsingConf/parsingConf.cpp\
@@ -34,76 +34,111 @@ g++ -g3 -D ERROR_FLAG -I../includes -Wall -Werror -Wextra --std=c++98 ../main.cp
 	../srcs/http/Request/Request.cpp\
 	../srcs/http/Request/requestParsing.cpp\
 	../srcs/http/Request/checkIncompleteRequest.cpp\
-	../srcs/http/Response/Response.cpp\
+	../srcs/http/Response/GET/Response/GET.cpp\
 
-./a.out ../conf/is_good.conf & sh ./requete.sh && kill $!
+./a.out ../conf/is_good.conf & sh Requete/requete.sh && kill $!
 
-if [ "$(diff ./Response/my_resp1 ./Response/resp1)" != "" ]; then
-	echo "Error: response 1"
+
+# \\ -------------- GET--------------- //
+if [ "$(diff ./Response/GET/my_resp1 ./Response/GET/resp1)" != "" ]; then
+	echo "Error: Response/GET 1"
+	rm a.out
+	exit 1
+fi
+if [ "$(diff ./Response/GET/my_resp2 ./Response/GET/resp2)" != "" ]; then
+	echo "Error: Response/GET 2"
+	rm a.out
+	exit 1
+fi
+if [ "$(diff ./Response/GET/my_resp3 ./Response/GET/resp3)" != "" ]; then
+	echo "Error: Response/GET 3"
+	rm a.out
+	exit 1
+fi
+if [ "$(diff ./Response/GET/my_resp4 ./Response/GET/resp4)" != "" ]; then
+	echo "Error: Response/GET 4"
+	rm a.out
+	exit 1
+fi
+if [ "$(diff ./Response/GET/my_resp5 ./Response/GET/resp5)" != "" ]; then
+	echo "Error: Response/GET 5"
+	rm a.out
+	exit 1
+fi
+if [ "$(diff ./Response/GET/my_resp6 ./Response/GET/resp6)" != "" ]; then
+	echo "Error: Response/GET 6"
+	rm a.out
+	exit 1
+fi
+if [ "$(diff ./Response/GET/my_resp7 ./Response/GET/resp7)" != "" ]; then
+	echo "Error: Response/GET 7"
+	rm a.out
+	exit 1
+fi
+if [ "$(diff ./Response/GET/my_resp8 ./Response/GET/resp8)" != "" ]; then
+	echo "Error: Response/GET 8"
+	rm a.out
+	exit 1
+fi
+if [ "$(diff ./Response/GET/my_resp9 ./Response/GET/resp9)" != "" ]; then
+	echo "Error: Response/GET 9"
+	rm a.out
+	exit 1
+fi
+if [ "$(diff ./Response/GET/my_resp10 ./Response/GET/resp10)" != "" ]; then
+	echo "Error: Response/GET 10"
+	rm a.out
+	exit 1
+fi
+if [ "$(diff ./Response/GET/my_resp11 ./Response/GET/resp11)" != "" ]; then
+	echo "Error: Response/GET 11"
 	rm a.out
 	exit 1
 fi
 
-if [ "$(diff ./Response/my_resp2 ./Response/resp2)" != "" ]; then
-	echo "Error: response 2"
-	rm a.out
-	exit 1
-fi
 
-if [ "$(diff ./Response/my_resp3 ./Response/resp3)" != "" ]; then
-	echo "Error: response 3"
-	rm a.out
-	exit 1
-fi
+# \\ -------------- POST --------------- //
+# if [ "$(diff ./Response/POST/my_resp1 ./Response/POST/resp1)" != "" ]; then
+# 	echo "Error: Response/POST 1"
+# 	rm a.out
+# 	exit 1
+# fi
+# if [ "$(diff ./Response/POST/my_resp2 ./Response/POST/resp2)" != "" ]; then
+# 	echo "Error: Response/POST 2"
+# 	rm a.out
+# 	exit 1
+# fi
+# if [ "$(diff ./Response/POST/my_resp3 ./Response/POST/resp3)" != "" ]; then
+# 	echo "Error: Response/POST 3"
+# 	rm a.out
+# 	exit 1
+# fi
+# if [ "$(diff ./Response/POST/my_resp4 ./Response/POST/resp4)" != "" ]; then
+# 	echo "Error: Response/POST 4"
+# 	rm a.out
+# 	exit 1
+# fi
+# if [ "$(diff ./Response/POST/my_resp5 ./Response/POST/resp5)" != "" ]; then
+# 	echo "Error: Response/POST 5"
+# 	rm a.out
+# 	exit 1
+# fi
+# if [ "$(diff ./Response/POST/my_resp6 ./Response/POST/resp6)" != "" ]; then
+# 	echo "Error: Response/POST 6"
+# 	rm a.out
+# 	exit 1
+# fi
+# if [ "$(diff ./Response/POST/my_resp7 ./Response/POST/resp7)" != "" ]; then
+# 	echo "Error: Response/POST 7"
+# 	rm a.out
+# 	exit 1
+# fi
+# if [ "$(diff ./Response/POST/my_resp8 ./Response/POST/resp8)" != "" ]; then
+# 	echo "Error: Response/POST 8"
+# 	rm a.out
+# 	exit 1
+# fi
 
-if [ "$(diff ./Response/my_resp4 ./Response/resp4)" != "" ]; then
-	echo "Error: response 4"
-	rm a.out
-	exit 1
-fi
-
-if [ "$(diff ./Response/my_resp5 ./Response/resp5)" != "" ]; then
-	echo "Error: response 5"
-	rm a.out
-	exit 1
-fi
-
-if [ "$(diff ./Response/my_resp6 ./Response/resp6)" != "" ]; then
-	echo "Error: response 6"
-	rm a.out
-	exit 1
-fi
-
-if [ "$(diff ./Response/my_resp7 ./Response/resp7)" != "" ]; then
-	echo "Error: response 7"
-	rm a.out
-	exit 1
-fi
-
-if [ "$(diff ./Response/my_resp8 ./Response/resp8)" != "" ]; then
-	echo "Error: response 8"
-	rm a.out
-	exit 1
-fi
-
-if [ "$(diff ./Response/my_resp9 ./Response/resp9)" != "" ]; then
-	echo "Error: response 9"
-	rm a.out
-	exit 1
-fi
-
-if [ "$(diff ./Response/my_resp10 ./Response/resp10)" != "" ]; then
-	echo "Error: response 10"
-	rm a.out
-	exit 1
-fi
-
-if [ "$(diff ./Response/my_resp11 ./Response/resp11)" != "" ]; then
-	echo "Error: response 11"
-	rm a.out
-	exit 1
-fi
-
-rm Response/my_*
+rm Response/GET/my_*
 rm a.out
 exit 0
