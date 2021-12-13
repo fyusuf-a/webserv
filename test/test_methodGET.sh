@@ -2,42 +2,44 @@
 
 rm Response/GET/my_*
 
-g++ -g3 -D ERROR_FLAG -I../includes -Wall -Werror -Wextra --std=c++98 ../main.cpp\
-	../srcs/parsingConf/parsingConf.cpp\
-	../srcs/parsingConf/serverBlock.cpp\
-	../srcs/parsingConf/serverConfig.cpp\
-	../srcs/parsingConf/serverLocation.cpp\
-	../srcs/utils/utils.cpp\
-	../srcs/utils/Log.cpp\
-	../srcs/webserv/webserv.cpp\
-	../srcs/server/Socket.cpp\
-	../srcs/server/ActiveServer.cpp\
-	../srcs/server/ActiveHTTP.cpp\
-	../srcs/server/NIOSelector.cpp\
-	../srcs/ipaddress/IPAddress.cpp\
-	../srcs/ipaddress/INetAddress.cpp\
-	../srcs/http/middlewares/CheckSyntax.cpp\
-	../srcs/http/middlewares/Error.cpp\
-	../srcs/http/middlewares/BlockSelector.cpp\
-	../srcs/http/middlewares/MethodChecker.cpp\
-	../srcs/http/middlewares/MethodGET.cpp\
-	../srcs/http/middlewares/MethodDELETE.cpp\
-	../srcs/http/middlewares/MethodPOST.cpp\
-	../srcs/http/middlewares/Sender.cpp\
-	../srcs/http/middlewares/IndexSelector.cpp\
-	../srcs/http/tasks/Task.cpp\
-	../srcs/http/tasks/GETTask.cpp\
-	../srcs/http/tasks/POSTTask.cpp\
-	../srcs/http/middlewares/Middleware.cpp\
-	../srcs/http/middlewares/MiddlewareChain.cpp\
-	../srcs/http/middlewares/AbsolutePathConcatenator.cpp\
-	../srcs/http/Request/Request.cpp\
-	../srcs/http/Request/requestParsing.cpp\
-	../srcs/http/Request/checkIncompleteRequest.cpp\
-	../srcs/http/Response/Response.cpp\
+# g++ -g3 -D ERROR_FLAG -I../includes -Wall -Werror -Wextra --std=c++98 ../main.cpp\
+# 	../srcs/parsingConf/parsingConf.cpp\
+# 	../srcs/parsingConf/serverBlock.cpp\
+# 	../srcs/parsingConf/serverConfig.cpp\
+# 	../srcs/parsingConf/serverLocation.cpp\
+# 	../srcs/utils/utils.cpp\
+# 	../srcs/utils/Log.cpp\
+# 	../srcs/webserv/webserv.cpp\
+# 	../srcs/server/Socket.cpp\
+# 	../srcs/server/ActiveServer.cpp\
+# 	../srcs/server/ActiveHTTP.cpp\
+# 	../srcs/server/NIOSelector.cpp\
+# 	../srcs/ipaddress/IPAddress.cpp\
+# 	../srcs/ipaddress/INetAddress.cpp\
+# 	../srcs/http/middlewares/CheckSyntax.cpp\
+# 	../srcs/http/middlewares/Error.cpp\
+# 	../srcs/http/middlewares/BlockSelector.cpp\
+# 	../srcs/http/middlewares/MethodChecker.cpp\
+# 	../srcs/http/middlewares/MethodGET.cpp\
+# 	../srcs/http/middlewares/MethodDELETE.cpp\
+# 	../srcs/http/middlewares/MethodPOST.cpp\
+# 	../srcs/http/middlewares/Sender.cpp\
+# 	../srcs/http/middlewares/IndexSelector.cpp\
+# 	../srcs/http/tasks/Task.cpp\
+# 	../srcs/http/tasks/GETTask.cpp\
+# 	../srcs/http/tasks/POSTTask.cpp\
+# 	../srcs/http/middlewares/Middleware.cpp\
+# 	../srcs/http/middlewares/MiddlewareChain.cpp\
+# 	../srcs/http/middlewares/AbsolutePathConcatenator.cpp\
+# 	../srcs/http/Request/Request.cpp\
+# 	../srcs/http/Request/requestParsing.cpp\
+# 	../srcs/http/Request/checkIncompleteRequest.cpp\
+# 	../srcs/http/Response/Response.cpp\
 
-
-./a.out ../conf/is_good.conf & sh Requete/requete.sh && kill $!
+make -C ../
+../Webserv ../conf/is_good.conf &
+sleep 1
+sh Requete/requete.sh && kill $!
 
 
 # \\ -------------- GET--------------- //
