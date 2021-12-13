@@ -15,7 +15,7 @@ std::string	Request::extract_attribute(std::string& buffer, std::string terminat
 		_wrong = true;
 	}
 	length = buffer.find(terminating, _lctr) - _lctr;
-	if (length == std::string::npos) {
+	if (length + _lctr == std::string::npos) {
 		_over = false;
 		return "";
 	}
@@ -26,14 +26,12 @@ std::string	Request::extract_attribute(std::string& buffer, std::string terminat
 void		Request::manage_head(std::string& buffer) {
 	if (_wrong == true)
 		_head = 6;
-	if (_head == 6)
-		return ;
-	if (_head == 5)
+	if (_head == 6 || _head == 5)
 		return ;
 	if (_head == 4) {
 		if (buffer.find("\r\n", _lctr) == _lctr) {
 			_lctr += 2;
-			if (_headers.find("Content-Length") == _headers.end() && _headers.find("Transfer-Encoding") == _headers.end())
+			if (_headers.find("Content-Length") == _headers.end() && _headers.find("Transfer-Encoding") == _headers.end() && _headers["Transfer-Encoding"] == "chunked")
 				_head = 6;
 			else
 				_head++;
@@ -59,10 +57,7 @@ void		Request::parse(std::string& buffer) {
 
 	if (buffer[_lctr] == '\0') {
 		buffer = buffer.substr(_lctr);
-		if (_head == 5 && _headers.find("Content-Length") == _headers.end() && _headers.find("Transfer-Encoding") == _headers.end())
-			++_head;
-		else
-			_over = false;
+		_over = false;
 		return;
 	}
 	switch(this->get_head()) {

@@ -22,8 +22,10 @@ void		MethodPOST::body(ActiveHTTP& serv, Request& request, Response& response, M
 		if ((fd = open(filename, O_RDWR | O_APPEND | O_CREAT, 0777)) < 0) {
 			response.set_code(Response::Forbidden);
 		}
-		else
+		else {
 			new POSTTask(fd, &serv);
+			response.set_code(Response::Created);
+		}
 		next();
 	}
 }
