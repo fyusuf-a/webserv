@@ -34,7 +34,8 @@ g++ -g3 -D ERROR_FLAG -I../includes -Wall -Werror -Wextra --std=c++98 ../main.cp
 	../srcs/http/Request/Request.cpp\
 	../srcs/http/Request/requestParsing.cpp\
 	../srcs/http/Request/checkIncompleteRequest.cpp\
-	../srcs/http/Response/GET/Response/GET.cpp\
+	../srcs/http/Response/Response.cpp\
+
 
 ./a.out ../conf/is_good.conf & sh Requete/requete.sh && kill $!
 
