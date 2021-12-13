@@ -12,11 +12,14 @@ WebServ::WebServ(const WebServ &other){(void)other;};
 WebServ::WebServ(const std::string&path){
 	 unsigned long int interfaces_launched = 0;
     _conf.parsing(path, this->_servers);
+		  std::cout << _servers << std::endl;
 
 	 for (std::vector<ServerBlock>::iterator it = _servers.begin(); it != _servers.end(); it++)
 	 {
 	  	ServerConfig const& conf = it->get_server_conf();
+
          INetAddress interface(conf.getAddress(), conf.getPort());
+
 	 	try {
 	 		new PassiveHTTP<ActiveHTTP>(interface, &_servers, true);
 
