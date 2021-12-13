@@ -36,13 +36,7 @@ g++ -g3 -D ERROR_FLAG -I../includes -Wall -Werror -Wextra --std=c++98 ../main.cp
 	../srcs/http/Request/checkIncompleteRequest.cpp\
 	../srcs/http/Response/Response.cpp\
 
-./a.out ../conf/is_good.conf &
-P1 = $!
-
-sh ./requete.sh &
-P2 = $!
-
-wait $P1 $P2
+./a.out ../conf/is_good.conf & sh ./requete.sh && kill $!
 
 if [ "$(diff ./Response/my_resp1 ./Response/resp1)" != "" ]; then
 	echo "Error: response 1"
