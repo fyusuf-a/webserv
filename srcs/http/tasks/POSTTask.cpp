@@ -2,15 +2,7 @@
 #include <unistd.h>
 #include <cerrno>
 
-
-POSTTask::POSTTask() : Task(), _head(0) {
-}
-
-POSTTask::POSTTask(const POSTTask& src) : Task(src), _head(0) {
-	*this = src;
-}
-
-POSTTask::POSTTask(int fd, ActiveHTTP *serv) : Task(fd, serv, WRITE), _head(0) {
+POSTTask::POSTTask(int fd, ActiveHTTP& serv) : Task(fd, serv, WRITE), _head(0) {
 }
 
 POSTTask::~POSTTask(){}
@@ -20,13 +12,11 @@ bool POSTTask::on_readable(int) {
 }
 
 bool POSTTask::on_writable(int fd) {
+	Response &resp = _serv.get_response();
+	if (!resp.get_ready())
+		return true;
 
-
-	Request &request = _serv->get_request();
-	
-	Response &resp = _serv->get_response();
-
-
+	Request &request = _serv.get_request();
 	std::string body = request.get_body();
 
 	const char *str = body.c_str() + _head;
@@ -50,11 +40,7 @@ bool POSTTask::on_writable(int fd) {
 	return (true);
 }
 
-bool POSTTask::always(int fd) {
-	if (_serv->get_response().get_written_on_write_buffer()) {
-			on_close(fd);
-		return (false);
-	}
+bool POSTTask::always(int) {
 	return (true);
 }
 

@@ -106,9 +106,11 @@ bool	ActiveHTTP::always(int fd) {
 
 	// If the response has been wholly treated by the middleware chain, write it
 	// on the write buffer (if the end of the response is delegated to a task,
-	// only write the beginning of the response)
-	if (_response.get_ready() && !_ongoing_tasks.empty() && !_response.get_beginning_written_on_write_buffer())
-		write_beginning_on_write_buffer();
+	// and it is not a CGI, only write the beginning of the response)
+	/*if (_response.get_ready() && !_ongoing_tasks.empty()
+			&& !_request.get_is_script()
+			&& !_response.get_beginning_written_on_write_buffer())
+		write_beginning_on_write_buffer();*/
 		
 	if (_response.get_ready() && _ongoing_tasks.empty() && !_response.get_written_on_write_buffer())
 		write_all_on_write_buffer();

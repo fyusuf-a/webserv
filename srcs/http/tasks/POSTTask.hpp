@@ -14,11 +14,8 @@ class POSTTask : public Task
 		ssize_t     _head;      
 
     public:
-        POSTTask();
         ~POSTTask();
-        POSTTask(const POSTTask&);
-		POSTTask(int fd, ActiveHTTP *serv);
-
+		POSTTask(int fd, ActiveHTTP& serv);
 
     protected:
         virtual bool   on_readable(int fd);

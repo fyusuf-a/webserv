@@ -25,7 +25,7 @@ void		MethodPOST::body(ActiveHTTP& serv, Request& request, Response& response, M
 		if ((fd = open(filepath.c_str(), O_RDWR | O_APPEND | O_CREAT, 0777)) < 0)
 			response.set_code(Response::Forbidden);
 		else
-			new POSTTask(fd, &serv);
+			new POSTTask(fd, serv);
 		next();
 	}
 }

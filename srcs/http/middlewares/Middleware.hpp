@@ -94,7 +94,10 @@ class AbsolutePathConcatenator : public Middleware, public Singleton<AbsolutePat
 class CGIRunner : public Middleware, public Singleton<CGIRunner>
 {
 	private:
-		void set_env(std::map<std::string, std::string>& env, ActiveHTTP const& server, Request const& request);
+		void set_env(std::map<std::string, std::string>& env
+							, ActiveHTTP const& server, Request const& request);
+		void convert_map_to_tab(std::map<std::string, std::string>env
+															, char** env_tab);
 
 	public:
 		static Log& LOG;

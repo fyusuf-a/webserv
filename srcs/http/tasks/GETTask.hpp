@@ -9,17 +9,23 @@
 class GETTask : public Task
 {
     public:
+		enum state {
+			S_WAITING_FOR_MIDDLEWARES,
+			S_BEGINNING_WRITTEN
+		};
+
         GETTask();
         ~GETTask();
         GETTask(const GETTask&);
-        GETTask(int fd, ActiveHTTP *serv);
+        GETTask(int fd, ActiveHTTP& serv);
 
 
     protected:
-        virtual bool   on_readable(int fd);
-        virtual bool   on_writable(int);
-        virtual bool   on_close(int);
-        virtual bool   always(int);
+        virtual bool	on_readable(int fd);
+        virtual bool	on_writable(int);
+        virtual bool	on_close(int);
+        virtual bool	always(int);
+		state			_state;
 };
 
 #endif

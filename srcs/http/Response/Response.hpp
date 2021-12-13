@@ -42,6 +42,15 @@ class Response
 		http_code	_code;
 		std::string _body;
 		std::map<std::string, std::string>	_headers;
+
+		/*
+		 * The lifetime of a response is :
+		 * request._treated_by_middlewares
+		 * -> _ready at the end of the middleware chain
+		 * (-> _beginning_written_on_write_buffer)
+		 * -> _written_on_write_buffer
+		 */
+
 		bool		_ready;
 		// If a task is running, enables it only if the first part of the
 		// request is sent
