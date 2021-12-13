@@ -20,25 +20,24 @@ CGITask::~CGITask(){
 bool CGITask::on_readable(int fd) {
 	Response& response = _serv.get_response();
 
-	std::cout << "CGITask: on_readable" << std::endl;
-	if (!response.get_ready())
-		return true;
+	if (_state == S_WAITING_FOR_MIDDLEWARES) {
+		if (_serv.get_response().get_ready())
+			_state = S_HEADER_NAME;
+		else
+			return true;
+	}
 
 	// Read from the pipe
 	char* tmp = _serv.get_tmp();
 	ssize_t ret = read(fd, tmp, BUFFER_LENGTH);
 
 	int status;
-	// If no data is read from the pipe, do not do anything or delete the task
+	// If no data is read from the pipe, harvest the zombie and delete the task
 	if (ret <= 0)
 	{
-		int pid = waitpid(_pid, &status, WNOHANG);
-		if (pid == _pid && WIFEXITED(status))
-		{
-			on_close(fd);
-			return false;
-		}
-		return true;
+		waitpid(_pid, &status, WNOHANG);
+		LOG.debug() << "Deleting task because of non-positive value of read" << std::endl;
+		return on_close(fd);
 	}
 	_buffer->append(tmp, ret);
 	// If the end of headers is not reached, parse the headers
@@ -47,13 +46,12 @@ bool CGITask::on_readable(int fd) {
 		// If the state changed after parsing, change the buffer reference to 
 		// the one of the ActiveHTTP
 		if (_state == S_BODY) {
-			std::cout << "CGITask: changing state" << std::endl;
-			std::string temp = *_buffer;
+			//if (_content_length == -1)
+				//response.set_header("Transfer-Encoding", "chunked");
 			_serv.write_beginning_on_write_buffer();
-			response.set_beginning_written_on_write_buffer(true);
+			_serv.get_write_buffer() += *_buffer;
 			delete _buffer;
 			_buffer = &_serv.get_write_buffer();
-			*_buffer += temp;
 		}
 	}
 	return (true);
@@ -93,18 +91,18 @@ bool CGITask::parse(Response &response) {
 }
 
 bool CGITask::parse_header_name() {
-	size_t res = _buffer->find(":", _index);
-	if (res != std::string::npos)
+	size_t res;
+	if ((res = _buffer->find("\r\n", _index)) != std::string::npos && res == 0)
+	{
+		_index = res + 2;
+		_state = S_BODY;
+		return false;
+	}
+	if ((res = _buffer->find(":", _index)) != std::string::npos)
 	{
 		_header_name = _buffer->substr(_index, res - _index);
 		_index = res + 1;
 		_state = S_HEADER_VALUE;
-		return true;
-	}
-	if ((res = _buffer->find("\r\n", _index)) != std::string::npos)
-	{
-		_index = res + 2;
-		_state = S_BODY;
 		return true;
 	}
 	return (false);
@@ -118,6 +116,9 @@ bool CGITask::parse_header_value(Response& response) {
 	{
 		response.set_header(_header_name
 							, _buffer->substr(_index, res - _index));
+		if (_header_name == "Content-Length")
+			_content_length =
+				atoi(response.get_headers().at("Content-Length").c_str());
 		_header_name = "";
 		_index = res + 2;
 		_state = S_HEADER_NAME;

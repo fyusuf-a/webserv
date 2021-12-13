@@ -1,31 +1,49 @@
 #include "Middleware.hpp"
 #include <sstream>
 
+Log& Sender::LOG = Log::getInstance();
+
 Sender::Sender() {
 }
 
-void Sender::body(ActiveHTTP& serv, Request&, Response& resp, MiddlewareChain& next) {
-	std::ostringstream oss;
-
-	// If there is no ongoing task, set the response length to the length of the body produced by the middlewares
-	if (serv.get_ongoing_tasks().empty()) {
-		std::map<std::string, std::string> const& headers = resp.get_headers();
-		std::map<std::string, std::string>::const_iterator it = headers.find("Content-Length");
-		if (it == headers.end())
-		{
-			oss << resp.get_body().length();
-			resp.set_header("Content-Length", oss.str()); 
-			oss.str("");
-		}
+void Sender::add_content_length(Response& response, std::ostringstream& oss) {
+	std::map<std::string, std::string> const& headers
+												= response.get_headers();
+	std::map<std::string, std::string>::const_iterator it
+										= headers.find("Content-Length");
+	if (it == headers.end())
+	{
+		oss << response.get_body().length();
+		response.set_header("Content-Length", oss.str()); 
+		oss.str("");
 	}
+}
+
+void Sender::write_all_on_write_buffer(ActiveHTTP& serv, Response& response,
+		std::ostringstream& oss) {
+	oss << response;
+	serv.get_write_buffer() += oss.str();
+	LOG.debug() << "Request totally written on the write buffer"<< std::endl;
+}
+
+void Sender::body(ActiveHTTP& serv, Request&, Response& response, MiddlewareChain&) {
 
 	// Give the server a name
-	resp.set_header("Server", SERVER_NAME);
+	response.set_header("Server", SERVER_NAME);
 
 	// Send the date
+	std::ostringstream oss;
 	Utils::print_date(oss);
-	resp.set_header("Date", oss.str());
+	response.set_header("Date", oss.str());
 	
-	resp.ready();
-	next();
+	// If there is no ongoing task, set the response length to the length of
+	// the body produced by the middlewares, and send the response
+	if (!serv.get_delegation_to_task()) {
+		add_content_length(response, oss);
+		write_all_on_write_buffer(serv, response, oss);
+		serv.reinitialize();
+		return ;
+	}
+	// Otherwise, set the response as ready for the task to come
+	response.ready();
 }

@@ -10,6 +10,7 @@ class CGITask : public Task
 {
     public:
 		enum parsing_state {
+			S_WAITING_FOR_MIDDLEWARES,
 			S_HEADER_NAME,
 			S_HEADER_VALUE,
 			S_BODY
@@ -32,6 +33,10 @@ class CGITask : public Task
 		parsing_state	_state;
 		size_t			_index;
 		int				_pid;
+		// This value is initialized to -1, if it non-negative at the end of the
+		// parsing, a Content-Length header was encountered and this value
+		// reflects it, otherwise, the response must be chunked
+		ssize_t			_content_length;
 
 	private:
 		bool parse(Response&);

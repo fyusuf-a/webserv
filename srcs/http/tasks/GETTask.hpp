@@ -14,11 +14,8 @@ class GETTask : public Task
 			S_BEGINNING_WRITTEN
 		};
 
-        GETTask();
         ~GETTask();
-        GETTask(const GETTask&);
         GETTask(int fd, ActiveHTTP& serv);
-
 
     protected:
         virtual bool	on_readable(int fd);

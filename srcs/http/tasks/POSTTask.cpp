@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <cerrno>
 
-POSTTask::POSTTask(int fd, ActiveHTTP& serv) : Task(fd, serv, WRITE), _head(0) {
+POSTTask::POSTTask(int fd, ActiveHTTP& serv) : Task(fd, serv, WRITE), _head(0), _state(S_WAITING_FOR_MIDDLEWARES) {
 }
 
 POSTTask::~POSTTask(){}
@@ -12,30 +12,33 @@ bool POSTTask::on_readable(int) {
 }
 
 bool POSTTask::on_writable(int fd) {
-	Response &resp = _serv.get_response();
-	if (!resp.get_ready())
-		return true;
+	switch ((int)_state) {
+		case S_WAITING_FOR_MIDDLEWARES:
+			if (_serv.get_response().get_ready()) {
+				_serv.write_beginning_on_write_buffer();
+				_state = S_BEGINNING_WRITTEN;
+			}
+		break;
+		case S_BEGINNING_WRITTEN:
+			Request &request = _serv.get_request();
+			std::string body = request.get_body();
 
-	Request &request = _serv.get_request();
-	std::string body = request.get_body();
+			const char *str = body.c_str() + _head;
 
-	const char *str = body.c_str() + _head;
+			ssize_t body_length = body.length() - _head;
+			ssize_t write_length = BUFFER_LENGTH > body_length ? body_length : BUFFER_LENGTH;
+			ssize_t ret = write(fd, str, write_length);
 
-	ssize_t body_length = body.length() - _head;
-	ssize_t write_length = BUFFER_LENGTH > body_length ? body_length : BUFFER_LENGTH;
-	ssize_t ret = write(fd, str, write_length);
+			_head += ret;
 
-	_head += ret;
-
-	if (ret == 0)
-	{
-		resp.set_written_on_write_buffer(true);
-		return on_close(fd);
-	}
-	if (ret < 0)
-	{
-		resp.set_code(Response::UnknownError);
-		return on_close(fd);
+			if (ret == 0)
+				return on_close(fd);
+			else if (ret < 0)
+			{
+				_serv.get_response().set_code(Response::UnknownError);
+				return on_close(fd);
+			}
+		break;
 	}
 	return (true);
 }

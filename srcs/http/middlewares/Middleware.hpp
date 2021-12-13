@@ -61,7 +61,6 @@ class IndexSelector : public Middleware, public Singleton<IndexSelector>
 class MethodGET : public Middleware, public Singleton<MethodGET>
 {
 	public:
-		static Log& LOG;
 		MethodGET();
 		virtual	~MethodGET() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
@@ -117,9 +116,15 @@ class PathChopper : public Middleware, public Singleton<PathChopper>
 class Sender : public Middleware, public Singleton<Sender>
 {
 	public:
+		static Log& LOG;
 		Sender();
 		virtual	~Sender() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+
+	private:
+		void write_all_on_write_buffer(ActiveHTTP& serv, Response& response,
+													std::ostringstream& oss);
+		void add_content_length(Response& response, std::ostringstream& oss);
 };
  
 std::string get_absolute_path(Request &request, const std::string &path);

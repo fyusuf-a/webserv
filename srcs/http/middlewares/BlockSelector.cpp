@@ -16,8 +16,8 @@ void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 	bool            set = false;
 	ServerBlocks    tmp_servers;
 	Locations       tmp_locations;
-	ServerBlocks	serverBlocks = *actHTTP.getServerBlocks();
-	INetAddress		interface = actHTTP.getInterface();
+	ServerBlocks	serverBlocks = *actHTTP.get_server_blocks();
+	INetAddress		interface = actHTTP.get_interface();
 
 	// ---- Select server block
 

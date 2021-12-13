@@ -112,7 +112,7 @@ Response & 		Response::operator=( Response const & rhs ){
 		_body = rhs._body;
 		_headers = rhs._headers;
 		_ready = rhs._ready;
-		_beginning_written_on_write_buffer = rhs._beginning_written_on_write_buffer;
+		//_beginning_written_on_write_buffer = rhs._beginning_written_on_write_buffer;
 		_written_on_write_buffer = rhs._beginning_written_on_write_buffer;
 	}
 	return *this;
@@ -121,8 +121,8 @@ Response::Response( Response const & src ) {
 	*this = src;
 }
 
-Response::Response() : _code(OK), _ready(false), _beginning_written_on_write_buffer(false)
-					   , _written_on_write_buffer(false) {
+Response::Response() : _code(OK), _ready(false), _beginning_written_on_write_buffer(false) {
+					   //, _written_on_write_buffer(false) {
 }
 
 Response::~Response() {
@@ -139,7 +139,7 @@ void Response::reinitialize() {
 	_headers.clear();
 	_ready = false;
 	_beginning_written_on_write_buffer = false;
-	_written_on_write_buffer = false;
+	//_written_on_write_buffer = false;
 }
 
 bool Response::get_ready() {
@@ -150,24 +150,17 @@ bool Response::get_beginning_written_on_write_buffer() const {
 	return _beginning_written_on_write_buffer;
 }
 
-bool Response::get_written_on_write_buffer() const {
+/*bool Response::get_written_on_write_buffer() const {
 	return _written_on_write_buffer;
-}
+}*/
 
 void Response::set_beginning_written_on_write_buffer(bool set) {
 	_beginning_written_on_write_buffer = set;
 }
 
-void Response::set_written_on_write_buffer(bool set) {
-	_written_on_write_buffer = set;
-}
-
-/*static std::ostream& put_headers(std::ostream& os, const Response& resp) {
-	for (std::map<std::string, std::string>::const_iterator it =
-			resp.get_headers().begin(); it != resp.get_headers().end(); ++it)
-		os << it->first << ":" << it->second << "\r\n";
-	return os;
-}*/
+//void Response::set_written_on_write_buffer(bool set) {
+	//_written_on_write_buffer = set;
+//}
 
 std::ostream& operator<<(std::ostream& os, const Response& resp) {
 	os < resp;
