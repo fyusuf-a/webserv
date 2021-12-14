@@ -16,7 +16,7 @@ std::size_t find_value(char val) {
 std::string percent_decode(const std::string str) {
 	std::string decoded;
 	std::size_t i = 0;
-	char ascii = 0;
+	char ascii;
 
 	while (str[i]) {
 		if (str[i] != '%')
