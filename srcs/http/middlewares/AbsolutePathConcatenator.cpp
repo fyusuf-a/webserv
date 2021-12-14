@@ -41,9 +41,8 @@ void		AbsolutePathConcatenator::body(ActiveHTTP& actHTTP, Request& request, Resp
 		// --> absolute = /mypath/to/folder/"myfile";
 
 		for (; request_path[i] == location_path[i]; i++);
-
-		if ((i + 1) < request_path.size())
-			absolute_path += &(request_path[i+1]);
+		if (i < request_path.size())
+			absolute_path += &(request_path[i]);
 
 		if (absolute_path.back() != '/' && Utils::is_dir(absolute_path.c_str()))
 			absolute_path += "/";
@@ -55,6 +54,10 @@ void		AbsolutePathConcatenator::body(ActiveHTTP& actHTTP, Request& request, Resp
 		absolute_path = request.get_server().get_server_conf().getRoot() + request.get_path();
 
 	request.set_path(absolute_path);
+
+	std::cout << absolute_path
+	 << std::endl;
+
 
 
 
