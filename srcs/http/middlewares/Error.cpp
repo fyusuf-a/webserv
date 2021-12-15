@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string>
 
+
 //405
 
 void		Error::body(ActiveHTTP&, Request&, Response& response, MiddlewareChain& next) {
@@ -18,7 +19,7 @@ void		Error::body(ActiveHTTP&, Request&, Response& response, MiddlewareChain& ne
         + Utils::toString(code) +
         " Not Found</title></head>\n<body><center><h1>"
         + Utils::toString(code) +
-        " Not Found</h1></center>\n<hr><center>webserv/1.0.0</center>\n</body>\n</html>\n";
+        " Not Found</h1></center>\n<hr><center>webserv/1.0.0s</center>\n</body>\n</html>\n";
 
         response.set_body(error_body);
     }

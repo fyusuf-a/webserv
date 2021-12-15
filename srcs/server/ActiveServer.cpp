@@ -43,6 +43,7 @@ Socket *ActiveServer::getSocket() const {
 }
 
 bool ActiveServer::on_readable(int fd) {
+
 	if (BUFFER_LENGTH > 0)
 	{
 		try {
