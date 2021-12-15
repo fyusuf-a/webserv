@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <cctype>
 
 
 CGITask::CGITask(int fd, ActiveHTTP& serv, int pid)
@@ -18,8 +19,6 @@ CGITask::~CGITask(){
 	TransferEncoding::final_chunk_on_buffer(_serv.get_write_buffer());
 }
 
-// Todo: remove font blank space from header value
-// Todo: get response code from headers
 bool CGITask::on_readable(int fd) {
 	Response& response = _serv.get_response();
 
@@ -47,8 +46,6 @@ bool CGITask::on_readable(int fd) {
 		parse(response);
 		// If the state changed after parsing, change the buffer reference to 
 		// the one of the ActiveHTTP
-		_buffer = _buffer.substr(_index);
-		_index = 0;
 		if (_state == S_BODY)
 		{
 			if (_content_length == -1)
@@ -102,8 +99,8 @@ bool CGITask::parse(Response &response) {
 				break;
 		}
 	}
-	//_buffer = _buffer.substr(_index);
-	//_index = 0;
+	_buffer = _buffer.substr(_index);
+	_index = 0;
 	return true;
 }
 
@@ -125,14 +122,42 @@ bool CGITask::parse_header_name() {
 	return (false);
 }
 
+void CGITask::parse_custom_status(Response& response, size_t res) {
+	std::stringstream oss;
+	oss << _buffer.substr(_index, res - _index);
+	unsigned int response_code;
+	oss >> response_code;
+	response.set_code(response_code);
+
+	char c;
+	do {
+		oss >> c;
+	} while (c == ' ' || c == '\t');
+	std::string reason_phrase;
+	getline(oss, reason_phrase);
+	response.set_custom_reason_phrase(c + reason_phrase);
+}
+
 bool CGITask::parse_header_value(Response& response) {
 	static int use = 0;
 	use++;
 	size_t res = _buffer.find("\r\n", _index);
 	if (res != std::string::npos)
 	{
-		response.set_header(_header_name
-							, _buffer.substr(_index, res - _index));
+		// Lose leading space
+		char c;
+		while (_index < res)
+		{	
+			if ((c = _buffer[_index]) == ' ' || c == '\t')
+				_index++;
+			else
+				break;
+		}
+		if (_header_name != "Status")
+			response.set_header(_header_name
+										, _buffer.substr(_index, res - _index));
+		else
+			parse_custom_status(response, res);
 		if (_header_name == "Content-Length")
 			_content_length =
 				atoi(response.get_headers().at("Content-Length").c_str());

@@ -42,6 +42,7 @@ class CGITask : public Task
 	private:
 		bool parse(Response&);
 		bool parse_header_name();
+		void parse_custom_status(Response& response, size_t res);
 		bool parse_header_value(Response&);
 };
 

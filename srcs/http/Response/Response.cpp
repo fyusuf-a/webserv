@@ -77,11 +77,11 @@ std::string Response::http_code_to_str(http_code code) {
 	}
 }
 
-void					Response::set_code(Response::http_code code) {
+void					Response::set_code(unsigned int code) {
 	this->_code = code;
 }
-Response::http_code		Response::get_code(void) const {
-	return this->_code;
+unsigned int 			Response::get_code(void) const {
+	return (http_code)this->_code;
 }
 
 std::string		Response::get_body(void) const {
@@ -100,10 +100,10 @@ void	Response::delete_header(const std::string& key) {
 	_headers.erase(key);
 }
 
-void			Response::set_body(std::string body)
+/*void			Response::set_body(std::string body)
 {
 	this->_body += body;
-}
+}*/
 
 Response & 		Response::operator=( Response const & rhs ){
 	if (this != &rhs)
@@ -139,6 +139,7 @@ void Response::reinitialize() {
 	_headers.clear();
 	_ready = false;
 	_beginning_written_on_write_buffer = false;
+	_custom_reason_phrase = "";
 	//_written_on_write_buffer = false;
 }
 
@@ -148,6 +149,10 @@ bool Response::get_ready() {
 
 bool Response::get_beginning_written_on_write_buffer() const {
 	return _beginning_written_on_write_buffer;
+}
+
+std::string const& Response::get_custom_reason_phrase() const {
+	return _custom_reason_phrase;
 }
 
 /*bool Response::get_written_on_write_buffer() const {
@@ -162,6 +167,10 @@ void Response::set_beginning_written_on_write_buffer(bool set) {
 	//_written_on_write_buffer = set;
 //}
 
+void 		Response::set_custom_reason_phrase(const std::string& reason_phrase) {
+	_custom_reason_phrase = reason_phrase;
+}
+
 std::ostream& operator<<(std::ostream& os, const Response& resp) {
 	os < resp;
 	os << resp.get_body(); 
@@ -169,8 +178,14 @@ std::ostream& operator<<(std::ostream& os, const Response& resp) {
 }
 
 std::ostream& operator<(std::ostream& os, const Response& resp) {
-	os << SERVER_PROTOCOL << " " << resp.get_code() << " "
-		<< Response::http_code_to_str(resp.get_code()) << "\r\n";
+	std::string const& custom_reason_phrase = resp.get_custom_reason_phrase();
+	std::string my_reason_phrase;
+	os << SERVER_PROTOCOL << " " << resp.get_code() << " ";
+	if (custom_reason_phrase.empty())
+		os << Response::http_code_to_str(static_cast<Response::http_code>(resp.get_code()));
+	else
+		os << resp.get_custom_reason_phrase();
+	os << "\r\n";
 	for (std::map<std::string, std::string>::const_iterator it =
 			resp.get_headers().begin(); it != resp.get_headers().end(); ++it)
 		os << it->first << ": " << it->second << "\r\n";
