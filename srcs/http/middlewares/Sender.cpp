@@ -42,6 +42,7 @@ void Sender::body(ActiveHTTP& serv, Request& request, Response& response, Middle
 	std::ostringstream oss;
 	Utils::print_date(oss);
 	response.set_header("Date", oss.str());
+	oss.str("");
 	
 	// If there is no ongoing task, set the response length to the length of
 	// the body produced by the middlewares, and send the response

@@ -46,7 +46,7 @@ void		CGIRunner::set_env(std::map<std::string, std::string>& env, ActiveHTTP con
 	// Setting PATH_TRANSLATED (same as SCRIPT_FILENAME?)
 	env["PATH_TRANSLATED"] = env["PATH_INFO"].empty() ? "" : request.get_path();
 
-	// Setting QUERY_STRING //Todo
+	// Setting QUERY_STRING
 	env["QUERY_STRING"] = request.get_query();
 
 	// Setting REMOTE_ADDR

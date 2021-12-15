@@ -185,7 +185,6 @@ void	ActiveHTTP::write_beginning_on_write_buffer() {
 	_response.set_beginning_written_on_write_buffer(true);
 }
 
-//Todo: verify that no task stays running
 void	ActiveHTTP::reinitialize() {
 	_request.reinitialize();
 	_response.reinitialize();

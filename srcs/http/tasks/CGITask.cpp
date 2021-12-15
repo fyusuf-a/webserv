@@ -18,6 +18,8 @@ CGITask::~CGITask(){
 	TransferEncoding::final_chunk_on_buffer(_serv.get_write_buffer());
 }
 
+// Todo: remove font blank space from header value
+// Todo: get response code from headers
 bool CGITask::on_readable(int fd) {
 	Response& response = _serv.get_response();
 
