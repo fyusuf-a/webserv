@@ -40,7 +40,6 @@ class Request
 		Request( Request const & src );
 		Request & operator=( Request const & rhs );
 
-		void								reinitialize();
 		void								parse(std::string& buffer);
 		std::string							extract_attribute(std::string& buffer, std::string terminating);
 		void								manage_head(std::string &buffer);

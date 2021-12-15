@@ -7,3 +7,4 @@ Webserv
 .vscode
 compile_commands.json
 .clangd
+test/Response/GET/my_resp*

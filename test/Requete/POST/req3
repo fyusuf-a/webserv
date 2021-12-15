@@ -1,0 +1,8 @@
+POST /directory/youpla.bla HTTP/1.1\r
+Host: localhost:8001\r
+User-Agent: Go-http-client/1.1\r
+Transfer-Encoding: chunked\r
+Type: test/file\r
+Accept-Encoding: gzip\r
+\r
+

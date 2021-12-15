@@ -58,6 +58,8 @@ class NIOSelector : public Singleton<NIOSelector> {
     public:
 		static Log& LOG;
 
+		static int _test;
+
 		NIOSelector();
         virtual ~NIOSelector();
 

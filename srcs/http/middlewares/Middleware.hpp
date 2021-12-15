@@ -61,6 +61,7 @@ class IndexSelector : public Middleware, public Singleton<IndexSelector>
 class MethodGET : public Middleware, public Singleton<MethodGET>
 {
 	public:
+		static Log& LOG;
 		MethodGET(){};
 		virtual	~MethodGET() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);

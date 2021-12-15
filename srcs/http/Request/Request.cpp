@@ -101,18 +101,24 @@ void			Request::set_is_script(bool set) {
 
 Request & 		Request::operator=( Request const & rhs ){
 	if (this != &rhs) {
-		this->_method = rhs.get_method();
-		this->_path = rhs.get_path();
-		this->_protocol = rhs.get_protocol();
-		this->_headers = rhs.get_headers();
-		this->_body = rhs.get_body();
-		this->_head = rhs.get_head();
-		this->_over = rhs.get_over();
-		this->_to_read = rhs._to_read;
-		this->_wrong= rhs._wrong;
-		this->_treated_by_middlewares = rhs._treated_by_middlewares;
-		this->_is_script = rhs._is_script;
-		this->_original_request_path = rhs._original_request_path;
+		_method = rhs._method;
+		_path = rhs._path;
+		_original_request_path = rhs._original_request_path;
+		_protocol = rhs._protocol;
+		_headers = rhs._headers;
+		_body = rhs._body;
+		_head = rhs._head;
+		_over = rhs._over;
+		_wrong= rhs._wrong;
+		_last_zero_read = rhs._last_zero_read;
+		_residual = rhs._residual;
+		_field_name = rhs._field_name;
+		_lctr = rhs._lctr;
+		_treated_by_middlewares = rhs._treated_by_middlewares;
+		_extra_path = rhs._extra_path;
+		_query = rhs._query;
+		_is_script = rhs._is_script;
+		_to_read = rhs._to_read;
 	}
 	return *this;
 }
@@ -120,29 +126,12 @@ Request::Request( Request const & src ) {
 	*this = src;
 }
 
-void Request::reinitialize() {
-	_method = "";
-	_path = "";
-	_protocol = "";
-	_query = "";
-	_extra_path = "";
-	_original_request_path = "";
-	_headers.clear();
-	_body = "";
-	_head = 0;
-	_over = true;
-	//_no_more_parsing = true;
-	_residual = "";
-	_field_name = "";
-	_treated_by_middlewares = false;
-	_is_script = false;
-}
-
 Request::Request()
 	: _head(0)
 	, _over(true)
 	, _wrong(false)
 	, _last_zero_read(false)
+	, _lctr(0)
 	, _treated_by_middlewares(false)
 	, _is_script(false)
 	, _to_read(0)

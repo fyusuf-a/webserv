@@ -59,9 +59,6 @@ class Response
 		// request is sent
 		bool		_beginning_written_on_write_buffer;
 		bool		_written_on_write_buffer;
-		// A request body might be too long, in which case it is possible that the
-		// request may be sent to 
-		//bool		_delegated_to_task;
 
 	public:
 		static std::string http_code_to_str(http_code);
@@ -75,7 +72,6 @@ class Response
 		// Ends the chain of the middleware, a task might add things to the
 		// body
 		void		ready();
-		void		reinitialize();
 
 		std::string	get_body(void) const;
 		const std::map<std::string, std::string>&

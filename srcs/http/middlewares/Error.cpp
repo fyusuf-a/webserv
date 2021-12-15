@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string>
 
+
 //405
 
 void		Error::body(ActiveHTTP&, Request&, Response& response, MiddlewareChain& next) {
@@ -16,10 +17,11 @@ void		Error::body(ActiveHTTP&, Request&, Response& response, MiddlewareChain& ne
 		std::ostringstream oss;
         
 		oss << "<html>\n<head><title>"
-			<< reason_phrase
-			<< " Not Found</title></head>\n<body><center><h1>"
-			<< reason_phrase
-        	<< "</h1></center>\n<hr><center>webserv/1.0.1</center>\n</body>\n</html>\n";
+			<< code << " " << reason_phrase
+			<< "</title></head>\n<body><center><h1>"
+			<< code << " " << reason_phrase
+        	<< "</h1></center>\n<hr><center>"
+			<< SERVER_NAME << "</center>\n</body>\n</html>\n";
         response.set_body(oss.str());
     }
     next();

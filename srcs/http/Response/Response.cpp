@@ -108,11 +108,12 @@ void			Response::set_body(std::string body)
 Response & 		Response::operator=( Response const & rhs ){
 	if (this != &rhs)
 	{
+		_custom_reason_phrase = rhs._custom_reason_phrase;
 		_code = rhs._code;
 		_body = rhs._body;
 		_headers = rhs._headers;
 		_ready = rhs._ready;
-		//_beginning_written_on_write_buffer = rhs._beginning_written_on_write_buffer;
+		_beginning_written_on_write_buffer = rhs._beginning_written_on_write_buffer;
 		_written_on_write_buffer = rhs._beginning_written_on_write_buffer;
 	}
 	return *this;
@@ -131,16 +132,6 @@ Response::~Response() {
 void Response::ready() {
 	LOG.debug() << "Response is ready" << std::endl;
 	_ready = true;
-}
-
-void Response::reinitialize() {
-	_code = OK;
-	_body = "";
-	_headers.clear();
-	_ready = false;
-	_beginning_written_on_write_buffer = false;
-	_custom_reason_phrase = "";
-	//_written_on_write_buffer = false;
 }
 
 bool Response::get_ready() {

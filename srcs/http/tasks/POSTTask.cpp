@@ -28,7 +28,6 @@ bool POSTTask::on_writable(int fd) {
 			ssize_t body_length = body.length() - _head;
 			ssize_t write_length = BUFFER_LENGTH > body_length ? body_length : BUFFER_LENGTH;
 			ssize_t ret = write(fd, str, write_length);
-
 			_head += ret;
 
 			if (ret == 0)

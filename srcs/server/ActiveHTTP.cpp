@@ -185,8 +185,8 @@ void	ActiveHTTP::write_beginning_on_write_buffer() {
 }
 
 void	ActiveHTTP::reinitialize() {
-	_request.reinitialize();
-	_response.reinitialize();
+	_request = Request();
+	_response = Response();
 	_delegation_to_task = false;
 	LOG.debug() << "ActiveHTTP server is reinitialized" << std::endl;
 }

@@ -4,7 +4,7 @@
 #include <string>
 #include "../tasks/GETTask.hpp"
 
-//405
+Log& MethodGET::LOG = Log::getInstance();
 
 void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, MiddlewareChain& next) {
 
@@ -15,7 +15,10 @@ void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, Mid
 		const char *filename = request.get_path().c_str();
 
 		if (!Utils::is_file(filename) || access(filename, 0) != 0)
+		{
+			LOG.debug() << "Cannot find file " << filename << std::endl;
 			response.set_code(Response::NotFound);
+		}
 		else if (access(filename, 4) != 0)
 			response.set_code(Response::Forbidden);
 		else
