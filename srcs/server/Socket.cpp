@@ -67,11 +67,13 @@ void Socket::init(const IPAddress& ip, uint16_t port, bool nonblocking) {
 	LOG.debug() << "Socket bound (address " << _interface << ')' << std::endl;
 }
 
-Socket::Socket(const IPAddress& ip, uint16_t port, bool nonblocking) { //:	_port(port)  {
+Socket::Socket(const IPAddress& ip, uint16_t port, bool nonblocking) :
+		_peer(NULL)
+{
 	init(ip, port, nonblocking);
 }
 
-Socket::Socket(const INetAddress& address, bool nonblocking) {
+Socket::Socket(const INetAddress& address, bool nonblocking) : _peer(NULL) {
 	init(address.getAddress(), address.getPort(), nonblocking);
 }
 
