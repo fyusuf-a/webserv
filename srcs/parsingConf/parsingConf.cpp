@@ -504,7 +504,11 @@ void ParsingConf::parsing(std::string path, ServerBlocks &servers)
     std::ifstream               fd(path.c_str());
 
     if (!fd.is_open() || !fd.good())
-        throw MyException("[ERROR] File: Can't open File !");
+	{
+		std::ostringstream oss;
+		oss << "[ERROR] File: Can't open file " << path;
+        throw MyException(oss.str().c_str());
+	}
     else
     {
         while (std::getline(fd, line))
