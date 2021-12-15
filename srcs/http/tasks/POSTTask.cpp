@@ -22,13 +22,10 @@ bool POSTTask::on_readable(int) {
 bool POSTTask::on_writable(int fd) {
 
 
-	Request &request = _serv->get_request();
-	
+	Request  &request = _serv->get_request();
 	Response &resp = _serv->get_response();
 
-
 	std::string body = request.get_body();
-
 	const char *str = body.c_str() + _head;
 
 	ssize_t body_length = body.length() - _head;
@@ -40,6 +37,7 @@ bool POSTTask::on_writable(int fd) {
 	if (ret == 0)
 	{
 		resp.set_written_on_write_buffer(true);
+
 		return on_close(fd);
 	}
 	if (ret < 0)
