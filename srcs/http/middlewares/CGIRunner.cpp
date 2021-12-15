@@ -45,7 +45,6 @@ void		CGIRunner::set_env(std::map<std::string, std::string>& env, ActiveHTTP con
 
 	// Setting PATH_TRANSLATED (same as SCRIPT_FILENAME?)
 	env["PATH_TRANSLATED"] = env["PATH_INFO"].empty() ? "" : request.get_path();
-	//env["PATH_TRANSLATED"] = env["PATH_INFO"].empty() ? "" : request.get_location().get_location_path() + env["PATH_INFO"];
 
 	// Setting QUERY_STRING //Todo
 	env["QUERY_STRING"] = request.get_query();
@@ -68,7 +67,6 @@ void		CGIRunner::set_env(std::map<std::string, std::string>& env, ActiveHTTP con
 	// Setting SCRIPT_FILENAME (path executed at the server)
 	env["SCRIPT_FILENAME"] = request.get_path();
 
-	//INetAddress const& interface = server.getSocket()->getInterface();
 	// Setting SERVER_NAME
 	oss << request.get_server().get_server_conf().getName();
 	env["SERVER_NAME"] = oss.str();
@@ -83,15 +81,6 @@ void		CGIRunner::set_env(std::map<std::string, std::string>& env, ActiveHTTP con
 
 	// For PHP CGI which throws a tantrum if this environment variable is unset
 	env["REDIRECT_STATUS"] = "200";
-	/*env["CHARSET"] = "utf-8";
-	env["DOCUMENT_URI"] = "toto.php";
-	env["DOCUMENT_ROOT"] = "toto.php";
-	env["SCRIPT_FILENAME"] = "toto.php";
-	env["ENCODING"] = "";
-	env["HOST"] = "my_server";
-	env["USER_AGENT"] = "Mozilla/5.0";
-	env["PHP_SELF"] = "/toto.php";*/
-
 }
 
 void CGIRunner::convert_map_to_tab(std::map<std::string, std::string>env
