@@ -7,15 +7,13 @@
 class Task : public NIOSelector::Callback { 
 	protected:
 		int			_fd;
-		ActiveHTTP* _serv;
+		ActiveHTTP& _serv;
 
     public:
 		static Log& LOG;
-        Task();
-        Task(int fd, ActiveHTTP*, short mode);
-		Task(const Task&);
-		//Task& operator=(const Task&);
+        Task(int fd, ActiveHTTP&, short mode);
         virtual ~Task();
+		int get_fd() const;
 };
 
 #endif

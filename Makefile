@@ -5,6 +5,7 @@ SRC = 	main.cpp\
 	srcs/parsingConf/serverLocation.cpp\
 	srcs/utils/utils.cpp\
 	srcs/utils/Log.cpp\
+	srcs/utils/TransferEncoding.cpp\
 	srcs/webserv/webserv.cpp\
 	srcs/server/Socket.cpp\
 	srcs/server/ActiveServer.cpp\
@@ -19,14 +20,17 @@ SRC = 	main.cpp\
 	srcs/http/middlewares/MethodGET.cpp\
 	srcs/http/middlewares/MethodDELETE.cpp\
 	srcs/http/middlewares/MethodPOST.cpp\
+	srcs/http/middlewares/PathChopper.cpp\
 	srcs/http/middlewares/Sender.cpp\
 	srcs/http/middlewares/IndexSelector.cpp\
 	srcs/http/tasks/Task.cpp\
 	srcs/http/tasks/GETTask.cpp\
 	srcs/http/tasks/POSTTask.cpp\
+	srcs/http/tasks/CGITask.cpp\
 	srcs/http/middlewares/Middleware.cpp\
 	srcs/http/middlewares/MiddlewareChain.cpp\
 	srcs/http/middlewares/AbsolutePathConcatenator.cpp\
+	srcs/http/middlewares/CGIRunner.cpp\
 	srcs/http/Request/Request.cpp\
 	srcs/http/Request/requestParsing.cpp\
 	srcs/http/Request/checkIncompleteRequest.cpp\
@@ -44,7 +48,7 @@ $(NAME) : $(O_FILES)
 	$(CC) $(CFLAGS) $(HEADERS) $(O_FILES) -o $(NAME)
 	@echo "\033[33;32mCompilation...\t""\033[33;31mDONE 🙃\033[0m"
 
-debug: CFLAGS += -g3
+debug: CFLAGS +=
 debug: CFLAGS += -D DEBUG_FLAG
 debug: all
 

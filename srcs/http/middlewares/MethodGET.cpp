@@ -8,7 +8,7 @@
 
 void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, MiddlewareChain& next) {
 
-	if (response.get_code() >= 400 || request.get_method() != "GET")
+	if (response.get_code() >= 400 || request.get_method() != "GET" || request.get_is_script())
         next();
 	else
 	{
@@ -41,7 +41,7 @@ void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, Mid
 				response.delete_header("Transfer-Encoding");
 				response.set_header("Content-Length", os.str());
 
-				new GETTask(fd, &serv);
+				new GETTask(fd, serv);
 			}
 		}
 		next();

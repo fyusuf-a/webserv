@@ -38,7 +38,7 @@ rm Response/GET/my_*
 
 make -C ../
 ../Webserv ../conf/is_good.conf &
-sleep 1
+sleep 5
 sh Requete/requete.sh && kill $!
 
 

@@ -11,13 +11,9 @@
 Log& ActiveHTTP::LOG = Log::getInstance();
 
 ActiveHTTP::ActiveHTTP() : ActiveServer(), _server_blocks(NULL), _chain(NULL),
-							_ongoing_task(NULL)
+	_delegation_to_task(false)
 {
 	time(&_last_time_active);
-}
-
-ActiveHTTP::ActiveHTTP(const ActiveHTTP& src) : ActiveServer(src) {
-	*this = src;
 }
 
 ActiveHTTP::ActiveHTTP(Socket* socket, INetAddress const& interface, std::vector<ServerBlock> const* server_blocks)
@@ -25,37 +21,28 @@ ActiveHTTP::ActiveHTTP(Socket* socket, INetAddress const& interface, std::vector
 													, _interface(interface)
 													, _server_blocks(server_blocks)
 													, _chain(NULL)
-													, _ongoing_task(NULL)
+													, _delegation_to_task(false)
 {
+	_original_port = interface.getPort();
 	time(&_last_time_active);
 }
 
-ActiveHTTP::ActiveHTTP(Socket* socket)
-													: ActiveServer(socket)
-													, _server_blocks(NULL)
-													, _chain(NULL)
-													, _ongoing_task(NULL)
+ActiveHTTP::ActiveHTTP(Socket* socket) : ActiveServer(socket)
+										, _server_blocks(NULL)
+										, _chain(NULL)
+										, _delegation_to_task(false)
+									
 {
 	time(&_last_time_active);
-}
-
-ActiveHTTP& ActiveHTTP::operator=(const ActiveHTTP& src) {
-	if (this != &src) {
-		ActiveServer::operator=(src);
-		_last_time_active = src._last_time_active;
-		_interface = src._interface;
-		_server_blocks = src._server_blocks;
-		_request = src._request;
-		_response = src._response;
-		_chain = src._chain;
-		_ongoing_task = src._ongoing_task;
-	}
-	return (*this);
 }
 
 ActiveHTTP::~ActiveHTTP() {
-	if (_ongoing_task)
-		delete _ongoing_task;
+	while (!_ongoing_tasks.empty())
+	{
+		Task* task = _ongoing_tasks.front();
+		task->on_close(task->get_fd());
+		//_ongoing_tasks.pop_front();
+	}
 	if (_chain)
 		delete _chain;
 }
@@ -67,18 +54,17 @@ bool	ActiveHTTP::on_readable(int fd) {
 	}
 	std::ostringstream	ss;
 
-	//std::cout << "readbuffer avant parsing:" << std::endl
-	//			  << "(" << _read_buffer << ")" << std::endl;
 	_request.set_over(true);
 	if (_request.get_head() != 6) {
 		//std::cout <<  "(" << _read_buffer.length() << ")" << std::endl;
 		while (_request.get_head() < 6 && _request.get_over())
 			_request.parse(_read_buffer);
 	}
-
-	//LOG.debug() << "----------------- parsed request" << std::endl;
-	//std::cout << "readbuffer after parsing: " << std::endl
-	//LOG.debug() << "end of parsing" << std::endl;
+	// If the request is parsed and the middleware chain is not launched, launch
+	// it
+	if (_request.get_head() == 6) {
+		launch_middleware_chain();
+	}
 	return (true);
 }
 
@@ -88,33 +74,9 @@ bool	ActiveHTTP::on_writable(int fd) {
 }
 
 bool	ActiveHTTP::always(int fd) {
-	(void)fd;
-
 	// If a request is parsed and a task is still running, the server should not timeout
-	if (_response.get_ready() && !_response.get_written_on_write_buffer())
+	if (_response.get_ready())
 		postpone_timeout();
-
-	// If the request is parsed and the middleware chain is not launched, launch
-	// it
-	if (!_request.get_treated_by_middlewares() && _request.get_head() == 6) {
-		LOG.debug() << "Launch middleware chain" << std::endl;
-		launch_middleware_chain();
-	}
-
-	// If the response has been wholly treated by the middleware chain, write it
-	// on the write buffer (if the end of the response is delegated to a task,
-	// only write the beginning of the response)
-	if (_response.get_ready() && _ongoing_task && !_response.get_beginning_written_on_write_buffer())
-		write_beginning_on_write_buffer();
-		
-	if (_response.get_ready() && !_ongoing_task && !_response.get_written_on_write_buffer())
-		write_all_on_write_buffer();
-
-	if (_response.get_written_on_write_buffer() && !_ongoing_task) {
-		_request.reinitialize();
-		_response.reinitialize();
-		LOG.debug() << "ActiveHTTP server is reinitialized" << std::endl;
-	}
 
 	// If the request timed out, delete the ActiveHTTP server
 	if (!check_timeout(fd))
@@ -122,30 +84,45 @@ bool	ActiveHTTP::always(int fd) {
 	return (true);
 }
 
-bool	ActiveHTTP::on_close(int fd) {
-	NIOSelector::getInstance().remove(fd);
+bool ActiveHTTP::on_close(int) {
 	delete (this);
 	return (false);
 }
 
-std::vector<ServerBlock> const* ActiveHTTP::getServerBlocks() const {
+uint16_t ActiveHTTP::get_original_port() const {
+	return _original_port;
+}
+
+std::vector<ServerBlock> const* ActiveHTTP::get_server_blocks() const {
 	return _server_blocks;
 }
 
-INetAddress ActiveHTTP::getInterface() const {
+INetAddress ActiveHTTP::get_interface() const {
 	return _interface;
 }
 
-Task const* ActiveHTTP::get_ongoing_task() const {
-	return _ongoing_task;
+std::list<Task*> const& ActiveHTTP::get_ongoing_tasks() const {
+	return _ongoing_tasks;
 }
 
-void ActiveHTTP::setServerBlocks(std::vector<ServerBlock> const* server_blocks) {
+/*void ActiveHTTP::set_server_blocks(std::vector<ServerBlock> const* server_blocks) {
 	_server_blocks = server_blocks;
+}*/
+
+void ActiveHTTP::set_delegation_to_task(bool set) {
+	_delegation_to_task = set;
 }
 
-void ActiveHTTP::set_ongoing_task(Task* task) {
-	_ongoing_task = task;
+/*void ActiveHTTP::set_ongoing_tasks(std::list<Task*> const& tasks) {
+	_ongoing_tasks = tasks;
+}*/
+
+void ActiveHTTP::add_ongoing_task(Task* const& task) {
+	_ongoing_tasks.push_back(task);
+}
+
+void ActiveHTTP::remove_ongoing_task(Task* const& task) {
+	_ongoing_tasks.remove(task);
 }
 
 time_t const& ActiveHTTP::get_last_time_active() const {
@@ -166,6 +143,10 @@ std::string& ActiveHTTP::get_write_buffer() {
 
 char* ActiveHTTP::get_tmp() {
 	return (_tmp);
+}
+
+bool ActiveHTTP::get_delegation_to_task() const {
+	return (_delegation_to_task);
 }
 
 void	ActiveHTTP::postpone_timeout() {
@@ -205,15 +186,9 @@ void	ActiveHTTP::write_beginning_on_write_buffer() {
 	_response.set_beginning_written_on_write_buffer(true);
 }
 
-void	ActiveHTTP::write_all_on_write_buffer() {	
-	std::ostringstream os;
-	os << _response;
-	_write_buffer += os.str();
-	LOG.debug() << "Request totally written on the write buffer" << std::endl;
-	_response.set_written_on_write_buffer(true);
+void	ActiveHTTP::reinitialize() {
+	_request.reinitialize();
+	_response.reinitialize();
+	_delegation_to_task = false;
+	LOG.debug() << "ActiveHTTP server is reinitialized" << std::endl;
 }
-
-/*void	ActiveHTTP::send_partial_response(const std::string& str) {	
-	std::ostringstream oss;
-	_write_buffer += str;
-}*/

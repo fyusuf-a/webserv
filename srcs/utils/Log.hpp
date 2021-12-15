@@ -26,7 +26,6 @@ private:
 	NullBuffer _nullBuffer;
 	std::ostream _nullStream;
 	std::map<log_level_t, std::string> _levels_to_str;
-	std::map<char, std::string> _months_to_str;
 
 public:
 	Log();

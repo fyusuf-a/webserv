@@ -8,8 +8,8 @@
 # include "../../ipaddress/INetAddress.hpp"
 # include "MiddlewareChain.hpp"
 # include "../../server/ActiveHTTP.hpp"
+# include "../../utils/Log.hpp"
 # include "../../server/NIOSelector.hpp"
-
 
 class MiddlewareChain;
 class ActiveHTTP;
@@ -69,6 +69,7 @@ class MethodGET : public Middleware, public Singleton<MethodGET>
 class MethodDELETE : public Middleware, public Singleton<MethodDELETE>
 {
 	public:
+		static Log& LOG;
 		MethodDELETE(){};
 		virtual	~MethodDELETE() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
@@ -99,15 +100,44 @@ class Error : public Middleware, public Singleton<Error>
 
 };
 
+class CGIRunner : public Middleware, public Singleton<CGIRunner>
+{
+	private:
+		void set_env(std::map<std::string, std::string>& env
+							, ActiveHTTP const& server, Request const& request);
+		void convert_map_to_tab(std::map<std::string, std::string>env
+															, char** env_tab);
+
+	public:
+		static Log& LOG;
+		CGIRunner(){};
+		virtual	~CGIRunner() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+};
+
+class PathChopper : public Middleware, public Singleton<PathChopper>
+{
+	public:
+		PathChopper() {};
+		virtual	~PathChopper() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+};
+
 class Sender : public Middleware, public Singleton<Sender>
 {
 	public:
-		Sender(){};
+		static Log& LOG;
+		Sender();
 		virtual	~Sender() {};
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+
+	private:
+		void write_all_on_write_buffer(ActiveHTTP& serv, Response& response,
+													std::ostringstream& oss);
+		void add_content_length(Response& response, std::ostringstream& oss);
 };
  
-
+std::string get_absolute_path(Request &request, const std::string &path);
 
 
 #endif

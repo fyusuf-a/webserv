@@ -11,9 +11,14 @@
 #include <dirent.h>
 #include <sstream>
 
+#include <map>
 
 namespace Utils
 {
+	std::string month_to_str(unsigned int i);
+	std::string weekday_to_str(unsigned int i);
+	std::ostream& print_date(std::ostream& os, bool show_weekday = true, bool show_gmt = true);
+
     bool is_space(char const c);
     bool is_spaces(std::string const s);
     bool is_valid_methods(std::string const &s);
@@ -25,7 +30,6 @@ namespace Utils
     bool is_file(const char *s);
     void ft_trim(std::string &str);
     bool is_comentary(std::string &str);
-
 
     // bool is_set(std::string value);
     template <typename T>

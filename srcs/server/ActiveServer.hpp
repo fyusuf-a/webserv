@@ -15,10 +15,9 @@ public:
 	ActiveServer(Socket*);
 	ActiveServer& operator=(const ActiveServer&);
 	virtual ~ActiveServer();
-	Socket			*getSocket();
+	Socket			*getSocket() const;
 
 protected:
-	bool			_closing;
 	std::string		_write_buffer;
 	std::string		_read_buffer;
 	Socket			*_socket;
@@ -29,4 +28,3 @@ protected:
 };
 
 #endif
-
