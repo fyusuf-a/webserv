@@ -173,7 +173,7 @@ std::ostream& operator<(std::ostream& os, const Response& resp) {
 		<< Response::http_code_to_str(resp.get_code()) << "\r\n";
 	for (std::map<std::string, std::string>::const_iterator it =
 			resp.get_headers().begin(); it != resp.get_headers().end(); ++it)
-		os << it->first << ":" << it->second << "\r\n";
+		os << it->first << ": " << it->second << "\r\n";
 	os << "\r\n";
 	return os;
 }

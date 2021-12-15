@@ -69,6 +69,7 @@ class MethodGET : public Middleware, public Singleton<MethodGET>
 class MethodDELETE : public Middleware, public Singleton<MethodDELETE>
 {
 	public:
+		static Log& LOG;
 		MethodDELETE();
 		virtual	~MethodDELETE() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);

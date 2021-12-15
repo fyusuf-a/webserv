@@ -17,7 +17,7 @@ void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & respo
 		response.set_code(Response::NotImplemented);
 	else if (request.get_path()[0] != '/')
 		response.set_code(Response::BadRequest);
-	else if (request.get_protocol() != SERVER_PROTOCOL)
+	else if (request.get_protocol() != "HTTP/1.1")
 		response.set_code(Response::HTTPNotSupported);
 
     if (response.get_code() >= 400) {

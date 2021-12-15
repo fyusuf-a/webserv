@@ -14,13 +14,13 @@ class GETTask : public Task
 			S_BEGINNING_WRITTEN
 		};
 
-        ~GETTask();
+        virtual ~GETTask();
         GETTask(int fd, ActiveHTTP& serv);
 
     protected:
         virtual bool	on_readable(int fd);
         virtual bool	on_writable(int);
-        virtual bool	on_close(int);
+		virtual bool	on_close(int);
         virtual bool	always(int);
 		state			_state;
 };

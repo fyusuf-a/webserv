@@ -5,6 +5,7 @@
 #include <cassert>
 #include <cstring>
 #include <cerrno>
+#include "../http/tasks/CGITask.hpp"
 
 Log &NIOSelector::LOG = Log::getInstance();
 
@@ -140,14 +141,14 @@ void	NIOSelector::poll() {
 			action.callback->on_close(fd);
 			continue;
 		}
+		if (revents & (POLLIN | POLLPRI) && !action.callback->on_readable(fd))
+			continue;
+		if (revents & POLLOUT && !action.callback->on_writable(fd))
+			continue;
 		if (revents & POLLHUP) {
 			LOG.info() << "Peer closed the connection (fd = " << fd << ")" << std::endl;
 			action.callback->on_close(fd);
 			continue;
 		}
-		if (revents & (POLLIN | POLLPRI) && !action.callback->on_readable(fd))
-			continue;
-		if (revents & POLLOUT && !action.callback->on_writable(fd))
-			continue;
 	}
 }

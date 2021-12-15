@@ -26,7 +26,14 @@ void Sender::write_all_on_write_buffer(ActiveHTTP& serv, Response& response,
 	LOG.debug() << "Request totally written on the write buffer"<< std::endl;
 }
 
-void Sender::body(ActiveHTTP& serv, Request&, Response& response, MiddlewareChain&) {
+void Sender::body(ActiveHTTP& serv, Request& request, Response& response, MiddlewareChain&) {
+	// If the client wants to close the connection, grant its wish
+	try {
+		if (request.get_headers().at("Connection") == "close")
+			response.set_header("Connection", "close");
+	}
+	catch (std::out_of_range& e) {
+	}
 
 	// Give the server a name
 	response.set_header("Server", SERVER_NAME);

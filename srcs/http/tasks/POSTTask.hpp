@@ -19,7 +19,7 @@ class POSTTask : public Task
 		ssize_t     _head;      
 
     public:
-        ~POSTTask();
+        virtual ~POSTTask();
 		POSTTask(int fd, ActiveHTTP& serv);
 
     protected:

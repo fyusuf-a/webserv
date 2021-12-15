@@ -20,5 +20,10 @@ Task::~Task() {
     NIOSelector::getInstance().remove(_fd);
 	close(_fd);
 	_serv.remove_ongoing_task(this);
-	_serv.reinitialize();
+	if (_serv.get_ongoing_tasks().empty())
+		_serv.reinitialize();
+}
+
+int Task::get_fd() const {
+	return _fd;
 }

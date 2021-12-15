@@ -37,11 +37,11 @@ ActiveHTTP::ActiveHTTP(Socket* socket) : ActiveServer(socket)
 }
 
 ActiveHTTP::~ActiveHTTP() {
-	if (!_ongoing_tasks.empty())
+	while (!_ongoing_tasks.empty())
 	{
-		std::list<Task*>::iterator it = _ongoing_tasks.begin();
-		for (; it != _ongoing_tasks.end(); it++)
-			delete *it;
+		Task* task = _ongoing_tasks.front();
+		task->on_close(task->get_fd());
+		//_ongoing_tasks.pop_front();
 	}
 	if (_chain)
 		delete _chain;
@@ -83,8 +83,7 @@ bool	ActiveHTTP::always(int fd) {
 	return (true);
 }
 
-bool ActiveHTTP::on_close(int fd) {
-	NIOSelector::getInstance().remove(fd);
+bool ActiveHTTP::on_close(int) {
 	delete (this);
 	return (false);
 }

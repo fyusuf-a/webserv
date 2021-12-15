@@ -2,6 +2,7 @@
 #define CGITASK_HPP
 #include "../../server/NIOSelector.hpp"
 #include "../../utils/Log.hpp"
+#include "../../utils/TransferEncoding.hpp"
 #include "../../defines.hpp"
 #include "../middlewares/MiddlewareChain.hpp"
 #include "Task.hpp"
@@ -16,7 +17,7 @@ class CGITask : public Task
 			S_BODY
 		};
 
-        ~CGITask();
+        virtual ~CGITask();
         CGITask(int fd, ActiveHTTP &serv, int pid);
 
 
@@ -28,7 +29,7 @@ class CGITask : public Task
 
 		// Contains a temporary string buffer or is a direct pointer to the
 		// write buffer of the ActiveHTTP server
-		std::string*	_buffer;
+		std::string		_buffer;
 		std::string		_header_name;
 		parsing_state	_state;
 		size_t			_index;
