@@ -52,10 +52,9 @@ bool	ActiveHTTP::on_readable(int fd) {
 	if (!ActiveServer::on_readable(fd)) {
 		return (false);
 	}
-	std::ostringstream	ss;
-
 	_request.set_over(true);
 	if (_request.get_head() != 6) {
+		//std::cout <<  "(" << _read_buffer.length() << ")" << std::endl;
 		while (_request.get_head() < 6 && _request.get_over())
 			_request.parse(_read_buffer);
 	}

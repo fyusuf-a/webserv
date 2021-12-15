@@ -14,6 +14,7 @@ SRC = 	main.cpp\
 	srcs/ipaddress/IPAddress.cpp\
 	srcs/ipaddress/INetAddress.cpp\
 	srcs/http/middlewares/CheckSyntax.cpp\
+	srcs/http/middlewares/Error.cpp\
 	srcs/http/middlewares/BlockSelector.cpp\
 	srcs/http/middlewares/MethodChecker.cpp\
 	srcs/http/middlewares/MethodGET.cpp\
@@ -66,6 +67,7 @@ test : all
 	cd test && ./test_nioselector.sh
 	cd test && ./test_multiple_addresses_bind.sh
 	cd test && ./test_parsing.sh
+	cd test && ./test_methods.sh
 
 .cpp.o:
 	${CC} ${CFLAGS} $(HEADERS) -c $< -o ${<:.cpp=.o}

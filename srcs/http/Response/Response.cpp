@@ -100,10 +100,10 @@ void	Response::delete_header(const std::string& key) {
 	_headers.erase(key);
 }
 
-/*void			Response::set_body(std::string body)
+void			Response::set_body(std::string body)
 {
 	this->_body += body;
-}*/
+}
 
 Response & 		Response::operator=( Response const & rhs ){
 	if (this != &rhs)

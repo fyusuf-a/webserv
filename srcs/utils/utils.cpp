@@ -147,8 +147,11 @@ namespace Utils
     }
     int ft_find(std::string str, std::string find)
     {
-        int i = 0;
+        size_t i = 0;
         for (; str[i] == find[i]; i++);
+
+        if (i < str.size())
+            return (0);
         return (i);
     }
 
@@ -159,6 +162,26 @@ namespace Utils
         if (!stat(path, &s) && !(s.st_mode & S_IFDIR))
                 return (true);
          return (false);
+    }
+    int is_dir(const char *name)
+    {
+        int ret = 0;
+        DIR* rep = opendir(name);
+        
+        if(rep != NULL)
+        {
+            closedir(rep);
+            ret = 1;
+        }
+    
+        return ret;
+    }
+
+    std::string toString(int &i)
+    {
+        std::stringstream ss;
+        ss << i;
+        return ss.str();
     }
 }
 

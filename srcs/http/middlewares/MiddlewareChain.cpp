@@ -19,6 +19,7 @@ void MiddlewareChain::init() {
 	MethodGET&	 					method_get = MethodGET::getInstance();
 	MethodPOST&	 					method_post = MethodPOST::getInstance();
 	MethodDELETE&	 				method_delete = MethodDELETE::getInstance();
+	Error& 						error = Error::getInstance();
 	CGIRunner&	 					cgi_runner = CGIRunner::getInstance();
 	Sender& 						sender = Sender::getInstance();
 
@@ -32,6 +33,7 @@ void MiddlewareChain::init() {
 	_chain.push_back(&method_post);
 	_chain.push_back(&method_delete);
 	_chain.push_back(&cgi_runner);
+	_chain.push_back(&error);
 	_chain.push_back(&sender);
 }
 

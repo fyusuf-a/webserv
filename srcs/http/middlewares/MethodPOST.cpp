@@ -6,9 +6,6 @@
 
 //405
 
-MethodPOST::MethodPOST() {
-}
-
 void		MethodPOST::body(ActiveHTTP& serv, Request& request, Response& response, MiddlewareChain& next) {
 
 	if (response.get_code() >= 400 || request.get_method() != "POST" || request.get_is_script())
@@ -18,12 +15,13 @@ void		MethodPOST::body(ActiveHTTP& serv, Request& request, Response& response, M
 		std::string  body;
 		std::string  result;
 
-		std::string	filepath = request.get_path();
+		const char  *filename = request.get_path().c_str();
 
 
 		int  	fd;
-		if ((fd = open(filepath.c_str(), O_RDWR | O_APPEND | O_CREAT, 0777)) < 0)
+		if ((fd = open(filename, O_RDWR | O_APPEND | O_CREAT, 0777)) < 0) {
 			response.set_code(Response::Forbidden);
+		}
 		else
 			new POSTTask(fd, serv);
 		next();

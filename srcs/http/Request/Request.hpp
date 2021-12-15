@@ -18,6 +18,8 @@ class Request
 		std::string _body;
 		int			_head;
 		bool		_over;
+		bool		_wrong;
+		bool		_last_zero_read;
 		std::string _residual;
 		std::string	_field_name;
 		size_t		_lctr;
@@ -25,6 +27,7 @@ class Request
 		std::string _extra_path;
 		std::string _query;
 		bool		_is_script;
+		unsigned long	_to_read;
 
 		ServerBlock 	_server;
 		ServerLocation	_location;
@@ -33,7 +36,6 @@ class Request
 
 	public:
 		Request();
-		Request(std::string& buffer);
 		~Request();
 		Request( Request const & src );
 		Request & operator=( Request const & rhs );
@@ -51,6 +53,7 @@ class Request
 		std::string const&					get_residual(void) const;
 		int									get_head(void) const;
 		bool								get_over(void) const;
+		bool								get_wrong(void) const;
 		void								set_over(bool over);
 		void								set_path(std::string path);
 		void								set_original_request_path(std::string path);

@@ -68,6 +68,10 @@ bool								Request::get_is_script() const {
 	return _is_script;
 }
 
+bool								Request::get_wrong(void) const {
+	return this->_wrong;
+}
+
 void 								Request::set_server(ServerBlock server){
 	this->_server = server;
 }
@@ -104,6 +108,8 @@ Request & 		Request::operator=( Request const & rhs ){
 		this->_body = rhs.get_body();
 		this->_head = rhs.get_head();
 		this->_over = rhs.get_over();
+		this->_to_read = rhs._to_read;
+		this->_wrong= rhs._wrong;
 		this->_treated_by_middlewares = rhs._treated_by_middlewares;
 		this->_is_script = rhs._is_script;
 		this->_original_request_path = rhs._original_request_path;
@@ -132,11 +138,15 @@ void Request::reinitialize() {
 	_is_script = false;
 }
 
-Request::Request() : _head(0), _over(true), _treated_by_middlewares(false), _is_script(false) {
-}
-
-Request::Request(std::string& buffer) : _head(0), _over(true), _treated_by_middlewares(false), _is_script(false) {
-	this->parse(buffer);
+Request::Request()
+	: _head(0)
+	, _over(true)
+	, _wrong(false)
+	, _last_zero_read(false)
+	, _treated_by_middlewares(false)
+	, _is_script(false)
+	, _to_read(0)
+{
 }
 
 Request::~Request() {

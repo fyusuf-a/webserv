@@ -6,9 +6,6 @@
 Log& MethodDELETE::LOG = Log::getInstance();
 
 //405
-MethodDELETE::MethodDELETE(){
-	
-}
 
 void		MethodDELETE::body(ActiveHTTP&, Request& request, Response& response, MiddlewareChain& next) {
 

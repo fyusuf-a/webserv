@@ -3,8 +3,6 @@
 
 //405
 
-MethodChecker::MethodChecker() {
-}
 void		MethodChecker::body(ActiveHTTP& actHTTP, Request& request, Response& response, MiddlewareChain& next) {
 
 
