@@ -1,9 +1,11 @@
 #include "../server/NIOSelector.hpp"
+#include "../defines.hpp"
 #include <poll.h>
 #include <stdexcept>
 #include <cassert>
 #include <cstring>
 #include <cerrno>
+#include "../http/tasks/CGITask.hpp"
 
 Log &NIOSelector::LOG = Log::getInstance();
 
@@ -20,7 +22,7 @@ NIOSelector::Callback& NIOSelector::Callback::operator=(const Callback&) {
 
 NIOSelector::Callback::~Callback() {}
 
-NIOSelector::NIOSelector() : _timeout(0) {
+NIOSelector::NIOSelector() : _timeout(NIO_SELECTOR_TIMEOUT) {
 }
 
 NIOSelector::NIOSelector(const NIOSelector& src) {
@@ -139,14 +141,14 @@ void	NIOSelector::poll() {
 			action.callback->on_close(fd);
 			continue;
 		}
+		if (revents & (POLLIN | POLLPRI) && !action.callback->on_readable(fd))
+			continue;
+		if (revents & POLLOUT && !action.callback->on_writable(fd))
+			continue;
 		if (revents & POLLHUP) {
 			LOG.info() << "Peer closed the connection (fd = " << fd << ")" << std::endl;
 			action.callback->on_close(fd);
 			continue;
 		}
-		if (revents & (POLLIN | POLLPRI) && !action.callback->on_readable(fd))
-			continue;
-		if (revents & POLLOUT && !action.callback->on_writable(fd))
-			continue;
 	}
 }

@@ -1,7 +1,8 @@
 #include "../srcs/parsingConf/parsingConf.hpp"
 #include "../srcs/parsingConf/serverBlock.hpp"
+#include <stdexcept>
 
-#define DEFAULT_PATH "../conf/is_good.conf"
+#define DEFAULT_PATH "../conf/config.conf"
 #define ERROR1  "./tests_conf/is_not1.conf"
 #define ERROR2  "./tests_conf/is_not2.conf"
 #define ERROR3  "./tests_conf/is_not3.conf"
@@ -14,16 +15,20 @@
 #define ERROR10 "./tests_conf/is_not10.conf"
 #define ERROR11 "./tests_conf/is_not11.conf"
 
-
+#include <iostream>
 
 #define SERVER_PORT 500
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
 
-
 void init(const std::string& path, ServerBlocks& servers) {
 	ParsingConf conf;
     conf.parsing(path, servers);
+}
+
+void init_should_fail(const std::string& path, ServerBlocks& servers) {
+	init(path, servers);
+	std::cerr << "[ERROR] loaded file " << path << " sucessfully" << std::endl;
 }
 
 std::ostream& operator<<(std::ostream& os, const ServerBlocks& servers) {
@@ -49,8 +54,7 @@ int main(int ac, char **av)
 
 
             if (!fd.is_open() && !fd.good())
-                throw MyException("[ERROR] File: Can't open File !");
-
+                throw std::runtime_error("File: Can't open file");
             init(DEFAULT_PATH, server_blocks1);
 
             fd << server_blocks1;
@@ -60,17 +64,17 @@ int main(int ac, char **av)
 			std::cout << server_blocks2;
         }
     }
-
-    catch(MyException& caught)
+    catch(std::runtime_error& caught)
     {
-        std::cout << "[ERROR] " << caught.what() << std::endl;
+        std::cerr << "[ERROR] " << caught.what() << " \""
+			<< std::string(av[1]) + "\"" << std::endl;
         return (1);
 
     }
 
     try
     {
-        init(ERROR1, server_blocks1);
+        init_should_fail(ERROR1, server_blocks1);
     }
     catch(MyException& caught)
     {
@@ -78,7 +82,7 @@ int main(int ac, char **av)
     }
     try
     {
-        init(ERROR2, server_blocks1);
+        init_should_fail(ERROR2, server_blocks1);
     }
     catch(MyException& caught)
     {
@@ -86,7 +90,7 @@ int main(int ac, char **av)
     }
     try
     {
-        init(ERROR3, server_blocks1);
+        init_should_fail(ERROR3, server_blocks1);
     }
     catch(MyException& caught)
     {
@@ -94,7 +98,7 @@ int main(int ac, char **av)
     }
     try
     {
-        init(ERROR4, server_blocks1);
+        init_should_fail(ERROR4, server_blocks1);
     }
     catch(MyException& caught)
     {
@@ -102,7 +106,7 @@ int main(int ac, char **av)
     }
     try
     {
-        init(ERROR5, server_blocks1);
+        init_should_fail(ERROR5, server_blocks1);
     }
     catch(MyException& caught)
     {
@@ -110,7 +114,7 @@ int main(int ac, char **av)
     }
     try
     {
-        init(ERROR6, server_blocks1);
+        init_should_fail(ERROR6, server_blocks1);
     }
     catch(MyException& caught)
     {
@@ -118,7 +122,7 @@ int main(int ac, char **av)
     }
     try
     {
-        init(ERROR7, server_blocks1);
+        init_should_fail(ERROR7, server_blocks1);
     }
     catch(MyException& caught)
     {
@@ -126,7 +130,7 @@ int main(int ac, char **av)
     }
     try
     {
-        init(ERROR8, server_blocks1);
+        init_should_fail(ERROR8, server_blocks1);
     }
     catch(MyException& caught)
     {
@@ -134,7 +138,7 @@ int main(int ac, char **av)
     }
     try
     {
-        init(ERROR9, server_blocks1);
+        init_should_fail(ERROR9, server_blocks1);
     }
     catch(MyException& caught)
     {
@@ -142,7 +146,7 @@ int main(int ac, char **av)
     }
     try
     {
-        init(ERROR10, server_blocks1);
+        init_should_fail(ERROR10, server_blocks1);
     }
     catch(MyException& caught)
     {
@@ -150,11 +154,11 @@ int main(int ac, char **av)
     }
     try
     {
-        init(ERROR11, server_blocks1);
+        init_should_fail(ERROR11, server_blocks1);
     }
     catch(MyException& caught)
     {
         value += 1;
     }
-  return (value);
+	return (value);
 }

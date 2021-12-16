@@ -4,21 +4,21 @@
 #include <string>
 #include "../tasks/GETTask.hpp"
 
-//405
-
-MethodGET::MethodGET() {
-}
+Log& MethodGET::LOG = Log::getInstance();
 
 void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, MiddlewareChain& next) {
 
-	if (response.get_code() >= 400 || request.get_method() != "GET")
+	if (response.get_code() >= 400 || request.get_method() != "GET" || request.get_is_script())
         next();
 	else
 	{
 		const char *filename = request.get_path().c_str();
 
 		if (!Utils::is_file(filename) || access(filename, 0) != 0)
+		{
+			LOG.debug() << "Cannot find file " << filename << std::endl;
 			response.set_code(Response::NotFound);
+		}
 		else if (access(filename, 4) != 0)
 			response.set_code(Response::Forbidden);
 		else
@@ -44,7 +44,7 @@ void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, Mid
 				response.delete_header("Transfer-Encoding");
 				response.set_header("Content-Length", os.str());
 
-				new GETTask(fd, &serv);
+				new GETTask(fd, serv);
 			}
 		}
 		next();

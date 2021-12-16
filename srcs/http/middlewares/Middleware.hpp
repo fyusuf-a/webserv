@@ -8,8 +8,8 @@
 # include "../../ipaddress/INetAddress.hpp"
 # include "MiddlewareChain.hpp"
 # include "../../server/ActiveHTTP.hpp"
+# include "../../utils/Log.hpp"
 # include "../../server/NIOSelector.hpp"
-
 
 class MiddlewareChain;
 class ActiveHTTP;
@@ -23,21 +23,21 @@ class Middleware
 		virtual ~Middleware();
 		Middleware& operator=(const Middleware& src);
 
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next) = 0;
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&) = 0;
 };
 
 class CheckSyntax : public Middleware, public Singleton<CheckSyntax>
 {
 	public:
-		CheckSyntax();
+		CheckSyntax(){};
 		virtual	~CheckSyntax() {};
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
 
 class BlockSelector : public Middleware, public Singleton<BlockSelector>
 {
 	public:
-		BlockSelector();
+		BlockSelector(){};
 		virtual	~BlockSelector() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
@@ -45,9 +45,9 @@ class BlockSelector : public Middleware, public Singleton<BlockSelector>
 class MethodChecker : public Middleware, public Singleton<MethodChecker>
 {
 	public:
-		MethodChecker();
+		MethodChecker(){};
 		virtual	~MethodChecker() {};
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
 
 class IndexSelector : public Middleware, public Singleton<IndexSelector>
@@ -55,31 +55,33 @@ class IndexSelector : public Middleware, public Singleton<IndexSelector>
 	public:
 		IndexSelector(){};
 		virtual	~IndexSelector() {};
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
 
 class MethodGET : public Middleware, public Singleton<MethodGET>
 {
 	public:
-		MethodGET();
+		static Log& LOG;
+		MethodGET(){};
 		virtual	~MethodGET() {};
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
 
 class MethodDELETE : public Middleware, public Singleton<MethodDELETE>
 {
 	public:
-		MethodDELETE();
+		static Log& LOG;
+		MethodDELETE(){};
 		virtual	~MethodDELETE() {};
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
 
 class MethodPOST : public Middleware, public Singleton<MethodPOST>
 {
 	public:
-		MethodPOST();
+		MethodPOST(){};
 		virtual	~MethodPOST() {};
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
 
 class AbsolutePathConcatenator : public Middleware, public Singleton<AbsolutePathConcatenator>
@@ -87,18 +89,56 @@ class AbsolutePathConcatenator : public Middleware, public Singleton<AbsolutePat
 	public:
 		AbsolutePathConcatenator();
 		virtual	~AbsolutePathConcatenator() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
+};
+
+class Error : public Middleware, public Singleton<Error>
+{
+	public:
+		Error(){};
+		virtual	~Error() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
+
+};
+
+class CGIRunner : public Middleware, public Singleton<CGIRunner>
+{
+	private:
+		void set_env(std::map<std::string, std::string>& env
+							, ActiveHTTP const& server, Request const& request);
+		void convert_map_to_tab(std::map<std::string, std::string>env
+															, char** env_tab);
+
+	public:
+		static Log& LOG;
+		CGIRunner(){};
+		virtual	~CGIRunner() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+};
+
+class PathChopper : public Middleware, public Singleton<PathChopper>
+{
+	public:
+		PathChopper() {};
+		virtual	~PathChopper() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
 };
 
 class Sender : public Middleware, public Singleton<Sender>
 {
 	public:
+		static Log& LOG;
 		Sender();
 		virtual	~Sender() {};
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
+
+	private:
+		void write_all_on_write_buffer(ActiveHTTP& serv, Response& response,
+													std::ostringstream& oss);
+		void add_content_length(Response& response, std::ostringstream& oss);
 };
  
-
+std::string get_absolute_path(Request &request, const std::string &path);
 
 
 #endif

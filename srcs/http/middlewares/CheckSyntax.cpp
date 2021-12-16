@@ -1,9 +1,6 @@
 #include "Middleware.hpp"
 #include "MiddlewareChain.hpp"
 
-CheckSyntax::CheckSyntax() {
-}
-
 void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & response, MiddlewareChain& next) {
 	(void)actHTTP;
 	
@@ -11,13 +8,13 @@ void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & respo
 
 	std::string met = request.get_method();
 
-	
-
-	if (met != "GET" && met != "POST" && met != "DELETE")
+	if (request.get_wrong())
+		response.set_code(Response::BadRequest);
+	else if (met != "GET" && met != "POST" && met != "DELETE")
 		response.set_code(Response::NotImplemented);
 	else if (request.get_path()[0] != '/')
 		response.set_code(Response::BadRequest);
-	else if (request.get_protocol() != "HTTP/1.1")
+	else if (request.get_protocol() != SERVER_PROTOCOL)
 		response.set_code(Response::HTTPNotSupported);
 
     if (response.get_code() >= 400) {

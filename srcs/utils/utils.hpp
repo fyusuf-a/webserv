@@ -8,9 +8,16 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <dirent.h>
+#include <sstream>
+#include <map>
 
 namespace Utils
 {
+	std::string month_to_str(unsigned int i);
+	std::string weekday_to_str(unsigned int i);
+	std::ostream& print_date(std::ostream& os, bool show_weekday = true, bool show_gmt = true);
+
     bool is_space(char const c);
     bool is_spaces(std::string const s);
     bool is_valid_methods(std::string const &s);
@@ -23,15 +30,13 @@ namespace Utils
     void ft_trim(std::string &str);
     bool is_comentary(std::string &str);
 
-
     // bool is_set(std::string value);
     template <typename T>
     bool is_set(std::vector<T> value);
 
     int ft_find(std::string str, std::string find);
-
-
-
+    int is_dir(const char *name);
+    std::string toString(int &i);
 };
 
 struct MyException : public std::exception

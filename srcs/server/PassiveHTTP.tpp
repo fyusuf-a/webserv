@@ -63,8 +63,12 @@ bool PassiveHTTP<T>::on_readable(int fd) {
 	Socket* old_socket = this->_socket;
 	Socket* new_socket = activeServer->getSocket();
 
-	LOG.info() << "New connection on " << old_socket->getInterface() << " (fd " << old_socket->getFd() << "), transfering connection to "<< new_socket->getInterface() << " (fd " << new_socket->getFd() << ")" << std::endl;
-	/*LOG.info() << "Transfering connection to " << activeServer->getSocket()->getInterface() << std::endl;*/
+	std::ostringstream oss;
+	if (INetAddress* peer = new_socket->getPeer())
+		oss << peer->getAddress() << " ";
+
+	LOG.info() << "Peer " << oss.str() << "connected on "
+		<< old_socket->getInterface() << " (fd " << old_socket->getFd() << "), transfering connection to "<< new_socket->getInterface() << " (fd " << new_socket->getFd() << ")" << std::endl;
 	return (true);
 }
 

@@ -24,41 +24,45 @@ public:
 	static Log& LOG;
 
 	ActiveHTTP();
-	ActiveHTTP(const ActiveHTTP&);
 	ActiveHTTP(Socket*);
 	ActiveHTTP(Socket*, INetAddress const&, std::vector<ServerBlock> const*);
-	ActiveHTTP& operator=(const ActiveHTTP&);
 	virtual ~ActiveHTTP();
 
-	void add_response(const Response&);
-	void write_all_on_write_buffer();
 	void write_beginning_on_write_buffer();
 	void launch_middleware_chain();
-	//void send_partial_response(const std::string&);
 	void postpone_timeout();
+	void reinitialize();
 
-	void setServerBlocks(std::vector<ServerBlock> const*);
-	void set_ongoing_task(Task*);
+	void set_delegation_to_task(bool);
+	void add_ongoing_task(Task* const&);
+	void remove_ongoing_task(Task* const& task);
 
-	std::vector<ServerBlock> const*
-					getServerBlocks() const;
-	INetAddress		getInterface() const;
+	uint16_t		get_original_port() const;
+	INetAddress		get_interface() const;
+	std::vector<ServerBlock> const* get_server_blocks() const;
 	time_t const&	get_last_time_active() const;
 	Request&		get_request();
 	Response&		get_response();
 	std::string&	get_write_buffer();
 	char*			get_tmp();
-	Task const*		get_ongoing_task() const;		
+	std::list<Task*> const& get_ongoing_tasks() const;
+	bool			get_delegation_to_task() const;
 
 protected:
+	uint16_t							_original_port;
 	time_t								_last_time_active;
 	INetAddress							_interface;
 	std::vector<ServerBlock> const*		_server_blocks;
 	Request								_request;
 	Response							_response;
 	MiddlewareChain*					_chain;
-	Task*								_ongoing_task;
+	// If a task is launched, it is responsible for writing the response to the
+	// ActiveHTTP write buffer, otherwise, it is written by the middleware
+	// callded Sender
+	bool								_delegation_to_task;
+	std::list<Task*>					_ongoing_tasks;
 	char								_tmp[BUFFER_LENGTH];
+
 	virtual bool						on_readable(int fd);
 	virtual bool						on_writable(int fd);
 	virtual bool						on_close(int fd);

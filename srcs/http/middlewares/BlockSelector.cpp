@@ -1,12 +1,8 @@
 #include "Middleware.hpp"
 
-BlockSelector::BlockSelector() {
-}
-
 void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& response, MiddlewareChain& next) {
 
 	(void)request;
-
 	if (response.get_code() >= 400)
 	{
         next();
@@ -16,8 +12,8 @@ void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 	bool            set = false;
 	ServerBlocks    tmp_servers;
 	Locations       tmp_locations;
-	ServerBlocks	serverBlocks = *actHTTP.getServerBlocks();
-	INetAddress		interface = actHTTP.getInterface();
+	ServerBlocks	serverBlocks = *actHTTP.get_server_blocks();
+	INetAddress		interface = actHTTP.get_interface();
 
 	// ---- Select server block
 
@@ -129,7 +125,6 @@ void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 			}
 		}
 	}
-	std::cout << "--->" << request.get_location() << std::endl; 
 	if (set == false)
 		response.set_code(Response::NotFound);
 	next();

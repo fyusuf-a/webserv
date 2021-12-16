@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-g++ -g3 -D DEBUG_FLAG -I../includes -Wall -Werror -Wextra --std=c++98 ../srcs/utils/Log.cpp ../srcs/server/Socket.cpp ../srcs/ipaddress/INetAddress.cpp ./test_nioselector.cpp ../srcs/server/NIOSelector.cpp ../srcs/ipaddress/IPAddress.cpp\
-	../srcs/server/ActiveServer.cpp
+g++ -g3 -D DEBUG_FLAG -I../includes -Wall -Werror -Wextra --std=c++98 ../srcs/utils/Log.cpp ../srcs/server/Socket.cpp ../srcs/ipaddress/INetAddress.cpp ./test_nioselector.cpp ../srcs/server/NIOSelector.cpp ../srcs/ipaddress/IPAddress.cpp ../srcs/server/ActiveServer.cpp ../srcs/utils/utils.cpp
 PORT1=8080
 PORT2=8081
 

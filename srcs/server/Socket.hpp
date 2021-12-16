@@ -54,7 +54,8 @@ public:
 	ssize_t			recv(void *buf, int maxlen, int flags = 0);
 
 	int				getFd() const;
-	INetAddress 	getInterface() const;
+	INetAddress const& 	getInterface() const;
+	INetAddress*	getPeer() const;
 	void			setFd(const int&);
 	void			setInterface(const INetAddress&);
 	void			setPort(u_int16_t port);
@@ -62,6 +63,7 @@ public:
 public:
 	int		_fd;
 	INetAddress	_interface;
+	INetAddress	*_peer;
 
 private:
 	void	init(const IPAddress& ip, uint16_t port, bool nonblocking);
