@@ -8,3 +8,4 @@ Webserv
 compile_commands.json
 .clangd
 test/Response/GET/my_resp*
+test/42_tester.conf

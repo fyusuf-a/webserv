@@ -60,8 +60,6 @@ bool	ActiveHTTP::on_readable(int fd) {
 	// it
 	if (_request.get_head() == 6) {
 		launch_middleware_chain();
-		if (_request.get_wrong())
-			return (false);
 	}
 	return (true);
 }
