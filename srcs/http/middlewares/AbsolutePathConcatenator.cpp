@@ -30,7 +30,6 @@ std::string get_absolute_path(Request &request, const std::string &path) {
 		absolute_path = "";
 	else
 		absolute_path = request.get_server().get_server_conf().getRoot() + request.get_path();
-	std::cout << absolute_path << std::endl;
 
 	return (absolute_path);
 }
