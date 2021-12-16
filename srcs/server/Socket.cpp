@@ -42,12 +42,12 @@ void Socket::init(const IPAddress& ip, uint16_t port, bool nonblocking) {
 	LOG.debug() << "Options set (address " << _interface << ')' << std::endl;
 	if (nonblocking)
 	{
-		if (fcntl(_fd, F_SETFL, O_NONBLOCK) < 0)
+		/*if (fcntl(_fd, F_SETFL, O_NONBLOCK) < 0)
 		{
 			std::ostringstream oss;
 			oss << "cannot set socket to be not blocking (address: " << _interface << ')';
 			throw std::runtime_error(oss.str());
-		}
+		}*/
 		LOG.debug() << "Socket set as nonblocking (address " << _interface << ')' << std::endl;
 	}
 	struct sockaddr_in my_struct;

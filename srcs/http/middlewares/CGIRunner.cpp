@@ -3,7 +3,7 @@
 #include <string>
 #include <sys/wait.h>
 #include <fcntl.h>
-#include "../tasks/CGITask.hpp"
+#include "../tasks/CGIOutTask.hpp"
 #define BUFFER_SIZE 1024
 
 Log& CGIRunner::LOG = Log::getInstance();
@@ -136,7 +136,7 @@ void		CGIRunner::body(ActiveHTTP& server, Request& request
 	//close(in_pipe[0]);
 	close(out_pipe[1]);
 
-	new CGITask(out_pipe[0], server, pid);
+	new CGIOutTask(out_pipe[0], server, pid);
 	//NIOSelector::getInstance()->add(in_pipe[0], 
 	for (size_t i = 0; i < env.size(); i++)
 		delete env_tab[i];
