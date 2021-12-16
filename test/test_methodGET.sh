@@ -12,10 +12,10 @@ bash Requete/requete.sh
 kill $!
 
 # \\ -------------- GET--------------- //
-#if [ "$(diff ./Response/GET/my_resp1 ./Response/GET/resp1)" != "" ]; then
-	#echo "Error: Response/GET 1"
-	#exit 1
-#fi
+if [ "$(diff ./Response/GET/my_resp1 ./Response/GET/resp1)" != "" ]; then
+	echo "Error: Response/GET 1"
+	exit 1
+fi
 if [ "$(diff ./Response/GET/my_resp2 ./Response/GET/resp2)" != "" ]; then
 	echo "Error: Response/GET 2"
 	exit 1

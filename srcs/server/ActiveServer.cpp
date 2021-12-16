@@ -4,7 +4,7 @@
 
 Log& ActiveServer::LOG = Log::getInstance();
 
-ActiveServer::ActiveServer() : Callback() {
+ActiveServer::ActiveServer() : Callback(), _status(false) {
 	_socket = new Socket();
 	NIOSelector::getInstance().add(_socket->getFd(), *this, READ | WRITE);
 }
@@ -42,6 +42,10 @@ Socket *ActiveServer::getSocket() const {
 	return _socket;
 }
 
+void	ActiveServer::setStatus(bool val) {
+	_status = val;
+}
+
 bool ActiveServer::on_readable(int fd) {
 
 	if (BUFFER_LENGTH > 0)
@@ -69,6 +73,8 @@ bool ActiveServer::on_writable(int fd) {
 		return (true);
 	try {
 		sent = _socket->send(_write_buffer);
+		if (_status)
+			return on_close(fd);
 	}
 	catch (std::exception& e) {
 		LOG.error() << "An error occured while using send" << std::endl;
