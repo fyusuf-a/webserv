@@ -67,14 +67,13 @@ bool ActiveServer::on_readable(int fd) {
 }
 
 bool ActiveServer::on_writable(int fd) {
+	
 	(void)fd;
 	ssize_t sent;
 	if (_write_buffer.empty())
 		return (true);
 	try {
 		sent = _socket->send(_write_buffer);
-		if (_status)
-			return on_close(fd);
 	}
 	catch (std::exception& e) {
 		LOG.error() << "An error occured while using send" << std::endl;
