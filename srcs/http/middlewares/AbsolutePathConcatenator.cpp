@@ -18,10 +18,15 @@ std::string get_absolute_path(Request &request, const std::string &path) {
 			absolute_path += "/";
 		size_t i = 0;
 
-		for (; path[i] == location_path[i]; i++);
+		while (path[i] == location_path[i])
+			i++;
 
-		if ((i + 1) < path.size())
-			absolute_path += &(path[i + 1]);
+		if (i < path.size())
+		{
+			if (*(absolute_path.end() - 1) == '/' && path[i] == '/' && i + 1 < path.size())
+				i += 1;
+			absolute_path += &(path[i]);
+		}
 
 		if (*(absolute_path.end() - 1) != '/' && Utils::is_dir(absolute_path.c_str()))
 			absolute_path += "/";
@@ -30,7 +35,6 @@ std::string get_absolute_path(Request &request, const std::string &path) {
 		absolute_path = "";
 	else
 		absolute_path = request.get_server().get_server_conf().getRoot() + request.get_path();
-
 	return (absolute_path);
 }
 
