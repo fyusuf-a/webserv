@@ -62,8 +62,6 @@ bool	ActiveHTTP::on_readable(int fd) {
 	// it
 	if (_request.get_head() == 6) {
 		launch_middleware_chain();
-		if (_request.get_wrong())
-			return (false);
 	}
 	return (true);
 }
@@ -187,11 +185,6 @@ void	ActiveHTTP::write_beginning_on_write_buffer() {
 }
 
 void	ActiveHTTP::reinitialize() {
-	if (_request.get_wrong())
-	{
-		std::cout << _socket->getFd() << std::endl;
-		on_close(_socket->getFd());
-	}
 	_request = Request();
 	_response = Response();
 	_delegation_to_task = false;
