@@ -2,7 +2,7 @@
 
 
 ServerLocation::ServerLocation() :
-_root(""), _cgi_ext(""), _cgi_bin(""), _language(""), _auth_basic_file(""), _location_path(""), _auto_index(0), _auth_basic(0), _body_size(-1){}
+_root(""), _cgi_ext(""), _cgi_bin(""), _language(""), _auth_basic_file(""), _location_path(""), _auto_index(0), _auth_basic(0), _body_size(100000000){}
 
 ServerLocation::ServerLocation(const ServerLocation &other) :
 _index(other._index), _methods(other._methods), _root(other._root), _cgi_ext(other._cgi_ext),

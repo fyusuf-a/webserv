@@ -87,6 +87,10 @@ void		Request::parse(std::string& buffer) {
 			if (_method == "POST" && _headers.find("Content-Length") != _headers.end()) {
 				if (_to_read == 0)
 					_to_read = ::atoi(_headers["Content-Length"].c_str());
+				if (_to_read > _location.get_body_size()) {
+					_wrong = true;
+					break;
+				}
 				if (buffer.length() >= _to_read) {
 					_body += buffer.substr(_lctr, _to_read);
 					_lctr += _to_read;
@@ -119,6 +123,7 @@ void		Request::parse(std::string& buffer) {
 					break;
 				}
 				else if (_last_zero_read) {
+					std::cout << buffer << std::endl;
 					_wrong = true;
 				}
 				else
@@ -129,6 +134,8 @@ void		Request::parse(std::string& buffer) {
 					_wrong = true;
 				else
 					_body += body_chunk;
+				if (_body.length() > _location.get_body_size())
+					_wrong = true;
 				_to_read = 0;
 			}
 			else
