@@ -23,6 +23,7 @@ void		MethodPOST::body(ActiveHTTP& serv, Request& request, Response& response, M
 
 		response.delete_header("Transfer-Encoding");
 		response.set_header("Content-Length", "0");
+		response.set_header("Location", request.get_original_request_path());
 
 		if ((fd = open(filename, O_RDWR | O_APPEND | O_CREAT, 0777)) < 0)
 			response.set_code(Response::Forbidden);

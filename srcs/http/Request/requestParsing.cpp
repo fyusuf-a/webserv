@@ -33,8 +33,10 @@ void		Request::manage_head(std::string& buffer) {
 			_lctr += 2;
 			if (_headers.find("Content-Length") == _headers.end() && (_headers.find("Transfer-Encoding") == _headers.end() || _headers["Transfer-Encoding"] != "chunked"))
 				_head = 6;
-			else
+			else {
 				_head++;
+				std::cout << "OHH" << _head << std::endl;
+			}
 		}
 		else if (_over)
 			_head--;
@@ -119,13 +121,16 @@ void		Request::parse(std::string& buffer) {
 				}
 				else if (_last_zero_read)
 					_wrong = true;
-				else 
+				else {
+					std::cout << "coucou" << std::endl;
 					body_chunk = buffer.substr(_lctr, _to_read);
-				if (body_chunk.length() < _to_read) {
+				}
+				std::cout << "WO" << body_chunk << std::endl;
+				if (buffer.length() - _lctr < _to_read + 2) {
 					_over = false;
 					break;
 				}
-				if (buffer.substr(_lctr + _to_read, 2) != "\r\n")
+				else if (buffer.substr(_lctr + _to_read, 2) != "\r\n")
 					_wrong = true;
 				else {
 					_body += body_chunk;
@@ -140,5 +145,6 @@ void		Request::parse(std::string& buffer) {
 	}
 	manage_head(buffer);
 	buffer = buffer.substr(_lctr);
+	std::cout << "//" << buffer << _head << std::endl;
 	return ;
 }
