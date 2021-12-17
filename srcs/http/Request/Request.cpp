@@ -72,6 +72,10 @@ bool								Request::get_wrong(void) const {
 	return this->_wrong;
 }
 
+bool								Request::get_too_big_body(void) const {
+	return this->_too_big_body;
+}
+
 void 								Request::set_server(ServerBlock server){
 	this->_server = server;
 }
@@ -82,7 +86,7 @@ ServerBlock const 					&Request::get_server(void) const {
 void 								Request::set_location(ServerLocation location){
 	this->_location = location;
 }
-ServerLocation const 				&Request::get_location(void) const {
+ServerLocation 							&Request::get_location(void) {
 	return this->_location;
 }
 
@@ -110,6 +114,7 @@ Request & 		Request::operator=( Request const & rhs ){
 		_head = rhs._head;
 		_over = rhs._over;
 		_wrong= rhs._wrong;
+		_too_big_body= rhs._too_big_body;
 		_last_zero_read = rhs._last_zero_read;
 		_residual = rhs._residual;
 		_field_name = rhs._field_name;
@@ -130,6 +135,7 @@ Request::Request()
 	: _head(0)
 	, _over(true)
 	, _wrong(false)
+	, _too_big_body(false)
 	, _last_zero_read(false)
 	, _lctr(0)
 	, _treated_by_middlewares(false)
