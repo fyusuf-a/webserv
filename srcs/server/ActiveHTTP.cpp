@@ -66,6 +66,7 @@ bool	ActiveHTTP::on_readable(int fd) {
 				if (_request.get_location().get_body_size() == std::string::npos)
 					_request.get_location().set_body_size(100000000);
 			}
+			_request.parse(_read_buffer);
 		}
 	}
 
