@@ -133,15 +133,10 @@ void		CGIRunner::body(ActiveHTTP& server, Request& request
 	close(in_pipe[0]);
 	close(out_pipe[1]);
 
-	new POSTTask(in_pipe[1], server);
+	new POSTTask(in_pipe[1], server, POSTTask::NO_WRITE_ON_WRITE_BUFFER);
 	new CGIOutTask(out_pipe[0], server, pid);
-	//NIOSelector::getInstance()->add(in_pipe[0], 
 	for (size_t i = 0; i < env.size(); i++)
 		delete env_tab[i];
-
-	//int status;
-	//waitpid(pid, &status, WUNTRACED);
-	//LOG.info() << cgi_script << " has stopped running" << std::endl;
 
 	next();
 }

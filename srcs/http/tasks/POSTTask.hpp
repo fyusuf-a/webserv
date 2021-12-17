@@ -19,8 +19,13 @@ class POSTTask : public Task
 		ssize_t     _head;      
 
     public:
+		enum does_write_on_write_buffer {
+			WRITE_ON_WRITE_BUFFER,
+			NO_WRITE_ON_WRITE_BUFFER,
+		};
+
         virtual ~POSTTask();
-		POSTTask(int fd, ActiveHTTP& serv);
+		POSTTask(int fd, ActiveHTTP& serv, does_write_on_write_buffer condition = WRITE_ON_WRITE_BUFFER);
 
     protected:
         virtual bool	on_readable(int fd);
@@ -28,6 +33,8 @@ class POSTTask : public Task
         virtual bool	on_close(int);
         virtual bool	always(int);
 		state			_state;
+		does_write_on_write_buffer
+						_output_to_write_buffer;
 };
 
 #endif

@@ -2,7 +2,12 @@
 #include <unistd.h>
 #include <cerrno>
 
-POSTTask::POSTTask(int fd, ActiveHTTP& serv) : Task(fd, serv, WRITE), _head(0), _state(S_WAITING_FOR_MIDDLEWARES) {
+POSTTask::POSTTask(int fd, ActiveHTTP& serv, does_write_on_write_buffer condition)
+	: Task(fd, serv, WRITE)
+	, _head(0)
+	, _state(S_WAITING_FOR_MIDDLEWARES)
+	, _output_to_write_buffer(condition)
+{
 	LOG.debug() << "New POST task (fd = " << _fd << ")" << std::endl;
 }
 
@@ -33,18 +38,13 @@ bool POSTTask::on_writable(int fd) {
 			if (ret <= 0) {
 				if (ret < 0)
 					_serv.get_response().set_code(Response::UnknownError);
-				std::ostringstream oss;
-				oss << _serv.get_response();
-				_serv.get_write_buffer() += oss.str();
-				on_close(fd);
+				if (_output_to_write_buffer == WRITE_ON_WRITE_BUFFER) {
+					std::ostringstream oss;
+					oss << _serv.get_response();
+					_serv.get_write_buffer() += oss.str();
+					on_close(fd);
+				}
 			}
-			/*if (ret == 0)
-				return on_close(fd);
-			else if (ret < 0)
-			{
-				_serv.get_response().set_code(Response::UnknownError);
-				return on_close(fd);
-			}*/
 		break;
 	}
 	return (true);
