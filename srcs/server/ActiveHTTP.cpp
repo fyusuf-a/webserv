@@ -43,7 +43,6 @@ ActiveHTTP::~ActiveHTTP() {
 	{
 		Task* task = _ongoing_tasks.front();
 		task->on_close(task->get_fd());
-		//_ongoing_tasks.pop_front();
 	}
 	if (_chain)
 		delete _chain;
@@ -67,7 +66,6 @@ bool	ActiveHTTP::on_readable(int fd) {
 				if (_request.get_location().get_body_size() == std::string::npos)
 					_request.get_location().set_body_size(100000000);
 			}
-			_request.parse(_read_buffer);
 		}
 	}
 
@@ -201,6 +199,11 @@ void	ActiveHTTP::write_beginning_on_write_buffer() {
 }
 
 void	ActiveHTTP::reinitialize() {
+	if (_request.get_wrong())
+	{
+		on_close(_socket->getFd());
+		return ;
+	}
 	_request = Request();
 	_response = Response();
 	_delegation_to_task = false;

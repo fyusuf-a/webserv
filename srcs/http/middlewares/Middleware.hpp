@@ -34,14 +34,6 @@ class CheckSyntax : public Middleware, public Singleton<CheckSyntax>
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
 
-class BlockSelector : public Middleware, public Singleton<BlockSelector>
-{
-	public:
-		BlockSelector(){};
-		virtual	~BlockSelector() {};
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
-};
-
 class MethodChecker : public Middleware, public Singleton<MethodChecker>
 {
 	public:

@@ -11,7 +11,7 @@ void		MethodDELETE::body(ActiveHTTP&, Request& request, Response& response, Midd
 
 // if body return 204
 	if (response.get_code() >= 400 || request.get_method() != "DELETE" || request.get_is_script())
-        next();
+        return next();
 	else
 	{
 		if (access(request.get_path().c_str(), 0) != 0)
