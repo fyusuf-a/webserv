@@ -22,8 +22,6 @@ void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & respo
 	else if (request.get_protocol() != SERVER_PROTOCOL)
 		response.set_code(Response::HTTPNotSupported);
 
-	std::cout << response.get_code() << std::endl;
-
     if (response.get_code() >= 400) {
         next();
         return ;
