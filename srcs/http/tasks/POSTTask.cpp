@@ -16,7 +16,6 @@ bool POSTTask::on_writable(int fd) {
 	switch ((int)_state) {
 		case S_WAITING_FOR_MIDDLEWARES:
 			if (_serv.get_response().get_ready()) {
-				_serv.write_beginning_on_write_buffer();
 				_state = S_BEGINNING_WRITTEN;
 			}
 		break;
@@ -31,13 +30,21 @@ bool POSTTask::on_writable(int fd) {
 			ssize_t ret = write(fd, str, write_length);
 			_head += ret;
 
-			if (ret == 0)
+			if (ret <= 0) {
+				if (ret < 0)
+					_serv.get_response().set_code(Response::UnknownError);
+				std::ostringstream oss;
+				oss << _serv.get_response();
+				_serv.get_write_buffer() += oss.str();
+				on_close(fd);
+			}
+			/*if (ret == 0)
 				return on_close(fd);
 			else if (ret < 0)
 			{
 				_serv.get_response().set_code(Response::UnknownError);
 				return on_close(fd);
-			}
+			}*/
 		break;
 	}
 	return (true);

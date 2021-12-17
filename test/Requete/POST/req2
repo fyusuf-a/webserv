@@ -1,7 +1,12 @@
-POST /directory/youpi.bla HTTP/1.1\r
-Host: localhost:8001\r
-User-Agent:http-client/1.1\r
-Transfer-Encoding: chunked\r
-Content-Type: test/file\r
-Accept-Encoding: gzip\r
-\r
+POST /testt HTTP/1.1
+Host: localhost:8001
+User-Agent: Go-http-client/1.1
+Type: test/file
+Transfer-Encoding: chunked
+
+c
+123456789abc
+2
+ok
+0
+

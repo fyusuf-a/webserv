@@ -8,6 +8,8 @@
 #include "../http/Response/Response.hpp"
 #include "../http/tasks/Task.hpp"
 
+void		block_selector(ActiveHTTP& actHTTP, Request& request, Response& response);
+
 Log& ActiveHTTP::LOG = Log::getInstance();
 
 ActiveHTTP::ActiveHTTP() : ActiveServer(), _server_blocks(NULL), _chain(NULL),
@@ -41,7 +43,6 @@ ActiveHTTP::~ActiveHTTP() {
 	{
 		Task* task = _ongoing_tasks.front();
 		task->on_close(task->get_fd());
-		//_ongoing_tasks.pop_front();
 	}
 	if (_chain)
 		delete _chain;
@@ -53,11 +54,25 @@ bool	ActiveHTTP::on_readable(int fd) {
 		return (false);
 	}
 	_request.set_over(true);
+
+	bool location_set = false;
+
 	if (_request.get_head() != 6) {
-		//std::cout <<  "(" << _read_buffer.length() << ")" << std::endl;
-		while (_request.get_head() < 6 && _request.get_over())
+		//std::cout <<  "(" << _read_buffer.length() << ") i " << _read_buffer[0] << std::endl;
+		while (_request.get_head() < 6 && _request.get_over()) {
+			if (_request.get_head() == 5 && !location_set) {
+				location_set = true;
+				block_selector(*this, _request, _response);
+				if (_request.get_location().get_body_size() == std::string::npos)
+					_request.get_location().set_body_size(100000000);
+			}
 			_request.parse(_read_buffer);
+		}
 	}
+
+	if (!location_set && _request.get_head() == 6)
+		block_selector(*this, _request, _response);
+	//std::cout << _request.get_wrong() << std::endl;
 	// If the request is parsed and the middleware chain is not launched, launch
 	// it
 	if (_request.get_head() == 6) {
@@ -185,6 +200,11 @@ void	ActiveHTTP::write_beginning_on_write_buffer() {
 }
 
 void	ActiveHTTP::reinitialize() {
+	if (_request.get_wrong())
+	{
+		on_close(_socket->getFd());
+		return ;
+	}
 	_request = Request();
 	_response = Response();
 	_delegation_to_task = false;

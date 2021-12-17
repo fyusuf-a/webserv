@@ -28,6 +28,7 @@ class Response
 			MethodNotAllowed = 405,
 			NotAcceptable = 406,
 			RequestTime_out = 408,
+			RequestEntityTooLarge = 413,
 			// Server Error
 			NotImplemented = 501,
 			HTTPNotSupported = 505,

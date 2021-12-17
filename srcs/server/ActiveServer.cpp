@@ -4,7 +4,7 @@
 
 Log& ActiveServer::LOG = Log::getInstance();
 
-ActiveServer::ActiveServer() : Callback() {
+ActiveServer::ActiveServer() : Callback(), _status(false) {
 	_socket = new Socket();
 	NIOSelector::getInstance().add(_socket->getFd(), *this, READ | WRITE);
 }
@@ -42,6 +42,10 @@ Socket *ActiveServer::getSocket() const {
 	return _socket;
 }
 
+void	ActiveServer::setStatus(bool val) {
+	_status = val;
+}
+
 bool ActiveServer::on_readable(int fd) {
 
 	if (BUFFER_LENGTH > 0)
@@ -63,6 +67,7 @@ bool ActiveServer::on_readable(int fd) {
 }
 
 bool ActiveServer::on_writable(int fd) {
+	
 	(void)fd;
 	ssize_t sent;
 	if (_write_buffer.empty())

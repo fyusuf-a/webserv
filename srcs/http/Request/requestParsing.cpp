@@ -24,7 +24,7 @@ std::string	Request::extract_attribute(std::string& buffer, std::string terminat
 }
 
 void		Request::manage_head(std::string& buffer) {
-	if (_wrong == true)
+	if (_wrong == true || _too_big_body == true)
 		_head = 6;
 	if (_head == 6 || _head == 5)
 		return ;
@@ -55,11 +55,6 @@ void		Request::parse(std::string& buffer) {
 	_over = true;
 	std::string tmp;
 
-	//if (buffer[_lctr] == '\0') {
-	//	buffer = buffer.substr(_lctr);
-	//	_over = false;
-	//	return;
-	//}
 	switch(this->get_head()) {
 		case 0:
 			_method = extract_attribute(buffer, " ");
@@ -87,6 +82,10 @@ void		Request::parse(std::string& buffer) {
 			if (_method == "POST" && _headers.find("Content-Length") != _headers.end()) {
 				if (_to_read == 0)
 					_to_read = ::atoi(_headers["Content-Length"].c_str());
+				if (_to_read > _location.get_body_size()) {
+					_too_big_body = true;
+					break;
+				}
 				if (buffer.length() >= _to_read) {
 					_body += buffer.substr(_lctr, _to_read);
 					_lctr += _to_read;
@@ -118,17 +117,22 @@ void		Request::parse(std::string& buffer) {
 					_over = false;
 					break;
 				}
-				else if (_last_zero_read) {
+				else if (_last_zero_read)
 					_wrong = true;
-				}
-				else
-					body_chunk = extract_attribute(buffer, "\r\n");
-				if (body_chunk == "")
+				else 
+					body_chunk = buffer.substr(_lctr, _to_read);
+				if (body_chunk.length() < _to_read) {
+					_over = false;
 					break;
-				if (body_chunk.length() != _to_read)
+				}
+				if (buffer.substr(_lctr + _to_read, 2) != "\r\n")
 					_wrong = true;
-				else
+				else {
 					_body += body_chunk;
+					_lctr += body_chunk.length() + 2;
+				}
+				if (_body.length() > _location.get_body_size())
+					_too_big_body = true;
 				_to_read = 0;
 			}
 			else

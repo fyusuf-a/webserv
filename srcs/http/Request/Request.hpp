@@ -19,6 +19,7 @@ class Request
 		int			_head;
 		bool		_over;
 		bool		_wrong;
+		bool		_too_big_body;
 		bool		_last_zero_read;
 		std::string _residual;
 		std::string	_field_name;
@@ -53,6 +54,7 @@ class Request
 		int									get_head(void) const;
 		bool								get_over(void) const;
 		bool								get_wrong(void) const;
+		bool								get_too_big_body(void) const;
 		void								set_over(bool over);
 		void								set_path(std::string path);
 		void								set_original_request_path(std::string path);
@@ -66,7 +68,7 @@ class Request
 		ServerBlock	const 					&get_server(void) const;
 
 		void 								set_location(ServerLocation location);
-		ServerLocation const 				&get_location(void) const;
+		ServerLocation 						&get_location(void);
 
 		bool								get_treated_by_middlewares(void) const;
 		void								set_treated_by_middlewares(bool);

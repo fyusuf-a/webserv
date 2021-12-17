@@ -4,12 +4,17 @@
 void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & response, MiddlewareChain& next) {
 	(void)actHTTP;
 	
-
-
+    if (response.get_code() >= 400) {
+        next();
+        return ;
+    }
+   
 	std::string met = request.get_method();
 
 	if (request.get_wrong())
 		response.set_code(Response::BadRequest);
+	else if (request.get_too_big_body())
+		response.set_code(Response::RequestEntityTooLarge);	
 	else if (met != "GET" && met != "POST" && met != "DELETE")
 		response.set_code(Response::NotImplemented);
 	else if (request.get_path()[0] != '/')

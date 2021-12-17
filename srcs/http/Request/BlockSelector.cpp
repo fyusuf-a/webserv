@@ -1,14 +1,6 @@
-#include "Middleware.hpp"
+#include "../middlewares/Middleware.hpp"
 
-void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& response, MiddlewareChain& next) {
-
-	(void)request;
-
-	if (response.get_code() >= 400)
-	{
-        next();
-        return ;
-	}
+void		block_selector(ActiveHTTP& actHTTP, Request& request, Response& response) {
 
 	bool            set = false;
 	ServerBlocks    tmp_servers;
@@ -75,8 +67,8 @@ void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 		}
 	}
 	if (set == false) {
+		std::cout << request.get_path() << std::endl;
 		response.set_code(Response::BadRequest);
-		next();
 		return ;
 	}
 	else
@@ -128,5 +120,4 @@ void		BlockSelector::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 	}
 	if (set == false)
 		response.set_code(Response::NotFound);
-	next();
 }

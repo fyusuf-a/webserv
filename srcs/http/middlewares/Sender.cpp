@@ -27,6 +27,7 @@ void Sender::write_all_on_write_buffer(ActiveHTTP& serv, Response& response,
 }
 
 void Sender::body(ActiveHTTP& serv, Request& request, Response& response, MiddlewareChain&) {
+
 	// If the client wants to close the connection, grant its wish
 	try {
 		if (request.get_headers().at("Connection") == "close")

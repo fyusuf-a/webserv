@@ -15,7 +15,6 @@ SRC = 	main.cpp\
 	srcs/ipaddress/INetAddress.cpp\
 	srcs/http/middlewares/CheckSyntax.cpp\
 	srcs/http/middlewares/Error.cpp\
-	srcs/http/middlewares/BlockSelector.cpp\
 	srcs/http/middlewares/MethodChecker.cpp\
 	srcs/http/middlewares/MethodGET.cpp\
 	srcs/http/middlewares/MethodDELETE.cpp\
@@ -33,7 +32,7 @@ SRC = 	main.cpp\
 	srcs/http/middlewares/CGIRunner.cpp\
 	srcs/http/Request/Request.cpp\
 	srcs/http/Request/requestParsing.cpp\
-	srcs/http/Request/checkIncompleteRequest.cpp\
+	srcs/http/Request/BlockSelector.cpp\
 	srcs/http/Response/Response.cpp\
 
 NAME = Webserv
