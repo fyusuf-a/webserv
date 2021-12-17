@@ -3,6 +3,7 @@
 #include <cerrno>
 
 POSTTask::POSTTask(int fd, ActiveHTTP& serv) : Task(fd, serv, WRITE), _head(0), _state(S_WAITING_FOR_MIDDLEWARES) {
+	LOG.debug() << "New POST task (fd = " << _fd << ")" << std::endl;
 }
 
 POSTTask::~POSTTask(){}

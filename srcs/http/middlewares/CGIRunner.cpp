@@ -4,7 +4,7 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include "../tasks/CGIOutTask.hpp"
-#define BUFFER_SIZE 1024
+#include "../tasks/POSTTask.hpp"
 
 Log& CGIRunner::LOG = Log::getInstance();
 
@@ -108,9 +108,6 @@ void		CGIRunner::body(ActiveHTTP& server, Request& request
 
 	std::string const& cgi_program =
 								request.get_location().get_cgi_bin().c_str();
-	//char* cgi_program = new char [cgi_program_str.size() + 1];
-	//cgi_program = const_cast<char*>(cgi_program_str.c_str());
-	//char* cgi_script  = (char*)request.get_path().c_str();
 	
 	char* args[3];
 	args[0] = (char*)cgi_program.c_str();
@@ -119,23 +116,24 @@ void		CGIRunner::body(ActiveHTTP& server, Request& request
 
 	LOG.info() << "Launching \"" << args[0] << " " << args[1] <<  "\"" << std::endl;
 
-	//int in_pipe[2];
+	int in_pipe[2];
 	int out_pipe[2];
-	//pipe(in_pipe);
+	pipe(in_pipe);
 	pipe(out_pipe);
 	int pid = fork();
 	if (pid == 0) {
-		//close(in_pipe[1]);
+		close(in_pipe[1]);
 		close(out_pipe[0]);
-		//dup2(in_pipe[0], 0);
+		dup2(in_pipe[0], 0);
 		dup2(out_pipe[1], 1);
 		execve(args[0], args, env_tab);
 		LOG.error() << "cgi binary \"" << request.get_location().get_cgi_bin() << "\" was not found on your system" << std::endl;
 		exit(-1);
 	}
-	//close(in_pipe[0]);
+	close(in_pipe[0]);
 	close(out_pipe[1]);
 
+	new POSTTask(in_pipe[1], server);
 	new CGIOutTask(out_pipe[0], server, pid);
 	//NIOSelector::getInstance()->add(in_pipe[0], 
 	for (size_t i = 0; i < env.size(); i++)

@@ -3,6 +3,7 @@
 
 
 GETTask::GETTask(int fd, ActiveHTTP &serv) : Task(fd, serv, READ), _state(S_WAITING_FOR_MIDDLEWARES) {
+	LOG.debug() << "New GET task (fd = " << _fd << ")" << std::endl;
 }
 
 GETTask::~GETTask(){}
