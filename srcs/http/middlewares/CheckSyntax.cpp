@@ -4,8 +4,6 @@
 void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & response, MiddlewareChain& next) {
 	(void)actHTTP;
 	
-
-
 	std::string met = request.get_method();
 
 	if (request.get_wrong())

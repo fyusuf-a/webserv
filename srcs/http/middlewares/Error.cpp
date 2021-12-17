@@ -6,14 +6,12 @@
 
 //405
 
-void		Error::body(ActiveHTTP& serv, Request&, Response& response, MiddlewareChain& next) {
+void		Error::body(ActiveHTTP&, Request&, Response& response, MiddlewareChain& next) {
 
     int code = response.get_code();
 
 	if (code >= 400)
     {
-		if (code == 400)
-			serv.setStatus(true);
         std::string reason_phrase =
 			Response::http_code_to_str(static_cast<Response::http_code>(code));
 		std::ostringstream oss;

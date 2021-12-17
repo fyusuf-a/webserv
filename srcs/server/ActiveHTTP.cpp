@@ -41,7 +41,6 @@ ActiveHTTP::~ActiveHTTP() {
 	{
 		Task* task = _ongoing_tasks.front();
 		task->on_close(task->get_fd());
-		//_ongoing_tasks.pop_front();
 	}
 	if (_chain)
 		delete _chain;
@@ -54,7 +53,6 @@ bool	ActiveHTTP::on_readable(int fd) {
 	}
 	_request.set_over(true);
 	if (_request.get_head() != 6) {
-		//std::cout <<  "(" << _read_buffer.length() << ")" << std::endl;
 		while (_request.get_head() < 6 && _request.get_over())
 			_request.parse(_read_buffer);
 	}
@@ -185,6 +183,11 @@ void	ActiveHTTP::write_beginning_on_write_buffer() {
 }
 
 void	ActiveHTTP::reinitialize() {
+	if (_request.get_wrong())
+	{
+		on_close(_socket->getFd());
+		return ;
+	}
 	_request = Request();
 	_response = Response();
 	_delegation_to_task = false;
