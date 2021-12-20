@@ -8,8 +8,8 @@ void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & respo
         next();
         return ;
     }
-   
 	std::string met = request.get_method();
+
 
 	if (request.get_wrong())
 		response.set_code(Response::BadRequest);

@@ -6,7 +6,13 @@
 
 //405
 
-void		Error::body(ActiveHTTP&, Request&, Response& response, MiddlewareChain& next) {
+void		Error::body(ActiveHTTP&, Request& request, Response& response, MiddlewareChain& next) {
+
+
+		if (request.get_method() == "HEAD")
+			response.set_code(Response::MethodNotAllowed);
+		else if (request.get_method() == "PUT")
+			response.set_code(Response::OK);
 
     int code = response.get_code();
 
