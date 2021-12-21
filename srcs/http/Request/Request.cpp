@@ -90,6 +90,12 @@ ServerLocation 							&Request::get_location(void) {
 	return this->_location;
 }
 
+void									Request::set_method(std::string method)
+{
+	this->_method = method;
+}
+
+
 bool			Request::get_treated_by_middlewares(void) const {
 	return this->_treated_by_middlewares;
 }

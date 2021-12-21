@@ -35,6 +35,7 @@ bool POSTTask::on_writable(int fd) {
 			ssize_t ret = write(fd, str, write_length);
 			_head += ret;
 
+
 			if (ret <= 0) {
 				if (ret < 0)
 					_serv.get_response().set_code(Response::UnknownError);

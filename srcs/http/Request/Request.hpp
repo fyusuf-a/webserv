@@ -49,6 +49,7 @@ class Request
 		void								manage_head(std::string &buffer);
 		//void								checkIncompleteRequest(std::string& buffer) const;
 		std::string const&					get_method(void) const;
+		void								set_method(std::string method);
 		std::string const&					get_path(void) const;
 		std::string const&					get_protocol(void) const;
 		header_map const&					get_headers(void) const;
