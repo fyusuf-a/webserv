@@ -10,8 +10,8 @@ Log& CGIRunner::LOG = Log::getInstance();
 
 void		CGIRunner::set_env(std::map<std::string, std::string>& env, ActiveHTTP const& server, Request const& request) {
 	(void)server;
-	std::map<std::string, std::string> headers = request.get_headers();
-	std::map<std::string, std::string>::const_iterator it;
+	Request::header_map const& headers = request.get_headers();
+	Request::header_map::const_iterator it;
 	std::ostringstream oss;
 	
 	// Todo: make headers case insensitive

@@ -7,10 +7,8 @@ Sender::Sender() {
 }
 
 void Sender::add_content_length(Response& response, std::ostringstream& oss) {
-	std::map<std::string, std::string> const& headers
-												= response.get_headers();
-	std::map<std::string, std::string>::const_iterator it
-										= headers.find("Content-Length");
+	Response::header_map const& headers = response.get_headers();
+	Response::header_map::const_iterator it = headers.find("Content-Length");
 	if (it == headers.end())
 	{
 		oss << response.get_body().length();

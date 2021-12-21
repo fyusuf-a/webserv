@@ -44,7 +44,7 @@ std::string const &					Request::get_protocol(void) const {
 	return this->_protocol;
 }
 
-std::map<std::string, std::string>	const &Request::get_headers(void) const {
+Request::header_map	const& Request::get_headers(void) const {
 	return this->_headers;
 }
 
@@ -147,20 +147,14 @@ Request::Request()
 Request::~Request() {
 }
 
-std::ostream& operator<<(std::ostream& os, const Request& req) {
+std::ostream& operator<<(std::ostream& os, Request const& req) {
        os << req.get_method() << " " << req.get_path() << " " << req.get_protocol() << "\r\n";
-	   std::map<std::string, std::string> my_headers = req.get_headers();
+	   Request::header_map const& my_headers = req.get_headers();
        if (! my_headers.empty()) {
-               for (std::map<std::string, std::string>::const_iterator it = my_headers.begin(); it != my_headers.end() ; it++) {
+               for (Request::header_map::const_iterator it = my_headers.begin(); it != my_headers.end() ; it++) {
                        os << it->first << ": " << it->second << "\r\n";
                }
        }
        os << "\r\n" << req.get_body();
-       //os << "over = " << (req.get_over() ? "true" : "false") << std::endl;
-       /*os << "\r\n" << req.get_body();
-       os << std::endl << "Other stuff:" << std::endl;
-       os << "head = " << req.get_head() << std::endl;
-       os << "over = " << (req.get_over() ? "true" : "false") << std::endl;
-       os << "residual = \"" << req.get_residual() << "\"" << std::endl;*/
        return os;
 }

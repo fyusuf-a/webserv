@@ -1,9 +1,18 @@
 #include "utils.hpp"
+#include <algorithm>
+#include <cctype>
 #include <iomanip>
 
 
 namespace Utils
 {
+	bool cmpCharInsensitive::operator() (const unsigned char a, const unsigned char b) {
+		return ::tolower(a) < tolower(b);
+	}
+	bool cmpStringInsensitive::operator()(const std::string& a, const std::string& b) const {
+		return std::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end(), cmpCharInsensitive());
+	}
+
 	std::string month_to_str(unsigned int i) {
 		static std::map<char, std::string> month_to_str;
 		if (month_to_str.empty()) {

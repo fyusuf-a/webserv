@@ -88,7 +88,7 @@ std::string		Response::get_body(void) const {
 	return this->_body;
 }
 
-const std::map<std::string, std::string>& Response::get_headers() const {
+const Response::header_map& Response::get_headers() const {
 	return _headers;
 }
 
@@ -177,8 +177,9 @@ std::ostream& operator<(std::ostream& os, const Response& resp) {
 	else
 		os << resp.get_custom_reason_phrase();
 	os << "\r\n";
-	for (std::map<std::string, std::string>::const_iterator it =
-			resp.get_headers().begin(); it != resp.get_headers().end(); ++it)
+	Response::header_map const& headers = resp.get_headers();
+	for (Response::header_map::const_iterator it = headers.begin();
+			it != headers.end(); ++it)
 		os << it->first << ": " << it->second << "\r\n";
 	os << "\r\n";
 	return os;

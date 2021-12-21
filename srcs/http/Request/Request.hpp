@@ -9,12 +9,15 @@ class ServerBlock;
 
 class Request
 {
+	public:
+		typedef std::map<std::string, std::string, Utils::cmpStringInsensitive>
+			header_map;
 	private:
 		std::string	_method;
 		std::string _path;
 		std::string _original_request_path;
 		std::string _protocol;
-		std::map<std::string, std::string>	_headers;
+		header_map	_headers;
 		std::string _body;
 		int			_head;
 		bool		_over;
@@ -48,7 +51,7 @@ class Request
 		std::string const&					get_method(void) const;
 		std::string const&					get_path(void) const;
 		std::string const&					get_protocol(void) const;
-		std::map<std::string, std::string>	const& get_headers(void) const;
+		header_map const&					get_headers(void) const;
 		std::string const&					get_body(void) const;
 		std::string const&					get_residual(void) const;
 		int									get_head(void) const;

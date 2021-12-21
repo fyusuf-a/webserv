@@ -3,7 +3,7 @@
 
 void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & response, MiddlewareChain& next) {
 	(void)actHTTP;
-	
+
     if (response.get_code() >= 400) {
         next();
         return ;
@@ -27,7 +27,8 @@ void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & respo
         return ;
     }
 
-	std::map<std::string, std::string>::const_iterator	it;
+	Request::header_map const& headers = request.get_headers();
+	Request::header_map::const_iterator	it;
 	std::string										whitespaces = " \n\r\v\t\f";
 	int												host = 0;
 
@@ -37,7 +38,7 @@ void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & respo
 		return ;
 	}
 		
-	for (it = request.get_headers().begin(); it != request.get_headers().end(); ++it){
+	for (it = headers.begin(); it != headers.end(); ++it){
 	    if (response.get_code() >= 400) {
 	        next();
 	        return ;

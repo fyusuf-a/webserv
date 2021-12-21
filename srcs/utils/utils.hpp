@@ -14,6 +14,12 @@
 
 namespace Utils
 {
+	struct cmpCharInsensitive {
+		bool operator() (const unsigned char a, const unsigned char b);
+	};
+	struct cmpStringInsensitive {
+		bool operator()(const std::string&, const std::string&) const;
+	};
 	std::string month_to_str(unsigned int i);
 	std::string weekday_to_str(unsigned int i);
 	std::ostream& print_date(std::ostream& os, bool show_weekday = true, bool show_gmt = true);

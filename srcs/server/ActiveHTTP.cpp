@@ -58,7 +58,6 @@ bool	ActiveHTTP::on_readable(int fd) {
 	bool location_set = false;
 
 	if (_request.get_head() != 6) {
-		//std::cout <<  "(" << _read_buffer.length() << ") i " << _read_buffer[0] << std::endl;
 		while (_request.get_head() < 6 && _request.get_over()) {
 			if (_request.get_head() == 5 && !location_set) {
 				location_set = true;
@@ -72,7 +71,6 @@ bool	ActiveHTTP::on_readable(int fd) {
 
 	if (!location_set && _request.get_head() == 6)
 		block_selector(*this, _request, _response);
-	//std::cout << _request.get_wrong() << std::endl;
 	// If the request is parsed and the middleware chain is not launched, launch
 	// it
 	if (_request.get_head() == 6) {
