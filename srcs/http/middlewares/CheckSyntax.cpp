@@ -8,7 +8,7 @@ void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & respo
 
 	if (request.get_wrong())
 		response.set_code(Response::BadRequest);
-	else if (met != "GET" && met != "POST" && met != "DELETE")
+	else if (met != "GET" && met != "POST" && met != "DELETE" && met != "PUT")
 		response.set_code(Response::NotImplemented);
 	else if (request.get_path()[0] != '/')
 		response.set_code(Response::BadRequest);
