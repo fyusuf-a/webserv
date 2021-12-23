@@ -10,6 +10,10 @@ void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & respo
     }
 	std::string met = request.get_method();
 
+	if (met == "PUT")
+		std::cout << "//" << request << "//" << std::endl;
+
+	std::cout << "------------/" << std::endl;
 
 	if (request.get_wrong())
 		response.set_code(Response::BadRequest);

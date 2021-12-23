@@ -48,7 +48,6 @@ void Sender::body(ActiveHTTP& serv, Request& request, Response& response, Middle
 	if (!serv.get_delegation_to_task()) {
 		add_content_length(response, oss);
 		write_all_on_write_buffer(serv, response, oss);
-		std::cout << "&" << request << "&" << std::endl;
 		serv.reinitialize();
 		return ;
 	}
