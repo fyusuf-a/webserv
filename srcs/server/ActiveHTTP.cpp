@@ -48,6 +48,18 @@ ActiveHTTP::~ActiveHTTP() {
 		delete _chain;
 }
 
+void ActiveHTTP::add_content_length(std::ostringstream& oss) {
+	Response::header_map const& headers = _response.get_headers();
+	Response::header_map::const_iterator it = headers.find("Content-Length");
+	if (it == headers.end())
+	{
+		oss << _response.get_body().length();
+		_response.set_header("Content-Length", oss.str()); 
+		oss.str("");
+	}
+}
+
+
 bool	ActiveHTTP::on_readable(int fd) {
 	postpone_timeout();
 	if (!ActiveServer::on_readable(fd)) {
@@ -75,6 +87,18 @@ bool	ActiveHTTP::on_readable(int fd) {
 	// it
 	if (_request.get_head() == 6) {
 		launch_middleware_chain();
+		// If there is no ongoing task, set the response length to the length of
+		// the body produced by the middlewares, and send the response
+		if (!_delegation_to_task)
+		{
+			std::ostringstream oss;
+			add_content_length(oss);
+			oss << _response;
+			_write_buffer += oss.str();
+			LOG.debug() << "Request totally written on the write buffer"<< std::endl;
+			if (reinitialize() == false)
+				return false;
+		}
 	}
 	return (true);
 }
@@ -122,6 +146,10 @@ std::list<Task*> const& ActiveHTTP::get_ongoing_tasks() const {
 
 void ActiveHTTP::set_delegation_to_task(bool set) {
 	_delegation_to_task = set;
+}
+
+void ActiveHTTP::set_chain(MiddlewareChain* const& chain) {
+	_chain = chain;
 }
 
 /*void ActiveHTTP::set_ongoing_tasks(std::list<Task*> const& tasks) {
@@ -197,14 +225,16 @@ void	ActiveHTTP::write_beginning_on_write_buffer() {
 	_response.set_beginning_written_on_write_buffer(true);
 }
 
-void	ActiveHTTP::reinitialize() {
+bool	ActiveHTTP::reinitialize() {
 	if (_request.get_wrong())
 	{
+		LOG.error() << "Request was malformed" << std::endl;
 		on_close(_socket->getFd());
-		return ;
+		return false;
 	}
 	_request = Request();
 	_response = Response();
 	_delegation_to_task = false;
 	LOG.debug() << "ActiveHTTP server is reinitialized" << std::endl;
+	return true;
 }

@@ -31,9 +31,11 @@ public:
 	void write_beginning_on_write_buffer();
 	void launch_middleware_chain();
 	void postpone_timeout();
-	void reinitialize();
+	bool reinitialize();
+	void add_content_length(std::ostringstream& oss);
 
 	void set_delegation_to_task(bool);
+	void set_chain(MiddlewareChain* const&);
 	void add_ongoing_task(Task* const&);
 	void remove_ongoing_task(Task* const& task);
 
@@ -58,7 +60,7 @@ protected:
 	MiddlewareChain*					_chain;
 	// If a task is launched, it is responsible for writing the response to the
 	// ActiveHTTP write buffer, otherwise, it is written by the middleware
-	// callded Sender
+	// called Sender
 	bool								_delegation_to_task;
 	std::list<Task*>					_ongoing_tasks;
 	char								_tmp[BUFFER_LENGTH];

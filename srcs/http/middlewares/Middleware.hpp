@@ -123,11 +123,6 @@ class Sender : public Middleware, public Singleton<Sender>
 		Sender();
 		virtual	~Sender() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
-
-	private:
-		void write_all_on_write_buffer(ActiveHTTP& serv, Response& response,
-													std::ostringstream& oss);
-		void add_content_length(Response& response, std::ostringstream& oss);
 };
  
 std::string get_absolute_path(Request &request, const std::string &path);
