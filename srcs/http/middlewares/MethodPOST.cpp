@@ -20,14 +20,12 @@ void		MethodPOST::body(ActiveHTTP& serv, Request& request, Response& response, M
 
 		int  	fd;
 
-
-		response.delete_header("Transfer-Encoding");
-		response.set_header("Content-Length", "0");
-
 		if ((fd = open(filename, O_RDWR | O_APPEND | O_CREAT, 0777)) < 0)
 			response.set_code(Response::Forbidden);
 		else
 		{
+			response.delete_header("Transfer-Encoding");
+			response.set_header("Content-Length", "0");
 			new POSTTask(fd, serv);
 			response.set_code(Response::Created);
 		}
