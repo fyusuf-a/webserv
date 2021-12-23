@@ -55,7 +55,6 @@ void		Request::parse(std::string& buffer) {
 	_over = true;
 	std::string tmp;
 
-
 	switch(this->get_head()) {
 		case 0:
 			_method = extract_attribute(buffer, " ");
@@ -122,11 +121,11 @@ void		Request::parse(std::string& buffer) {
 					_wrong = true;
 				else 
 					body_chunk = buffer.substr(_lctr, _to_read);
-				if (body_chunk.length() < _to_read) {
+				if (body_chunk.length() < _to_read || buffer.substr(_lctr + _to_read, 2).length() < 2) {
 					_over = false;
 					break;
 				}
-				if (buffer.substr(_lctr + _to_read, 2) != "\r\n")
+				else if (buffer.substr(_lctr + _to_read, 2) != "\r\n")
 					_wrong = true;
 				else {
 					_body += body_chunk;
