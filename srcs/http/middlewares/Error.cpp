@@ -16,6 +16,7 @@ void		Error::body(ActiveHTTP&, Request& request, Response& response, MiddlewareC
 
     int code = response.get_code();
 
+
 	if (code >= 400)
     {
         std::string reason_phrase =

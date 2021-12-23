@@ -18,7 +18,7 @@ std::string get_absolute_path(Request &request, const std::string &path) {
 			absolute_path += "/";
 		size_t i = 0;
 
-		while (path[i] == location_path[i])
+		while (path[i] == location_path[i] && i < path.size() && i < location_path.size())
 			i++;
 
 		if (i < path.size())
@@ -39,10 +39,9 @@ std::string get_absolute_path(Request &request, const std::string &path) {
 }
 
 void		AbsolutePathConcatenator::body(ActiveHTTP&, Request& request, Response& response, MiddlewareChain& next) {
-    if (response.get_code() >= 400) {
-        next();
-        return ;
-    }
+   
+    if (response.get_code() >= 400)
+        return next();
 
     request.set_original_request_path(request.get_path());
 	request.set_path(get_absolute_path(request, request.get_original_request_path()));

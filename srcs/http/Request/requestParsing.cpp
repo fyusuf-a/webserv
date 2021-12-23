@@ -55,6 +55,7 @@ void		Request::parse(std::string& buffer) {
 	_over = true;
 	std::string tmp;
 
+
 	switch(this->get_head()) {
 		case 0:
 			_method = extract_attribute(buffer, " ");
