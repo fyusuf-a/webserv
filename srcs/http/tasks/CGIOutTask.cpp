@@ -55,6 +55,8 @@ bool CGIOutTask::on_readable(int fd) {
 				response.set_header("Transfer-Encoding", "chunked");
 			}
 			_serv.write_beginning_on_write_buffer();
+			if (_serv.get_request().get_method() == "HEAD")
+				return on_close(fd);
 			if (_content_length == -1)
 				TransferEncoding::to_chunk_on_buffer(_serv.get_write_buffer(),
 																	_buffer);

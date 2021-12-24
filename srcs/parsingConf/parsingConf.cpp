@@ -145,7 +145,11 @@ std::vector<std::string> ParsingConf::parsing_methods_value(std::string val, std
     for (start = 0; start != methods.size(); )
     {
         Utils::ft_trim(methods[start]);
-        if (Utils::is_valid(methods[start], "GET") || Utils::is_valid(methods[start], "POST") || Utils::is_valid(methods[start], "DELETE"))
+        if (Utils::is_valid(methods[start], "GET")
+				|| Utils::is_valid(methods[start], "POST")
+				|| Utils::is_valid(methods[start], "DELETE")
+				|| Utils::is_valid(methods[start], "PUT")
+				|| Utils::is_valid(methods[start], "HEAD"))
             start++;
         else
             throw MyException("Directive: '" +  dir + "' : Expected - [GET,POST , DELETE]'");

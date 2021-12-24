@@ -50,6 +50,7 @@ class IndexSelector : public Middleware, public Singleton<IndexSelector>
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
 
+// Also manages HEAD requests
 class MethodGET : public Middleware, public Singleton<MethodGET>
 {
 	public:
@@ -93,6 +94,7 @@ class Error : public Middleware, public Singleton<Error>
 
 };
 
+// Also manages HEAD requests
 class CGIRunner : public Middleware, public Singleton<CGIRunner>
 {
 	private:
