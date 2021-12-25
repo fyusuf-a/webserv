@@ -3,7 +3,9 @@
 
 void		IndexSelector::body(ActiveHTTP&, Request& request, Response& response, MiddlewareChain& next) {
 
-    if (response.get_code() >= 400 || *(request.get_path().end() - 1) != '/') {
+    if (response.get_code() >= 400
+		|| *(request.get_path().end() - 1) != '/'
+		|| !(request.get_method() == "GET" || request.get_method() == "HEAD" || request.get_is_script())) {
         next();
         return ;
     }
