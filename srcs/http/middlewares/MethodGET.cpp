@@ -8,8 +8,8 @@ Log& MethodGET::LOG = Log::getInstance();
 
 void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, MiddlewareChain& next) {
 
-	if (response.get_code() >= 400 ||
-		!(request.get_method() == "GET" || request.get_method() == "HEAD")
+	if (response.get_code() >= 400
+		|| !(request.get_method() == "GET" || request.get_method() == "HEAD")
 		|| request.get_is_script())
         return next();
 	const char *filename = request.get_path().c_str();

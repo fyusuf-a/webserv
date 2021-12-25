@@ -129,7 +129,7 @@ std::vector<std::string> ParsingConf::parsing_methods_value(std::string val, std
         if (!str.empty() && str[0] != ',')
             methods.push_back(str);
         else
-            throw MyException("Directive: '" +  dir + "' : Expected - [GET,POST , DELETE]'");
+            throw MyException("Directive: '" +  dir + "' : Expected - [GET, POST, PUT, HEAD, DELETE]'");
         start = found + 1;
         found = val.find(",", start);
         len = found - start;
@@ -140,7 +140,7 @@ std::vector<std::string> ParsingConf::parsing_methods_value(std::string val, std
     if (!str.empty() && str[0] != ',')
         methods.push_back(str);
     else
-            throw MyException("Directive: '" +  dir + "' : Expected - [GET,POST , DELETE]'");
+            throw MyException("Directive: '" +  dir + "' : Expected - [GET, POST, PUT, HEAD, DELETE]'");
     // check if it's valid methods
     for (start = 0; start != methods.size(); )
     {
@@ -152,7 +152,7 @@ std::vector<std::string> ParsingConf::parsing_methods_value(std::string val, std
 				|| Utils::is_valid(methods[start], "HEAD"))
             start++;
         else
-            throw MyException("Directive: '" +  dir + "' : Expected - [GET,POST , DELETE]'");
+            throw MyException("Directive: '" +  dir + "' : Expected - [GET, POST, PUT, HEAD, DELETE]'");
     }
     return (methods);
 }

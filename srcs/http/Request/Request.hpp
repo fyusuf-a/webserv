@@ -1,15 +1,17 @@
 #ifndef REQUEST_HPP
-# define REQUEST_HPP
+#define REQUEST_HPP
 #include <cstddef>
-# include <iostream>
-# include <map>
-# include "../../parsingConf/serverBlock.hpp"
+#include <iostream>
+#include <map>
+#include "../../parsingConf/serverBlock.hpp"
+#include "../../utils/Log.hpp"
 
 class ServerBlock;
 
 class Request
 {
 	public:
+		static Log& LOG;
 		typedef std::map<std::string, std::string, Utils::cmpStringInsensitive>
 			header_map;
 	private:

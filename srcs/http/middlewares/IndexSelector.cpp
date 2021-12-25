@@ -3,7 +3,7 @@
 
 void		IndexSelector::body(ActiveHTTP&, Request& request, Response& response, MiddlewareChain& next) {
 
-    if (response.get_code() >= 400 || *(request.get_path().end() - 1) != '/' || request.get_method() != "GET"){
+    if (response.get_code() >= 400 || *(request.get_path().end() - 1) != '/') {
         next();
         return ;
     }
