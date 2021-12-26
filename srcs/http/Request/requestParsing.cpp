@@ -83,7 +83,7 @@ void		Request::parse(std::string& buffer) {
 				_headers.insert(std::pair<std::string, std::string>(_field_name, field_value));
 			break;
 		case 5:
-			if (_method == "POST" && _headers.find("Content-Length") != _headers.end()) {
+			if ((_method == "POST" || _method == "PUT") && _headers.find("Content-Length") != _headers.end()) {
 				if (_to_read == 0)
 					_to_read = ::atoi(_headers["Content-Length"].c_str());
 				if (_to_read > _location.get_body_size()) {
@@ -103,7 +103,7 @@ void		Request::parse(std::string& buffer) {
 					_over = false;
 				}
 			}
-			else if (_method == "POST" && _headers.find("Transfer-Encoding") != _headers.end() && _headers["Transfer-Encoding"] == "chunked") {
+			else if ((_method == "POST" || _method == "PUT") && _headers.find("Transfer-Encoding") != _headers.end() && _headers["Transfer-Encoding"] == "chunked") {
 				if (_to_read == 0 && !_last_zero_read) {
 					field_value = extract_attribute(buffer, "\r\n");
 					if (field_value == "")
