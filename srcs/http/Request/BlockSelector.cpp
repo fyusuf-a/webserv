@@ -72,7 +72,6 @@ void		block_selector(ActiveHTTP& actHTTP, Request& request, Response& response) 
 		}
 	}
 	if (set == false) {
-		std::cout << request.get_path() << std::endl;
 		response.set_code(Response::BadRequest);
 		return ;
 	}
