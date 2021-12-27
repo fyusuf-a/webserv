@@ -100,7 +100,7 @@ namespace Utils
             return (true);
         return (false);
     }
-    bool is_valid(std::string &str, std::string const val)
+    bool is_valid(std::string& str, std::string const& val)
     {
         size_t found;
 

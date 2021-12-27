@@ -4,20 +4,20 @@ void								Request::set_over(bool over) {
 	this->_over = over;
 }
 
-void								Request::set_path(std::string path) {
-	this->_path = path;
+void								Request::set_path(const std::string& path) {
+	_path = path;
 }
 
-void								Request::set_query(std::string query) {
-	this->_query = query;
+void								Request::set_query(const std::string& query) {
+	_query = query;
 }
 
-void								Request::set_extra_path(std::string extra_path) {
-	this->_extra_path = extra_path;
+void								Request::set_extra_path(const std::string& extra_path) {
+	_extra_path = extra_path;
 }
 
-void								Request::set_original_request_path(std::string original_path) {
-	this->_original_request_path = original_path;
+void								Request::set_original_request_path(const std::string& original_path) {
+	_original_request_path = original_path;
 }
 
 std::string	const&					Request::get_query(void) const {
@@ -33,7 +33,7 @@ std::string const&					Request::get_method(void) const {
 }
 
 std::string const&					Request::get_path(void) const {
-	return this->_path;
+	return _path;
 }
 
 std::string const&					Request::get_original_request_path(void) const {

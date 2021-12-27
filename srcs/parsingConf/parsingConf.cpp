@@ -16,19 +16,19 @@ ParsingConf &ParsingConf::operator=(const ParsingConf &other)
 }
 
 
-bool is_set(std::vector<std::string> value, std::string directive)
+bool is_set(std::vector<std::string> value, const std::string& directive)
 {
     if (!value.empty())
         throw MyException("Directive: '" +  directive + "' : duplicate symbols");
     return (true);
 }
-bool is_set(std::string value, std::string directive)
+bool is_set(const std::string& value, const std::string& directive)
 {
     if (!value.empty())
         throw MyException("Directive: '" +  directive + "' : duplicate symbols");
     return (true);
 }
-bool is_set(int value, std::string directive)
+bool is_set(int value, const std::string& directive)
 {
     if ((value != -1 && directive == "client_max_body_size") || (value != 80 && directive == "listen") || (value && directive == "host"))
         throw MyException("Directive: '" +  directive + "' : duplicate symbols");
@@ -37,7 +37,7 @@ bool is_set(int value, std::string directive)
 
 
 
-bool ParsingConf::is_serv_block(std::string const &line)
+bool ParsingConf::is_serv_block(const std::string& line)
 {
     int i = 0;
 
@@ -72,7 +72,7 @@ bool ParsingConf::is_location_block(std::string const &line)
 
 
 
-int ParsingConf::parse_directive(std::string const &line, std::string &directive)
+int ParsingConf::parse_directive(const std::string& line, std::string& directive)
 {
     int i = 0;
 
@@ -80,7 +80,8 @@ int ParsingConf::parse_directive(std::string const &line, std::string &directive
         directive += line[i++];
     return (i);
 }
-bool ParsingConf::parse_value(std::string const &line, std::string &value, int i)
+
+bool ParsingConf::parse_value(const std::string& line, std::string& value, int i)
 {
     if (line[line.size() - 1] != ';')
         throw MyException("Line must finish by ';'");
@@ -93,7 +94,7 @@ bool ParsingConf::parse_value(std::string const &line, std::string &value, int i
 
 
 // ---- [Parsing Value] ----- 
-std::vector<std::string> ParsingConf::parsing_index_value(std::string val)
+std::vector<std::string> ParsingConf::parsing_index_value(const std::string& val)
 {
     std::vector<std::string> tab;
 
@@ -111,7 +112,7 @@ std::vector<std::string> ParsingConf::parsing_index_value(std::string val)
     }
     return (tab);
 }
-std::vector<std::string> ParsingConf::parsing_methods_value(std::string val, std::string dir)
+std::vector<std::string> ParsingConf::parsing_methods_value(const std::string& val, const std::string& dir)
 {
     std::string str;
     std::vector<std::string> methods;
@@ -156,7 +157,7 @@ std::vector<std::string> ParsingConf::parsing_methods_value(std::string val, std
     }
     return (methods);
 }
-int ParsingConf::parsing_bool_value(std::string str, std::string dir)
+int ParsingConf::parsing_bool_value(std::string str, const std::string& dir)
 {
     if (Utils::is_valid(str, "on"))
         return (1);
@@ -166,7 +167,7 @@ int ParsingConf::parsing_bool_value(std::string str, std::string dir)
         throw MyException("Directive: '" +  dir + "'  : Expected - [on | off]'");
     return (0);
 }
-std::string ParsingConf::parsing_path_value(std::string str, std::string dir)
+std::string ParsingConf::parsing_path_value(std::string str, const std::string& dir)
 {
     size_t i = 0;
     std::string path;
@@ -180,18 +181,16 @@ std::string ParsingConf::parsing_path_value(std::string str, std::string dir)
         throw MyException("Directive: '" +  dir + "'  invalid modifier '" + path + "'");
     return (path);
 }
-std::string ParsingConf::parsing_cgi_ext_value(std::string str, std::string dir)
+std::string ParsingConf::parsing_cgi_ext_value(std::string str)
 {
     size_t i = 0;
     std::string extention;
 
     for (; i < str.size() && !Utils::is_space(str[i]); i++)
         extention += str[i];
-    if (!Utils::is_valid(extention, ".php"))
-        throw MyException("Directive: '" +  dir + "'  Expected - [test.php]");
     return (extention);
 }
-uint16_t ParsingConf::parsing_port_value(std::string val, std::string dir)
+uint16_t ParsingConf::parsing_port_value(const std::string& val, const std::string& dir)
 {
     int      value;
     uint16_t result;
@@ -206,7 +205,7 @@ uint16_t ParsingConf::parsing_port_value(std::string val, std::string dir)
     result = value;
     return ( result );
 }
-size_t ParsingConf::parsing_body_size_value(std::string val, std::string dir)
+size_t ParsingConf::parsing_body_size_value(const std::string& val, const std::string& dir)
 {
     size_t value;
 
@@ -217,7 +216,7 @@ size_t ParsingConf::parsing_body_size_value(std::string val, std::string dir)
     
     return (value );
 }
-std::string ParsingConf::parsing_name_value(std::string val, std::string dir)
+std::string ParsingConf::parsing_name_value(const std::string& val, const std::string& dir)
 {
     for (int i = 0; val[i]; i++)
     {
@@ -226,7 +225,7 @@ std::string ParsingConf::parsing_name_value(std::string val, std::string dir)
     }
     return (val);
 }
-std::string    ParsingConf::parsing_host_value(std::string val, std::string dir)
+std::string    ParsingConf::parsing_host_value(const std::string& val, const std::string& dir)
 {
     for (size_t i = 0; i < val.size() ; i++)
     {
@@ -235,10 +234,10 @@ std::string    ParsingConf::parsing_host_value(std::string val, std::string dir)
     }
     return (val);
 }
-std::string ParsingConf::parsing_location_path(std::string line)
+std::string ParsingConf::parsing_location_path(const std::string& line)
 {
 
-    std::string location_path = parsing_path_value(&line[8], "location");
+    const std::string& location_path = parsing_path_value(&line[8], "location");
 
     if (location_path == "")
     {
@@ -277,7 +276,7 @@ void  ParsingConf::setup_location_directive(std::string const &line, ServerLocat
         location.set_methods( parsing_methods_value(value, directive) );
 
     else if (directive == "cgi_extension" && is_set(location.get_cgi_ext(), directive) )
-        location.set_cgi_ext( parsing_cgi_ext_value(value, directive) );
+        location.set_cgi_ext( parsing_cgi_ext_value(value) );
 
     else if (directive == "cgi_bin" && is_set(location.get_cgi_bin(), directive) )
         location.set_cgi_bin( parsing_path_value(value, directive) );
@@ -336,7 +335,7 @@ void  ParsingConf::setup_server_directive(std::string const &line, ServerBlock &
 
 
 
-void ParsingConf::setup_location(ITER &start, ITER &end, ServerBlock &server, std::string location_path)
+void ParsingConf::setup_location(ITER &start, ITER &end, ServerBlock &server, const std::string& location_path)
 {
     ServerLocation location;
 
@@ -374,9 +373,9 @@ void ParsingConf::setup_server(ITER &start, ITER &end, ServerBlocks &servers)
             start++;
 
 			if ((*start).find('{') != std::string::npos)
-					brace++, start++;
-            else
-                throw MyException("Directive: \"location\" has no opening \"{\"");
+				brace++, start++;
+			else
+				throw MyException("Directive: \"location\" has no opening \"{\"");
 
             ITER block_start = start;
 
@@ -412,8 +411,8 @@ void ParsingConf::setup_servers(std::vector<std::string> &content, ServerBlocks 
         {
             it++;
 			if ((*it).find('{') != std::string::npos)
-					brace++, it++;
-            else
+				brace++, it++;
+			else
                 throw MyException("Directive: \"server\" has no opening \"{\"");
 
             ITER block_start = it;
@@ -501,7 +500,7 @@ std::vector<std::string> ParsingConf::parsing_line(std::string line, std::vector
     return (content);
 }
 
-void ParsingConf::parsing(std::string path, ServerBlocks &servers)
+void ParsingConf::parsing(const std::string& path, ServerBlocks &servers)
 {
     std::string                 line;
     std::vector<std::string>    content;

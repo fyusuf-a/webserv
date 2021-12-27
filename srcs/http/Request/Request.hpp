@@ -62,10 +62,10 @@ class Request
 		bool								get_wrong(void) const;
 		bool								get_too_big_body(void) const;
 		void								set_over(bool over);
-		void								set_path(std::string path);
-		void								set_original_request_path(std::string path);
-		void								set_query(std::string path);
-		void								set_extra_path(std::string path);
+		void								set_path(const std::string&);
+		void								set_original_request_path(const std::string&);
+		void								set_query(const std::string&);
+		void								set_extra_path(const std::string&);
 		std::string const&					get_query(void) const;
 		std::string const&					get_extra_path(void) const;
 		std::string const&					get_original_request_path(void) const;
