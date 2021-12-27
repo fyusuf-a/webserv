@@ -45,6 +45,7 @@ class MethodChecker : public Middleware, public Singleton<MethodChecker>
 class IndexSelector : public Middleware, public Singleton<IndexSelector>
 {
 	public:
+		static Log& LOG;
 		IndexSelector(){};
 		virtual	~IndexSelector() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
