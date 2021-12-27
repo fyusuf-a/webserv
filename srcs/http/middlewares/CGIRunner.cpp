@@ -14,7 +14,6 @@ void		CGIRunner::set_env(std::map<std::string, std::string>& env, ActiveHTTP con
 	Request::header_map::const_iterator it;
 	std::ostringstream oss;
 	
-	// Todo: make headers case insensitive
 	// Setting AUTH_TYPE
 	env["AUTH_TYPE"] = "";
 
@@ -41,7 +40,12 @@ void		CGIRunner::set_env(std::map<std::string, std::string>& env, ActiveHTTP con
 	env["GATEWAY_INTERFACE"] = "CGI/1.1";
 
 	// Setting PATH_INFO
+#ifdef TEST42
+	// The test CGI executable from 42 does not follow RFC's rules
+	env["PATH_INFO"] = request.get_original_request_path();
+#else
 	env["PATH_INFO"] = request.get_extra_path();
+#endif
 
 	// Setting PATH_TRANSLATED (same as SCRIPT_FILENAME?)
 	env["PATH_TRANSLATED"] = env["PATH_INFO"].empty() ? "" : request.get_path();
@@ -81,6 +85,11 @@ void		CGIRunner::set_env(std::map<std::string, std::string>& env, ActiveHTTP con
 
 	// For PHP CGI which throws a tantrum if this environment variable is unset
 	env["REDIRECT_STATUS"] = "200";
+
+	// For the 42 test CGI executable which throws a tantrum if this environment variable is unset
+#ifdef TEST42
+	env["REQUEST_URI"] = request.get_original_request_path();
+#endif
 }
 
 void CGIRunner::convert_map_to_tab(std::map<std::string, std::string>env

@@ -2,9 +2,7 @@
 
 make -C ..
 
-sed "s|%ROOT%|$PWD|g" 42_tester_stub.conf > 42_tester.conf
-
-../Webserv 42_tester.conf &
+../Webserv test42/test42.conf &
 
 sleep 5
 
@@ -59,15 +57,15 @@ kill $!
 
 
 # \\ -------------- POST --------------- //
-if [ "$(diff random1.txt ./html/random-output1.txt)" != "" ]; then
+if [ "$(diff random1.txt ./test42/random-output1.txt)" != "" ]; then
 	echo "Error: POST 1"
 	exit 1
 fi
-if [ "$(diff random2.txt ./html/random-output2.txt)" != "" ]; then
+if [ "$(diff random2.txt ./test42/random-output2.txt)" != "" ]; then
 	echo "Error: POST 2"
 	exit 1
 fi
-if [ "$(diff random3.txt ./html/random-output3.txt)" != "" ]; then
+if [ "$(diff random3.txt ./test42/random-output3.txt)" != "" ]; then
 	echo "Error: POST 3"
 	exit 1
 fi
@@ -94,5 +92,5 @@ fi
 
 rm Response/GET/my_*
 rm random*
-rm ./html/random* 
+rm ./test42/random* 
 exit 0

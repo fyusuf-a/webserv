@@ -51,6 +51,9 @@ debug: CFLAGS +=
 debug: CFLAGS += -D DEBUG_FLAG
 debug: all
 
+test42: CFLAGS += -D TEST42 -D DEBUG_FLAG
+test42: all
+
 clean :
 	rm -f $(O_FILES)
 	@echo "\033[33;36mDeleting - *.o...\033[0m"
