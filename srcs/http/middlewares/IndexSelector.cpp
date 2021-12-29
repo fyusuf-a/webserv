@@ -25,7 +25,8 @@ void		IndexSelector::body(ActiveHTTP&, Request& request, Response& response, Mid
         request.set_path(idx);
     else if (request.get_location().get_auto_index() == false)
         response.set_code(Response::NotFound);
-
+    else
+        response.set_index_display(true);
 
 
     next();

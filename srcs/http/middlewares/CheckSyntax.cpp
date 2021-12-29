@@ -4,6 +4,7 @@
 void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & response, MiddlewareChain& next) {
 	(void)actHTTP;
 
+	std::cout << request.get_wrong() << request << std::endl;
     if (response.get_code() >= 400) {
         next();
         return ;

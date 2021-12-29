@@ -6,12 +6,35 @@
 
 Log& MethodGET::LOG = Log::getInstance();
 
+void		display_index(Request& request, Response& response) {
+	std::ostringstream oss;
+
+	oss << "<html>\n<head><title>Index of "
+		<< request.get_original_request_path()
+		<< "</title></head>\n<body>"
+		<< "<pre>Name\n";
+	
+	oss	<< "<a href=\"http://"
+		<< request.get_server().get_server_conf().getName()
+		<< request.get_original_request_path() << "\">"
+		<< request.get_original_request_path()
+		<< "</a></pre></body>";
+
+	response.set_body(oss.str());
+}
+
 void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, MiddlewareChain& next) {
 
 	if (response.get_code() >= 400
 		|| !(request.get_method() == "GET" || request.get_method() == "HEAD")
 		|| request.get_is_script())
         return next();
+
+    if (response.get_index_display()) {
+    	display_index(request, response);
+    	return next();
+    }
+
 	const char *filename = request.get_path().c_str();
 
 	if (!Utils::is_file(filename) || access(filename, 0) != 0)

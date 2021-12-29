@@ -80,12 +80,21 @@ std::string Response::http_code_to_str(http_code code) {
 void					Response::set_code(unsigned int code) {
 	this->_code = code;
 }
+
+void					Response::set_index_display(bool status) {
+	this->_index_display = status;
+}
+
 unsigned int 			Response::get_code(void) const {
 	return (http_code)this->_code;
 }
 
 std::string		Response::get_body(void) const {
 	return this->_body;
+}
+
+bool			Response::get_index_display(void) const {
+	return this->_index_display;
 }
 
 const Response::header_map& Response::get_headers() const {
@@ -110,6 +119,7 @@ Response & 		Response::operator=( Response const & rhs ){
 	{
 		_custom_reason_phrase = rhs._custom_reason_phrase;
 		_code = rhs._code;
+		_index_display = rhs._index_display;
 		_body = rhs._body;
 		_headers = rhs._headers;
 		_ready = rhs._ready;
@@ -122,7 +132,7 @@ Response::Response( Response const & src ) {
 	*this = src;
 }
 
-Response::Response() : _code(OK), _ready(false), _beginning_written_on_write_buffer(false) {
+Response::Response() : _code(OK), _ready(false), _beginning_written_on_write_buffer(false), _index_display(false) {
 					   //, _written_on_write_buffer(false) {
 }
 

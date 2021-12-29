@@ -8,6 +8,7 @@ Sender::Sender() {
 
 void Sender::body(ActiveHTTP& serv, Request& request, Response& response, MiddlewareChain&) {
 
+	std::cout << response.get_code() << std::endl;
 	// If the client wants to close the connection, grant its wish
 	try {
 		if (request.get_headers().at("Connection") == "close")
