@@ -51,6 +51,9 @@ std::string Response::http_code_to_str(http_code code) {
 		case 408:
 			return "Request Timeout";
 		break;
+		case 413:
+			return "Payload Too Large";
+		break;
 		case 501:
 			return "Not Implemented";
 		break;
@@ -73,7 +76,7 @@ std::string Response::http_code_to_str(http_code code) {
 			return "A Timeout Occurred";
 		break;
 		default:
-			return "Unknown Error";
+			return "I'm a teapot";
 	}
 }
 
