@@ -13,7 +13,7 @@ void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & respo
 	if (request.get_wrong())
 		response.set_code(Response::BadRequest);
 	else if (request.get_too_big_body())
-		response.set_code(Response::RequestEntityTooLarge);	
+		response.set_code(Response::PayloadTooLarge);	
 	else if (met != "GET" && met != "POST" && met != "DELETE" && met != "PUT"
 															&& met != "HEAD")
 		response.set_code(Response::NotImplemented);

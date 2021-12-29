@@ -7,6 +7,7 @@
 #include "../middlewares/MiddlewareChain.hpp"
 #include "Task.hpp"
 
+#define POST_BUFFER_LENGTH 10000000
 
 class POSTTask : public Task
 {
@@ -17,6 +18,7 @@ class POSTTask : public Task
 		};
 
 		ssize_t     _head;      
+		size_t		_size;
 
     public:
 		enum does_write_on_write_buffer {

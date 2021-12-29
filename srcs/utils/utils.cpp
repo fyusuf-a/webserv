@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cctype>
 #include <iomanip>
+#include <fcntl.h>
 
 
 namespace Utils
@@ -192,5 +193,14 @@ namespace Utils
         ss << i;
         return ss.str();
     }
+
+	bool set_fd_as_non_blocking(int fd, const char* fd_description) {
+		if (fcntl(fd, F_SETFL, O_NONBLOCK) < 0)
+		{
+			Log::getInstance().error() << "cannot set " << fd_description << " as nonblocking" << std::endl;
+			return false;
+		}
+		return true;
+	}
 }
 

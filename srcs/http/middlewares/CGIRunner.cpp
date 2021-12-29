@@ -1,5 +1,6 @@
 #include "Middleware.hpp"
 #include <stdio.h>
+#include <unistd.h>
 #include <string>
 #include <sys/wait.h>
 #include <fcntl.h>
@@ -8,7 +9,7 @@
 
 Log& CGIRunner::LOG = Log::getInstance();
 
-void		CGIRunner::set_env(std::map<std::string, std::string>& env, ActiveHTTP const& server, Request const& request) {
+void		CGIRunner::set_env(Request::header_map& env, ActiveHTTP const& server, Request const& request) {
 	(void)server;
 	Request::header_map const& headers = request.get_headers();
 	Request::header_map::const_iterator it;
@@ -90,14 +91,31 @@ void		CGIRunner::set_env(std::map<std::string, std::string>& env, ActiveHTTP con
 #ifdef TEST42
 	env["REQUEST_URI"] = request.get_original_request_path();
 #endif
+
+	// Adding headers from the request
+	Request::header_map::iterator jt;
+	for (Request::header_map::const_iterator it = headers.begin();
+			it != headers.end(); it++) {
+		std::string header_name = it->first;
+		// See RFC3875, section 4.1.18.
+		for (size_t i = 0; i < header_name.size(); i++) {
+			if (header_name[i] == '-') {
+				header_name[i] = '_';
+				continue;
+			}
+			header_name[i] = std::toupper(header_name[i]);
+		}
+		jt = env.find(header_name);
+		if (jt == env.end())
+			env["HTTP_" + header_name] = it->second;
+	}
 }
 
-void CGIRunner::convert_map_to_tab(std::map<std::string, std::string>env
-															, char** env_tab) {
+void CGIRunner::convert_map_to_tab(Request::header_map env , char** env_tab) {
 	env_tab[env.size()] = 0;
 	std::string tmp;
 	int i = 0;
-	for (std::map<std::string, std::string>::iterator it = env.begin()
+	for (Request::header_map::iterator it = env.begin()
 												; it != env.end(); it++, i++) {
 		tmp = it->first + "=" + it->second;
 		env_tab[i] = new char[tmp.size() + 1];
@@ -110,7 +128,7 @@ void		CGIRunner::body(ActiveHTTP& server, Request& request
 	if (response.get_code() >= 400 || !request.get_is_script())
 		return next();
 
-	std::map<std::string, std::string> env;
+	Request::header_map env;
 	set_env(env, server, request);
 	char *env_tab[env.size() + 1];
 	convert_map_to_tab(env, env_tab);
@@ -129,6 +147,17 @@ void		CGIRunner::body(ActiveHTTP& server, Request& request
 	int out_pipe[2];
 	pipe(in_pipe);
 	pipe(out_pipe);
+	if (!Utils::set_fd_as_non_blocking(in_pipe[0], "in-pipe read extremity")
+		|| !Utils::set_fd_as_non_blocking(in_pipe[1], "in-pipe write extremity")
+		|| !Utils::set_fd_as_non_blocking(out_pipe[0], "out-pipe read extremity")
+		|| !Utils::set_fd_as_non_blocking(out_pipe[1], "out-pipe write extremity"))
+	{
+		close(in_pipe[0]);
+		close(in_pipe[1]);
+		close(out_pipe[0]);
+		close(out_pipe[1]);
+		return next();
+	}
 	int pid = fork();
 	if (pid == 0) {
 		close(in_pipe[1]);

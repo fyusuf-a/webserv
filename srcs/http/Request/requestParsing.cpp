@@ -14,6 +14,7 @@ std::string	Request::extract_attribute(std::string& buffer, std::string terminat
 
 	if (buffer.find("\r\n\r\n", _lctr) < buffer.find(terminating, _lctr)) {
 		terminating = "\r\n\r\n";
+		std::cout << "oops 1" << std::endl;;
 		_wrong = true;
 	}
 	length = buffer.find(terminating, _lctr) - _lctr;
@@ -46,7 +47,7 @@ void		Request::manage_head(std::string& buffer) {
 }
 
 void		Request::parse(std::string& buffer) {
-	//LOG.debug() << "buffer (head = " << _head << "):" << std::endl << buffer << std::endl;
+	LOG.debug() << "buffer (head = " << _head << "):\n_" << buffer << "_" << std::endl;
 	_lctr = 0;
 	while ((_head == 1 || _head == 2) && buffer[_lctr] == ' ')
 		++_lctr;
@@ -121,15 +122,20 @@ void		Request::parse(std::string& buffer) {
 					break;
 				}
 				else if (_last_zero_read)
+				{
+					std::cout << "oops 2" << std::endl;;
 					_wrong = true;
+				}
 				else 
 					body_chunk = buffer.substr(_lctr, _to_read);
 				if (body_chunk.length() < _to_read || buffer.substr(_lctr + _to_read, 2).length() < 2) {
 					_over = false;
 					break;
 				}
-				else if (buffer.substr(_lctr + _to_read, 2) != "\r\n")
+				else if (buffer.substr(_lctr + _to_read, 2) != "\r\n") {
+					std::cout << "oops 3" << std::endl;;
 					_wrong = true;
+				}
 				else {
 					_body += body_chunk;
 					_lctr += body_chunk.length() + 2;

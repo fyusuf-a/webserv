@@ -11,6 +11,7 @@
 #include <dirent.h>
 #include <sstream>
 #include <map>
+#include "Log.hpp"
 
 namespace Utils
 {
@@ -43,6 +44,8 @@ namespace Utils
     int ft_find(std::string str, std::string find);
     int is_dir(const char *name);
     std::string toString(int &i);
+
+	bool set_fd_as_non_blocking(int fd, const char* fd_description);
 };
 
 struct MyException : public std::exception
