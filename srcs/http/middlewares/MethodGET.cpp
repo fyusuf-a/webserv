@@ -3,23 +3,61 @@
 #include <stdio.h>
 #include <string>
 #include "../tasks/GETTask.hpp"
+#include <sys/types.h>
+#include <dirent.h>
 
 Log& MethodGET::LOG = Log::getInstance();
 
+
+int         is_script2(Request& request, std::string path) {
+    std::string absolute_path = get_absolute_path(request, path);
+
+    struct stat s;
+    if (!stat(absolute_path.c_str(), &s)) {
+        if (s.st_mode & S_IFDIR)
+            return (0);
+        return (1);
+    }
+    else
+        return (0);
+}
+
 void		display_index(Request& request, Response& response) {
 	std::ostringstream oss;
+	DIR *dir;
+    struct dirent *ent;
+	struct stat s;    
+	std::string file_path;
+	std::string final_slash;
 
 	oss << "<html>\n<head><title>Index of "
 		<< request.get_original_request_path()
 		<< "</title></head>\n<body>"
 		<< "<pre>Name\n";
-	
-	oss	<< "<a href=\"http://"
-		<< request.get_server().get_server_conf().getName()
-		<< request.get_original_request_path() << "\">"
-		<< request.get_original_request_path()
-		<< "</a></pre></body>";
 
+    if ((dir = opendir(request.get_path().c_str())) != NULL) {
+      while ((ent = readdir(dir)) != NULL) {
+      	file_path = request.get_path() + ent->d_name;
+	    final_slash = "";
+	    if (stat(file_path.c_str(), &s)) {
+	    	response.set_code(Response::UnknownError);
+	    	return ;
+	    }
+	    if (s.st_mode & S_IFDIR)
+	    	final_slash = "/";
+		oss	<< "<a href=\"http://"
+			<< request.get_server().get_server_conf().getName()
+			<< request.get_original_request_path() << ent->d_name << final_slash <<  "\">"
+			<< ent->d_name << final_slash
+			<< "</a>\n";
+      }
+      closedir(dir);
+      oss << "</pre></body>";
+    } 
+    else {
+      response.set_code(Response::UnknownError);
+      return ;
+    }
 	response.set_body(oss.str());
 }
 
