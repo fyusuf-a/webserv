@@ -27,7 +27,7 @@ std::string	Request::extract_attribute(std::string& buffer, std::string terminat
 }
 
 void		Request::manage_head(std::string& buffer) {
-	if (_wrong == true || _too_big_body == true)
+	if (_wrong == true)
 		_head = 6;
 	if (_head == 6 || _head == 5)
 		return ;
@@ -122,22 +122,18 @@ void		Request::parse(std::string& buffer) {
 					break;
 				}
 				else if (_last_zero_read)
-				{
-					std::cout << "oops 2" << std::endl;;
 					_wrong = true;
-				}
 				else 
 					body_chunk = buffer.substr(_lctr, _to_read);
 				if (body_chunk.length() < _to_read || buffer.substr(_lctr + _to_read, 2).length() < 2) {
 					_over = false;
 					break;
 				}
-				else if (buffer.substr(_lctr + _to_read, 2) != "\r\n") {
-					std::cout << "oops 3" << std::endl;;
+				else if (buffer.substr(_lctr + _to_read, 2) != "\r\n")
 					_wrong = true;
-				}
 				else {
-					_body += body_chunk;
+					if (!_too_big_body)
+						_body += body_chunk;
 					_lctr += body_chunk.length() + 2;
 				}
 				if (_body.length() > _location.get_body_size())
