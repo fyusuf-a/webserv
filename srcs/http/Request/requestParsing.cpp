@@ -14,7 +14,6 @@ std::string	Request::extract_attribute(std::string& buffer, std::string terminat
 
 	if (buffer.find("\r\n\r\n", _lctr) < buffer.find(terminating, _lctr)) {
 		terminating = "\r\n\r\n";
-		std::cout << "oops 1" << std::endl;;
 		_wrong = true;
 	}
 	length = buffer.find(terminating, _lctr) - _lctr;
