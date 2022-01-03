@@ -255,7 +255,7 @@ void  ParsingConf::setup_location_directive(std::string const &line, ServerLocat
     std::string value;
 
     int i = parse_directive(line, directive);
-    if (Utils::is_valid_directive(directive) && directive != "index" && directive != "root")
+    if (Utils::is_valid_directive(directive) && directive != "index" && directive != "root" && directive != "cgi_bin" && directive != "cgi_extension")
         throw MyException("Directive: '" +  directive + "' : Only allowed in server block");
 
     if (!Utils::is_valid_directive_location(directive))
@@ -299,7 +299,7 @@ void  ParsingConf::setup_server_directive(std::string const &line, ServerBlock &
     std::string value;
 
     int i = parse_directive(line, directive);
-    if (Utils::is_valid_directive_location(directive) && directive != "index" && directive != "root")
+    if (Utils::is_valid_directive_location(directive) && directive != "index" && directive != "root" && directive != "cgi_bin" && directive != "cgi_extension")
         throw MyException("Directive: '" +  directive + "' : only Allowed in location block");
 
     if (!Utils::is_valid_directive(directive))
@@ -309,6 +309,12 @@ void  ParsingConf::setup_server_directive(std::string const &line, ServerBlock &
 
     if (value.empty())
         throw MyException("Directive: '" +  directive + "' : invalid number of arguments");
+
+    else if (directive == "cgi_extension" && is_set(server._serverConf.get_cgi_ext(), directive) )
+        server._serverConf.set_cgi_ext( parsing_cgi_ext_value(value) );
+
+    else if (directive == "cgi_bin" && is_set(server._serverConf.get_cgi_bin(), directive) )
+        server._serverConf.set_cgi_bin( parsing_path_value(value, directive) );
 
     else if ( directive == "index" && is_set(server._serverConf.getIndex(), directive) )
         server._serverConf.setIndex( parsing_index_value(value) );
