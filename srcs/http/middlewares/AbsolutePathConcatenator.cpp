@@ -27,14 +27,15 @@ std::string get_absolute_path(Request &request, const std::string &path) {
 				i += 1;
 			absolute_path += &(path[i]);
 		}
-
-		if (*(absolute_path.end() - 1) != '/' && Utils::is_dir(absolute_path.c_str()))
-			absolute_path += "/";
 	}
 	else if (request.get_server().get_server_conf().getRoot() == "")
 		absolute_path = "";
 	else
 		absolute_path = request.get_server().get_server_conf().getRoot() + request.get_path();
+
+	if (*(absolute_path.end() - 1) != '/' && Utils::is_dir(absolute_path.c_str()))
+		absolute_path += "/";
+
 	return (absolute_path);
 }
 
