@@ -14,6 +14,12 @@
 
 namespace Utils
 {
+	struct cmpCharInsensitive {
+		bool operator() (const unsigned char a, const unsigned char b);
+	};
+	struct cmpStringInsensitive {
+		bool operator()(const std::string&, const std::string&) const;
+	};
 	std::string month_to_str(unsigned int i);
 	std::string weekday_to_str(unsigned int i);
 	std::ostream& print_date(std::ostream& os, bool show_weekday = true, bool show_gmt = true);
@@ -23,7 +29,7 @@ namespace Utils
     bool is_valid_methods(std::string const &s);
     bool is_valid_directive(std::string const &dir);
     bool is_valid_directive_location(std::string const &dir);
-    bool is_valid(std::string  &str, std::string const val);
+    bool is_valid(std::string& str, std::string const& val);
     bool is_digits(std::string const &str);
     bool is_digit(char const c);
     bool is_file(const char *s);

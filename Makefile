@@ -15,7 +15,6 @@ SRC = 	main.cpp\
 	srcs/ipaddress/INetAddress.cpp\
 	srcs/http/middlewares/CheckSyntax.cpp\
 	srcs/http/middlewares/Error.cpp\
-	srcs/http/middlewares/BlockSelector.cpp\
 	srcs/http/middlewares/MethodChecker.cpp\
 	srcs/http/middlewares/MethodGET.cpp\
 	srcs/http/middlewares/MethodDELETE.cpp\
@@ -26,14 +25,14 @@ SRC = 	main.cpp\
 	srcs/http/tasks/Task.cpp\
 	srcs/http/tasks/GETTask.cpp\
 	srcs/http/tasks/POSTTask.cpp\
-	srcs/http/tasks/CGITask.cpp\
+	srcs/http/tasks/CGIOutTask.cpp\
 	srcs/http/middlewares/Middleware.cpp\
 	srcs/http/middlewares/MiddlewareChain.cpp\
 	srcs/http/middlewares/AbsolutePathConcatenator.cpp\
 	srcs/http/middlewares/CGIRunner.cpp\
 	srcs/http/Request/Request.cpp\
 	srcs/http/Request/requestParsing.cpp\
-	srcs/http/Request/checkIncompleteRequest.cpp\
+	srcs/http/Request/BlockSelector.cpp\
 	srcs/http/Response/Response.cpp\
 
 NAME = Webserv
@@ -51,6 +50,9 @@ $(NAME) : $(O_FILES)
 debug: CFLAGS +=
 debug: CFLAGS += -D DEBUG_FLAG
 debug: all
+
+test42: CFLAGS += -D TEST42 -D DEBUG_FLAG
+test42: all
 
 clean :
 	rm -f $(O_FILES)

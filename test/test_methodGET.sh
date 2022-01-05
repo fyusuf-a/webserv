@@ -2,9 +2,7 @@
 
 make -C ..
 
-sed "s|%ROOT%|$PWD|g" 42_tester_stub.conf > 42_tester.conf
-
-../Webserv 42_tester.conf &
+../Webserv test42/test42.conf &
 
 sleep 5
 
@@ -12,65 +10,65 @@ bash Requete/requete.sh
 kill $!
 
 # \\ -------------- GET--------------- //
-if [ "$(diff ./Response/GET/my_resp1 ./Response/GET/resp1)" != "" ]; then
-	echo "Error: Response/GET 1"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp2 ./Response/GET/resp2)" != "" ]; then
-	echo "Error: Response/GET 2"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp3 ./Response/GET/resp3)" != "" ]; then
-	echo "Error: Response/GET 3"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp4 ./Response/GET/resp4)" != "" ]; then
-	echo "Error: Response/GET 4"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp5 ./Response/GET/resp5)" != "" ]; then
-	echo "Error: Response/GET 5"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp6 ./Response/GET/resp6)" != "" ]; then
-	echo "Error: Response/GET 6"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp7 ./Response/GET/resp7)" != "" ]; then
-	echo "Error: Response/GET 7"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp8 ./Response/GET/resp8)" != "" ]; then
-	echo "Error: Response/GET 8"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp9 ./Response/GET/resp9)" != "" ]; then
-	echo "Error: Response/GET 9"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp10 ./Response/GET/resp10)" != "" ]; then
-	echo "Error: Response/GET 10"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp11 ./Response/GET/resp11)" != "" ]; then
-	echo "Error: Response/GET 11"
-	exit 1
-fi
+# if [ "$(diff ./Response/GET/my_resp1 ./Response/GET/resp1)" != "" ]; then
+# 	echo "Error: Response/GET 1"
+# 	exit 1
+# fi
+# if [ "$(diff ./Response/GET/my_resp2 ./Response/GET/resp2)" != "" ]; then
+# 	echo "Error: Response/GET 2"
+# 	exit 1
+# fi
+# if [ "$(diff ./Response/GET/my_resp3 ./Response/GET/resp3)" != "" ]; then
+# 	echo "Error: Response/GET 3"
+# 	exit 1
+# fi
+# if [ "$(diff ./Response/GET/my_resp4 ./Response/GET/resp4)" != "" ]; then
+# 	echo "Error: Response/GET 4"
+# 	exit 1
+# fi
+# if [ "$(diff ./Response/GET/my_resp5 ./Response/GET/resp5)" != "" ]; then
+# 	echo "Error: Response/GET 5"
+# 	exit 1
+# fi
+# if [ "$(diff ./Response/GET/my_resp6 ./Response/GET/resp6)" != "" ]; then
+# 	echo "Error: Response/GET 6"
+# 	exit 1
+# fi
+# if [ "$(diff ./Response/GET/my_resp7 ./Response/GET/resp7)" != "" ]; then
+# 	echo "Error: Response/GET 7"
+# 	exit 1
+# fi
+# if [ "$(diff ./Response/GET/my_resp8 ./Response/GET/resp8)" != "" ]; then
+# 	echo "Error: Response/GET 8"
+# 	exit 1
+# fi
+# if [ "$(diff ./Response/GET/my_resp9 ./Response/GET/resp9)" != "" ]; then
+# 	echo "Error: Response/GET 9"
+# 	exit 1
+# fi
+# if [ "$(diff ./Response/GET/my_resp10 ./Response/GET/resp10)" != "" ]; then
+# 	echo "Error: Response/GET 10"
+# 	exit 1
+# fi
+# if [ "$(diff ./Response/GET/my_resp11 ./Response/GET/resp11)" != "" ]; then
+# 	echo "Error: Response/GET 11"
+# 	exit 1
+# fi
 
 
 # \\ -------------- POST --------------- //
-# if [ "$(diff ./Response/POST/my_resp1 ./Response/POST/resp1)" != "" ]; then
-# 	echo "Error: Response/POST 1"
-# 	exit 1
-# fi
-# if [ "$(diff ./Response/POST/my_resp2 ./Response/POST/resp2)" != "" ]; then
-# 	echo "Error: Response/POST 2"
-# 	exit 1
-# fi
-# if [ "$(diff ./Response/POST/my_resp3 ./Response/POST/resp3)" != "" ]; then
-# 	echo "Error: Response/POST 3"
-# 	exit 1
-# fi
+if [ "$(diff random1.txt ./test42/random-output1.txt)" != "" ]; then
+	echo "Error: POST 1"
+	exit 1
+fi
+if [ "$(diff random2.txt ./test42/random-output2.txt)" != "" ]; then
+	echo "Error: POST 2"
+	exit 1
+fi
+if [ "$(diff random3.txt ./test42/random-output3.txt)" != "" ]; then
+	echo "Error: POST 3"
+	exit 1
+fi
 # if [ "$(diff ./Response/POST/my_resp4 ./Response/POST/resp4)" != "" ]; then
 # 	echo "Error: Response/POST 4"
 # 	exit 1
@@ -92,5 +90,7 @@ fi
 # 	exit 1
 # fi
 
-rm -f Response/GET/my_*
+rm Response/GET/my_*
+rm random*
+rm ./test42/random* 
 exit 0

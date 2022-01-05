@@ -1,24 +1,30 @@
 #ifndef REQUEST_HPP
-# define REQUEST_HPP
+#define REQUEST_HPP
 #include <cstddef>
-# include <iostream>
-# include <map>
-# include "../../parsingConf/serverBlock.hpp"
+#include <iostream>
+#include <map>
+#include "../../parsingConf/serverBlock.hpp"
+#include "../../utils/Log.hpp"
 
 class ServerBlock;
 
 class Request
 {
+	public:
+		static Log& LOG;
+		typedef std::map<std::string, std::string, Utils::cmpStringInsensitive>
+			header_map;
 	private:
 		std::string	_method;
 		std::string _path;
 		std::string _original_request_path;
 		std::string _protocol;
-		std::map<std::string, std::string>	_headers;
+		header_map	_headers;
 		std::string _body;
 		int			_head;
 		bool		_over;
 		bool		_wrong;
+		bool		_too_big_body;
 		bool		_last_zero_read;
 		std::string _residual;
 		std::string	_field_name;
@@ -45,19 +51,21 @@ class Request
 		void								manage_head(std::string &buffer);
 		//void								checkIncompleteRequest(std::string& buffer) const;
 		std::string const&					get_method(void) const;
+		void								set_method(std::string method);
 		std::string const&					get_path(void) const;
 		std::string const&					get_protocol(void) const;
-		std::map<std::string, std::string>	const& get_headers(void) const;
+		header_map const&					get_headers(void) const;
 		std::string const&					get_body(void) const;
 		std::string const&					get_residual(void) const;
 		int									get_head(void) const;
 		bool								get_over(void) const;
 		bool								get_wrong(void) const;
+		bool								get_too_big_body(void) const;
 		void								set_over(bool over);
-		void								set_path(std::string path);
-		void								set_original_request_path(std::string path);
-		void								set_query(std::string path);
-		void								set_extra_path(std::string path);
+		void								set_path(const std::string&);
+		void								set_original_request_path(const std::string&);
+		void								set_query(const std::string&);
+		void								set_extra_path(const std::string&);
 		std::string const&					get_query(void) const;
 		std::string const&					get_extra_path(void) const;
 		std::string const&					get_original_request_path(void) const;
@@ -66,7 +74,7 @@ class Request
 		ServerBlock	const 					&get_server(void) const;
 
 		void 								set_location(ServerLocation location);
-		ServerLocation const 				&get_location(void) const;
+		ServerLocation 						&get_location(void);
 
 		bool								get_treated_by_middlewares(void) const;
 		void								set_treated_by_middlewares(bool);

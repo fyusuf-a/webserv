@@ -3,18 +3,17 @@
 #include <string>
 #include <sys/wait.h>
 #include <fcntl.h>
-#include "../tasks/CGITask.hpp"
-#define BUFFER_SIZE 1024
+#include "../tasks/CGIOutTask.hpp"
+#include "../tasks/POSTTask.hpp"
 
 Log& CGIRunner::LOG = Log::getInstance();
 
 void		CGIRunner::set_env(std::map<std::string, std::string>& env, ActiveHTTP const& server, Request const& request) {
 	(void)server;
-	std::map<std::string, std::string> headers = request.get_headers();
-	std::map<std::string, std::string>::const_iterator it;
+	Request::header_map const& headers = request.get_headers();
+	Request::header_map::const_iterator it;
 	std::ostringstream oss;
 	
-	// Todo: make headers case insensitive
 	// Setting AUTH_TYPE
 	env["AUTH_TYPE"] = "";
 
@@ -41,7 +40,12 @@ void		CGIRunner::set_env(std::map<std::string, std::string>& env, ActiveHTTP con
 	env["GATEWAY_INTERFACE"] = "CGI/1.1";
 
 	// Setting PATH_INFO
+#ifdef TEST42
+	// The test CGI executable from 42 does not follow RFC's rules
+	env["PATH_INFO"] = request.get_original_request_path();
+#else
 	env["PATH_INFO"] = request.get_extra_path();
+#endif
 
 	// Setting PATH_TRANSLATED (same as SCRIPT_FILENAME?)
 	env["PATH_TRANSLATED"] = env["PATH_INFO"].empty() ? "" : request.get_path();
@@ -81,6 +85,11 @@ void		CGIRunner::set_env(std::map<std::string, std::string>& env, ActiveHTTP con
 
 	// For PHP CGI which throws a tantrum if this environment variable is unset
 	env["REDIRECT_STATUS"] = "200";
+
+	// For the 42 test CGI executable which throws a tantrum if this environment variable is unset
+#ifdef TEST42
+	env["REQUEST_URI"] = request.get_original_request_path();
+#endif
 }
 
 void CGIRunner::convert_map_to_tab(std::map<std::string, std::string>env
@@ -108,9 +117,6 @@ void		CGIRunner::body(ActiveHTTP& server, Request& request
 
 	std::string const& cgi_program =
 								request.get_location().get_cgi_bin().c_str();
-	//char* cgi_program = new char [cgi_program_str.size() + 1];
-	//cgi_program = const_cast<char*>(cgi_program_str.c_str());
-	//char* cgi_script  = (char*)request.get_path().c_str();
 	
 	char* args[3];
 	args[0] = (char*)cgi_program.c_str();
@@ -119,31 +125,27 @@ void		CGIRunner::body(ActiveHTTP& server, Request& request
 
 	LOG.info() << "Launching \"" << args[0] << " " << args[1] <<  "\"" << std::endl;
 
-	//int in_pipe[2];
+	int in_pipe[2];
 	int out_pipe[2];
-	//pipe(in_pipe);
+	pipe(in_pipe);
 	pipe(out_pipe);
 	int pid = fork();
 	if (pid == 0) {
-		//close(in_pipe[1]);
+		close(in_pipe[1]);
 		close(out_pipe[0]);
-		//dup2(in_pipe[0], 0);
+		dup2(in_pipe[0], 0);
 		dup2(out_pipe[1], 1);
 		execve(args[0], args, env_tab);
 		LOG.error() << "cgi binary \"" << request.get_location().get_cgi_bin() << "\" was not found on your system" << std::endl;
 		exit(-1);
 	}
-	//close(in_pipe[0]);
+	close(in_pipe[0]);
 	close(out_pipe[1]);
 
-	new CGITask(out_pipe[0], server, pid);
-	//NIOSelector::getInstance()->add(in_pipe[0], 
+	new POSTTask(in_pipe[1], server, POSTTask::NO_WRITE_ON_WRITE_BUFFER);
+	new CGIOutTask(out_pipe[0], server, pid);
 	for (size_t i = 0; i < env.size(); i++)
 		delete env_tab[i];
-
-	//int status;
-	//waitpid(pid, &status, WUNTRACED);
-	//LOG.info() << cgi_script << " has stopped running" << std::endl;
 
 	next();
 }

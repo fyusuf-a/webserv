@@ -1,5 +1,5 @@
-#ifndef CGITASK_HPP
-#define CGITASK_HPP
+#ifndef CGIOUTTASK_HPP
+#define CGIOUTTASK_HPP
 #include "../../server/NIOSelector.hpp"
 #include "../../utils/Log.hpp"
 #include "../../utils/TransferEncoding.hpp"
@@ -7,7 +7,7 @@
 #include "../middlewares/MiddlewareChain.hpp"
 #include "Task.hpp"
 
-class CGITask : public Task
+class CGIOutTask : public Task
 {
     public:
 		enum parsing_state {
@@ -17,8 +17,8 @@ class CGITask : public Task
 			S_BODY
 		};
 
-        virtual ~CGITask();
-        CGITask(int fd, ActiveHTTP &serv, int pid);
+        virtual ~CGIOutTask();
+        CGIOutTask(int fd, ActiveHTTP &serv, int pid);
 
 
     protected:

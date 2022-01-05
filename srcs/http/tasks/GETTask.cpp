@@ -3,6 +3,7 @@
 
 
 GETTask::GETTask(int fd, ActiveHTTP &serv) : Task(fd, serv, READ), _state(S_WAITING_FOR_MIDDLEWARES) {
+	LOG.debug() << "New GET task (fd = " << _fd << ")" << std::endl;
 }
 
 GETTask::~GETTask(){}
@@ -12,6 +13,8 @@ bool GETTask::on_readable(int fd) {
 		case S_WAITING_FOR_MIDDLEWARES:
 			if (_serv.get_response().get_ready()) {
 				_serv.write_beginning_on_write_buffer();
+				if (_serv.get_request().get_method() == "HEAD")
+					return on_close(fd);
 				_state = S_BEGINNING_WRITTEN;
 			}
 		break;

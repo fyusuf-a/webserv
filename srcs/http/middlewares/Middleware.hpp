@@ -34,14 +34,6 @@ class CheckSyntax : public Middleware, public Singleton<CheckSyntax>
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
 
-class BlockSelector : public Middleware, public Singleton<BlockSelector>
-{
-	public:
-		BlockSelector(){};
-		virtual	~BlockSelector() {};
-		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain& next);
-};
-
 class MethodChecker : public Middleware, public Singleton<MethodChecker>
 {
 	public:
@@ -53,11 +45,13 @@ class MethodChecker : public Middleware, public Singleton<MethodChecker>
 class IndexSelector : public Middleware, public Singleton<IndexSelector>
 {
 	public:
+		static Log& LOG;
 		IndexSelector(){};
 		virtual	~IndexSelector() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
 
+// Also manages HEAD requests
 class MethodGET : public Middleware, public Singleton<MethodGET>
 {
 	public:
@@ -101,6 +95,7 @@ class Error : public Middleware, public Singleton<Error>
 
 };
 
+// Also manages HEAD requests
 class CGIRunner : public Middleware, public Singleton<CGIRunner>
 {
 	private:
@@ -131,11 +126,6 @@ class Sender : public Middleware, public Singleton<Sender>
 		Sender();
 		virtual	~Sender() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
-
-	private:
-		void write_all_on_write_buffer(ActiveHTTP& serv, Response& response,
-													std::ostringstream& oss);
-		void add_content_length(Response& response, std::ostringstream& oss);
 };
  
 std::string get_absolute_path(Request &request, const std::string &path);

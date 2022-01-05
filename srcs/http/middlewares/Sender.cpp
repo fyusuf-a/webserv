@@ -6,26 +6,6 @@ Log& Sender::LOG = Log::getInstance();
 Sender::Sender() {
 }
 
-void Sender::add_content_length(Response& response, std::ostringstream& oss) {
-	std::map<std::string, std::string> const& headers
-												= response.get_headers();
-	std::map<std::string, std::string>::const_iterator it
-										= headers.find("Content-Length");
-	if (it == headers.end())
-	{
-		oss << response.get_body().length();
-		response.set_header("Content-Length", oss.str()); 
-		oss.str("");
-	}
-}
-
-void Sender::write_all_on_write_buffer(ActiveHTTP& serv, Response& response,
-		std::ostringstream& oss) {
-	oss << response;
-	serv.get_write_buffer() += oss.str();
-	LOG.debug() << "Request totally written on the write buffer"<< std::endl;
-}
-
 void Sender::body(ActiveHTTP& serv, Request& request, Response& response, MiddlewareChain&) {
 
 	// If the client wants to close the connection, grant its wish
@@ -45,14 +25,7 @@ void Sender::body(ActiveHTTP& serv, Request& request, Response& response, Middle
 	response.set_header("Date", oss.str());
 	oss.str("");
 	
-	// If there is no ongoing task, set the response length to the length of
-	// the body produced by the middlewares, and send the response
-	if (!serv.get_delegation_to_task()) {
-		add_content_length(response, oss);
-		write_all_on_write_buffer(serv, response, oss);
-		serv.reinitialize();
-		return ;
-	}
-	// Otherwise, set the response as ready for the task to come
-	response.ready();
+	// If ther is an ongoing task, set the response as ready for the task to come
+	if (serv.get_delegation_to_task())
+		response.ready();
 }

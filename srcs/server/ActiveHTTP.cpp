@@ -8,6 +8,8 @@
 #include "../http/Response/Response.hpp"
 #include "../http/tasks/Task.hpp"
 
+void		block_selector(ActiveHTTP& actHTTP, Request& request, Response& response);
+
 Log& ActiveHTTP::LOG = Log::getInstance();
 
 ActiveHTTP::ActiveHTTP() : ActiveServer(), _server_blocks(NULL), _chain(NULL),
@@ -46,20 +48,57 @@ ActiveHTTP::~ActiveHTTP() {
 		delete _chain;
 }
 
+void ActiveHTTP::add_content_length(std::ostringstream& oss) {
+	Response::header_map const& headers = _response.get_headers();
+	Response::header_map::const_iterator it = headers.find("Content-Length");
+	if (it == headers.end())
+	{
+		oss << _response.get_body().length();
+		_response.set_header("Content-Length", oss.str()); 
+		oss.str("");
+	}
+}
+
+
 bool	ActiveHTTP::on_readable(int fd) {
 	postpone_timeout();
 	if (!ActiveServer::on_readable(fd)) {
 		return (false);
 	}
 	_request.set_over(true);
+
+	bool location_set = false;
+
 	if (_request.get_head() != 6) {
-		while (_request.get_head() < 6 && _request.get_over())
+		while (_request.get_head() < 6 && _request.get_over()) {
+			if (_request.get_head() == 5 && !location_set) {
+				location_set = true;
+				block_selector(*this, _request, _response);
+				if (_request.get_location().get_body_size() == std::string::npos)
+					_request.get_location().set_body_size(100000000);
+			}
 			_request.parse(_read_buffer);
+		}
 	}
+
+	if (!location_set && _request.get_head() == 6)
+		block_selector(*this, _request, _response);
 	// If the request is parsed and the middleware chain is not launched, launch
 	// it
 	if (_request.get_head() == 6) {
 		launch_middleware_chain();
+		// If there is no ongoing task, set the response length to the length of
+		// the body produced by the middlewares, and send the response
+		if (!_delegation_to_task)
+		{
+			std::ostringstream oss;
+			add_content_length(oss);
+			oss << _response;
+			_write_buffer += oss.str();
+			LOG.debug() << "Request totally written on the write buffer"<< std::endl;
+			if (reinitialize() == false)
+				return false;
+		}
 	}
 	return (true);
 }
@@ -107,6 +146,10 @@ std::list<Task*> const& ActiveHTTP::get_ongoing_tasks() const {
 
 void ActiveHTTP::set_delegation_to_task(bool set) {
 	_delegation_to_task = set;
+}
+
+void ActiveHTTP::set_chain(MiddlewareChain* const& chain) {
+	_chain = chain;
 }
 
 /*void ActiveHTTP::set_ongoing_tasks(std::list<Task*> const& tasks) {
@@ -182,14 +225,16 @@ void	ActiveHTTP::write_beginning_on_write_buffer() {
 	_response.set_beginning_written_on_write_buffer(true);
 }
 
-void	ActiveHTTP::reinitialize() {
+bool	ActiveHTTP::reinitialize() {
 	if (_request.get_wrong())
 	{
+		LOG.error() << "Request was malformed" << std::endl;
 		on_close(_socket->getFd());
-		return ;
+		return false;
 	}
 	_request = Request();
 	_response = Response();
 	_delegation_to_task = false;
 	LOG.debug() << "ActiveHTTP server is reinitialized" << std::endl;
+	return true;
 }

@@ -1,25 +1,26 @@
-#include "CGITask.hpp"
+#include "CGIOutTask.hpp"
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <cctype>
 
 
-CGITask::CGITask(int fd, ActiveHTTP& serv, int pid)
+CGIOutTask::CGIOutTask(int fd, ActiveHTTP& serv, int pid)
 		: Task(fd, serv, READ)
 		, _state(S_HEADER_NAME)
 		, _index(0)
 		, _pid(pid)
 		, _content_length(-1)
 {
+	LOG.debug() << "New CGIOut task (fd = " << _fd << ")" << std::endl;
 }
 
-CGITask::~CGITask(){
+CGIOutTask::~CGIOutTask(){
 	waitpid(_pid, NULL, WNOHANG);
 	TransferEncoding::final_chunk_on_buffer(_serv.get_write_buffer());
 }
 
-bool CGITask::on_readable(int fd) {
+bool CGIOutTask::on_readable(int fd) {
 	Response& response = _serv.get_response();
 
 	if (_state == S_WAITING_FOR_MIDDLEWARES) {
@@ -54,6 +55,8 @@ bool CGITask::on_readable(int fd) {
 				response.set_header("Transfer-Encoding", "chunked");
 			}
 			_serv.write_beginning_on_write_buffer();
+			if (_serv.get_request().get_method() == "HEAD")
+				return on_close(fd);
 			if (_content_length == -1)
 				TransferEncoding::to_chunk_on_buffer(_serv.get_write_buffer(),
 																	_buffer);
@@ -71,20 +74,20 @@ bool CGITask::on_readable(int fd) {
 	return (true);
 }
 
-bool CGITask::on_writable(int) {
+bool CGIOutTask::on_writable(int) {
 	return (true);
 }
 
-bool CGITask::always(int) {
+bool CGIOutTask::always(int) {
 	return (true);
 }
 
-bool	CGITask::on_close(int) { 
+bool	CGIOutTask::on_close(int) { 
 	delete (this);
 	return (false);
 }
 
-bool CGITask::parse(Response &response) {
+bool CGIOutTask::parse(Response &response) {
 	bool keep_on_going = true;
 	while (keep_on_going)
 	{
@@ -104,7 +107,7 @@ bool CGITask::parse(Response &response) {
 	return true;
 }
 
-bool CGITask::parse_header_name() {
+bool CGIOutTask::parse_header_name() {
 	size_t res;
 	if ((res = _buffer.find("\r\n", _index)) != std::string::npos && res == _index)
 	{
@@ -122,7 +125,7 @@ bool CGITask::parse_header_name() {
 	return (false);
 }
 
-void CGITask::parse_custom_status(Response& response, size_t res) {
+void CGIOutTask::parse_custom_status(Response& response, size_t res) {
 	std::stringstream oss;
 	oss << _buffer.substr(_index, res - _index);
 	unsigned int response_code;
@@ -138,7 +141,7 @@ void CGITask::parse_custom_status(Response& response, size_t res) {
 	response.set_custom_reason_phrase(c + reason_phrase);
 }
 
-bool CGITask::parse_header_value(Response& response) {
+bool CGIOutTask::parse_header_value(Response& response) {
 	static int use = 0;
 	use++;
 	size_t res = _buffer.find("\r\n", _index);

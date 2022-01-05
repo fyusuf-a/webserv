@@ -3,12 +3,15 @@
 # include <iostream>
 # include "../Request/Request.hpp"
 # include "../../utils/Log.hpp"
+# include "../../utils/utils.hpp"
 
 class ActiveHTTP;
 
 class Response
 {
 	public:
+		typedef std::map<std::string, std::string, Utils::cmpStringInsensitive>
+			header_map;
 		enum http_code {
 			// Success
 			OK = 200,
@@ -28,6 +31,7 @@ class Response
 			MethodNotAllowed = 405,
 			NotAcceptable = 406,
 			RequestTime_out = 408,
+			RequestEntityTooLarge = 413,
 			// Server Error
 			NotImplemented = 501,
 			HTTPNotSupported = 505,
@@ -44,7 +48,7 @@ class Response
 		std::string _custom_reason_phrase;
 		unsigned int _code;
 		std::string _body;
-		std::map<std::string, std::string>	_headers;
+		header_map	_headers;
 
 		/*
 		 * The lifetime of a response is :
@@ -74,16 +78,13 @@ class Response
 		void		ready();
 
 		std::string	get_body(void) const;
-		const std::map<std::string, std::string>&
-					get_headers() const;
-		void		delete_header(const std::string& key);
-		unsigned int
-					get_code(void) const;
-		bool		get_ready();
-		bool 		get_beginning_written_on_write_buffer() const;
-		bool 		get_written_on_write_buffer() const;
-		std::string const&
-					get_custom_reason_phrase() const;
+		const header_map&	get_headers() const;
+		void				delete_header(const std::string& key);
+		unsigned int		get_code(void) const;
+		bool				get_ready();
+		bool 				get_beginning_written_on_write_buffer() const;
+		bool 				get_written_on_write_buffer() const;
+		std::string const&	get_custom_reason_phrase() const;
 
 		void		set_code(unsigned int code);
 		void		set_header(const std::string& key, const std::string& value);

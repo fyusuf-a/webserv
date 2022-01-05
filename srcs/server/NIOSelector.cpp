@@ -5,7 +5,6 @@
 #include <cassert>
 #include <cstring>
 #include <cerrno>
-#include "../http/tasks/CGITask.hpp"
 
 Log &NIOSelector::LOG = Log::getInstance();
 

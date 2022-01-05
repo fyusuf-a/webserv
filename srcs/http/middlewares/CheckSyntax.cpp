@@ -3,12 +3,19 @@
 
 void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & response, MiddlewareChain& next) {
 	(void)actHTTP;
-	
+
+    if (response.get_code() >= 400) {
+        next();
+        return ;
+    }
 	std::string met = request.get_method();
 
 	if (request.get_wrong())
 		response.set_code(Response::BadRequest);
-	else if (met != "GET" && met != "POST" && met != "DELETE")
+	else if (request.get_too_big_body())
+		response.set_code(Response::RequestEntityTooLarge);	
+	else if (met != "GET" && met != "POST" && met != "DELETE" && met != "PUT"
+															&& met != "HEAD")
 		response.set_code(Response::NotImplemented);
 	else if (request.get_path()[0] != '/')
 		response.set_code(Response::BadRequest);
@@ -20,7 +27,8 @@ void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & respo
         return ;
     }
 
-	std::map<std::string, std::string>::const_iterator	it;
+	Request::header_map const& headers = request.get_headers();
+	Request::header_map::const_iterator	it;
 	std::string										whitespaces = " \n\r\v\t\f";
 	int												host = 0;
 
@@ -30,7 +38,7 @@ void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & respo
 		return ;
 	}
 		
-	for (it = request.get_headers().begin(); it != request.get_headers().end(); ++it){
+	for (it = headers.begin(); it != headers.end(); ++it){
 	    if (response.get_code() >= 400) {
 	        next();
 	        return ;

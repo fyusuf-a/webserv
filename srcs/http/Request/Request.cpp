@@ -4,20 +4,20 @@ void								Request::set_over(bool over) {
 	this->_over = over;
 }
 
-void								Request::set_path(std::string path) {
-	this->_path = path;
+void								Request::set_path(const std::string& path) {
+	_path = path;
 }
 
-void								Request::set_query(std::string query) {
-	this->_query = query;
+void								Request::set_query(const std::string& query) {
+	_query = query;
 }
 
-void								Request::set_extra_path(std::string extra_path) {
-	this->_extra_path = extra_path;
+void								Request::set_extra_path(const std::string& extra_path) {
+	_extra_path = extra_path;
 }
 
-void								Request::set_original_request_path(std::string original_path) {
-	this->_original_request_path = original_path;
+void								Request::set_original_request_path(const std::string& original_path) {
+	_original_request_path = original_path;
 }
 
 std::string	const&					Request::get_query(void) const {
@@ -33,7 +33,7 @@ std::string const&					Request::get_method(void) const {
 }
 
 std::string const&					Request::get_path(void) const {
-	return this->_path;
+	return _path;
 }
 
 std::string const&					Request::get_original_request_path(void) const {
@@ -44,7 +44,7 @@ std::string const &					Request::get_protocol(void) const {
 	return this->_protocol;
 }
 
-std::map<std::string, std::string>	const &Request::get_headers(void) const {
+Request::header_map	const& Request::get_headers(void) const {
 	return this->_headers;
 }
 
@@ -72,6 +72,10 @@ bool								Request::get_wrong(void) const {
 	return this->_wrong;
 }
 
+bool								Request::get_too_big_body(void) const {
+	return this->_too_big_body;
+}
+
 void 								Request::set_server(ServerBlock server){
 	this->_server = server;
 }
@@ -82,9 +86,15 @@ ServerBlock const 					&Request::get_server(void) const {
 void 								Request::set_location(ServerLocation location){
 	this->_location = location;
 }
-ServerLocation const 				&Request::get_location(void) const {
+ServerLocation 							&Request::get_location(void) {
 	return this->_location;
 }
+
+void									Request::set_method(std::string method)
+{
+	this->_method = method;
+}
+
 
 bool			Request::get_treated_by_middlewares(void) const {
 	return this->_treated_by_middlewares;
@@ -110,6 +120,7 @@ Request & 		Request::operator=( Request const & rhs ){
 		_head = rhs._head;
 		_over = rhs._over;
 		_wrong= rhs._wrong;
+		_too_big_body= rhs._too_big_body;
 		_last_zero_read = rhs._last_zero_read;
 		_residual = rhs._residual;
 		_field_name = rhs._field_name;
@@ -130,6 +141,7 @@ Request::Request()
 	: _head(0)
 	, _over(true)
 	, _wrong(false)
+	, _too_big_body(false)
 	, _last_zero_read(false)
 	, _lctr(0)
 	, _treated_by_middlewares(false)
@@ -141,20 +153,14 @@ Request::Request()
 Request::~Request() {
 }
 
-std::ostream& operator<<(std::ostream& os, const Request& req) {
+std::ostream& operator<<(std::ostream& os, Request const& req) {
        os << req.get_method() << " " << req.get_path() << " " << req.get_protocol() << "\r\n";
-	   std::map<std::string, std::string> my_headers = req.get_headers();
+	   Request::header_map const& my_headers = req.get_headers();
        if (! my_headers.empty()) {
-               for (std::map<std::string, std::string>::const_iterator it = my_headers.begin(); it != my_headers.end() ; it++) {
+               for (Request::header_map::const_iterator it = my_headers.begin(); it != my_headers.end() ; it++) {
                        os << it->first << ": " << it->second << "\r\n";
                }
        }
        os << "\r\n" << req.get_body();
-       //os << "over = " << (req.get_over() ? "true" : "false") << std::endl;
-       /*os << "\r\n" << req.get_body();
-       os << std::endl << "Other stuff:" << std::endl;
-       os << "head = " << req.get_head() << std::endl;
-       os << "over = " << (req.get_over() ? "true" : "false") << std::endl;
-       os << "residual = \"" << req.get_residual() << "\"" << std::endl;*/
        return os;
 }
