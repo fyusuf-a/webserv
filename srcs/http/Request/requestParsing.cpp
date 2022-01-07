@@ -46,7 +46,7 @@ void		Request::manage_head(std::string& buffer) {
 }
 
 void		Request::parse(std::string& buffer) {
-	LOG.debug() << "buffer (head = " << _head << "):\n_" << buffer << "_" << std::endl;
+	//LOG.debug() << "buffer (head = " << _head << "):\n_" << buffer << "_" << std::endl;
 	_lctr = 0;
 	while ((_head == 1 || _head == 2) && buffer[_lctr] == ' ')
 		++_lctr;

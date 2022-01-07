@@ -12,7 +12,7 @@ bool GETTask::on_readable(int fd) {
 	switch ((int)_state) {
 		case S_WAITING_FOR_MIDDLEWARES:
 			if (_serv.get_response().get_ready()) {
-				_serv.write_beginning_on_write_buffer();
+				_serv.write_beginning_on_write_buffer(fd);
 				if (_serv.get_request().get_method() == "HEAD")
 					return on_close(fd);
 				_state = S_BEGINNING_WRITTEN;

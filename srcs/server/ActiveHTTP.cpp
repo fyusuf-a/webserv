@@ -61,6 +61,9 @@ void ActiveHTTP::add_content_length(std::ostringstream& oss) {
 
 
 bool	ActiveHTTP::on_readable(int fd) {
+#ifdef DEBUG_FLAG
+	static size_t request_number = 1;
+#endif
 	postpone_timeout();
 	if (!ActiveServer::on_readable(fd)) {
 		return (false);
@@ -79,6 +82,18 @@ bool	ActiveHTTP::on_readable(int fd) {
 			}
 			_request.parse(_read_buffer);
 		}
+#ifdef DEBUG_FLAG
+		if (_request.get_head() == 6) {
+			LOG.debug() << "REQUEST NO " << request_number << std::endl;
+			request_number++;
+			LOG.debug() < _request;
+			if (!_request.get_body().empty())
+				LOG.debug() << "[BODY OF " << _request.get_body().size() << " ]";
+			else
+				LOG.debug() << "[EMPTY BODY]";
+			LOG.debug() << std::endl;
+		}
+#endif
 	}
 
 	if (!location_set && _request.get_head() == 6)
@@ -86,7 +101,7 @@ bool	ActiveHTTP::on_readable(int fd) {
 	// If the request is parsed and the middleware chain is not launched, launch
 	// it
 	if (_request.get_head() == 6) {
-		launch_middleware_chain();
+		launch_middleware_chain(fd);
 		// If there is no ongoing task, set the response length to the length of
 		// the body produced by the middlewares, and send the response
 		if (!_delegation_to_task)
@@ -95,8 +110,8 @@ bool	ActiveHTTP::on_readable(int fd) {
 			add_content_length(oss);
 			oss << _response;
 			_write_buffer += oss.str();
-			LOG.debug() << "Request totally written on the write buffer"<< std::endl;
-			if (reinitialize() == false)
+			LOG.debug() << "Request totally written on the write buffer (fd = "<< fd << ")" << std::endl;
+			if (reinitialize(fd) == false)
 				return false;
 		}
 	}
@@ -111,11 +126,17 @@ bool	ActiveHTTP::on_writable(int fd) {
 bool	ActiveHTTP::always(int fd) {
 	// If a request is parsed and a task is still running, the server should not timeout
 	if (_response.get_ready())
+	{
+		LOG.debug() << "postponing timeout for fd " << fd << std::endl;
 		postpone_timeout();
+	}
 
 	// If the request timed out, delete the ActiveHTTP server
 	if (!check_timeout(fd))
+	{
+		LOG.debug() << "A timeout occured because on fd " << fd << std::endl;
 		return (false);
+	}
 	return (true);
 }
 
@@ -198,34 +219,34 @@ bool	ActiveHTTP::check_timeout(int fd) {
 	time(&now);
 	if (difftime(now, _last_time_active) > TIMEOUT)
 	{
-		LOG.info() << "Connection timed out" << std::endl;
+		LOG.info() << "Connection timed out (fd = "<< fd << ")" << std::endl;
 		on_close(fd);
 		return (false);
 	}
 	return (true);
 }
 
-void	ActiveHTTP::launch_middleware_chain() {	
+void	ActiveHTTP::launch_middleware_chain(int fd) {	
 	if (_chain)
 	{
 		delete _chain;
 		_chain = NULL;
 	}
 	_chain = new MiddlewareChain(this, &_request, &_response);
-	LOG.debug() << "Beginning of the treatment of the request by the middlewares" << std::endl;
+	LOG.debug() << "Beginning of the treatment of the request by the middlewares (fd = "<< fd << ")" << std::endl;
 	_request.set_treated_by_middlewares(true);
 	(*_chain)();
 }
 
-void	ActiveHTTP::write_beginning_on_write_buffer() {	
+void	ActiveHTTP::write_beginning_on_write_buffer(int fd) {	
 	std::ostringstream os;
 	os < _response;
 	_write_buffer += os.str();
-	LOG.debug() << "Beginning of the request written on the write buffer" << std::endl;
+	LOG.debug() << "Beginning of the request written on the write buffer (fd = "<< fd << ")" << std::endl;
 	_response.set_beginning_written_on_write_buffer(true);
 }
 
-bool	ActiveHTTP::reinitialize() {
+bool	ActiveHTTP::reinitialize(int fd) {
 	if (_request.get_wrong())
 	{
 		LOG.error() << "Request was malformed" << std::endl;
@@ -235,6 +256,6 @@ bool	ActiveHTTP::reinitialize() {
 	_request = Request();
 	_response = Response();
 	_delegation_to_task = false;
-	LOG.debug() << "ActiveHTTP server is reinitialized" << std::endl;
+	LOG.debug() << "ActiveHTTP server is reinitialized (fd = "<< fd << ")" << std::endl;
 	return true;
 }
