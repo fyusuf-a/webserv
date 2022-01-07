@@ -84,5 +84,6 @@ class Request
 };
 
 std::ostream& operator<<(std::ostream&, const Request&);
+std::ostream& operator<(std::ostream&, const Request&);
 
 #endif
