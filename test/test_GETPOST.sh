@@ -5,7 +5,7 @@ rm -f ./test42/random*
 make -C ..
 
 mv ../Webserv ./
-./Webserv test42/test_methodGET.conf &
+./Webserv test42/test_GETPOST.conf &
 
 
 sleep 5
