@@ -70,7 +70,7 @@ test : all
 	cd test && ./test_nioselector.sh
 	cd test && ./test_multiple_addresses_bind.sh
 	cd test && ./test_parsing.sh
-	cd test && ./test_methodGET.sh
+	cd test && ./test_GETPOST.sh
 
 .cpp.o:
 	${CC} ${CFLAGS} $(HEADERS) -c $< -o ${<:.cpp=.o}
