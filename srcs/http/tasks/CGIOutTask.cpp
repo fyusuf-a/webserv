@@ -1,4 +1,5 @@
 #include "CGIOutTask.hpp"
+#include <stdexcept>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -161,9 +162,15 @@ bool CGIOutTask::parse_header_value(Response& response) {
 										, _buffer.substr(_index, res - _index));
 		else
 			parse_custom_status(response, res);
-		if (_header_name == "Content-Length")
-			_content_length =
-				atoi(response.get_headers().at("Content-Length").c_str());
+		if (_header_name == "Content-Length") {
+			try {
+				std::string content_length_str =
+					HeaderMap::get_header_first_value(response.get_headers(), "Content-Length");
+				_content_length = atoi(content_length_str.c_str());
+			}
+			catch (std::out_of_range& e) {
+			}
+		}
 		_header_name = "";
 		_index = res + 2;
 		_state = S_HEADER_NAME;

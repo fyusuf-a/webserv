@@ -103,6 +103,7 @@ class CGIRunner : public Middleware, public Singleton<CGIRunner>
 		void set_env(Request::header_map& env, ActiveHTTP const& server,
 				Request const& request);
 		bool set_fd_as_non_blocking(int fd, char* fd_description);
+		size_t size_of_header_map(const Request::header_map& map);
 		void convert_map_to_tab(Request::header_map env, char** env_tab);
 
 	public:

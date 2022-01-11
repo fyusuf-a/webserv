@@ -127,7 +127,7 @@ bool	ActiveHTTP::always(int fd) {
 	// If a request is parsed and a task is still running, the server should not timeout
 	if (_response.get_ready())
 	{
-		LOG.debug() << "postponing timeout for fd " << fd << std::endl;
+		//LOG.debug() << "postponing timeout for fd " << fd << std::endl;
 		postpone_timeout();
 	}
 
