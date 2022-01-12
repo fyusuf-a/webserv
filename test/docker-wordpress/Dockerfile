@@ -13,7 +13,7 @@ RUN service mysql start && \
 		rm create.sql
 
 # webserv
-RUN git clone -b cgi https://github.com/fyusuf-a/webserv /etc/webserv; \
+RUN git clone https://github.com/fyusuf-a/webserv /etc/webserv; \
 	make -C /etc/webserv debug
 
 # wordpress
