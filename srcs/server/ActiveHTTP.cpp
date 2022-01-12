@@ -88,10 +88,10 @@ bool	ActiveHTTP::on_readable(int fd) {
 			request_number++;
 			LOG.debug() < _request;
 			if (!_request.get_body().empty())
-				LOG.debug() << "[BODY OF " << _request.get_body().size() << " ]";
+				LOG.debug() << "[BODY OF " << _request.get_body().size() << " ]"
+					<< std::endl;
 			else
-				LOG.debug() << "[EMPTY BODY]";
-			LOG.debug() << std::endl;
+				LOG.debug() << "[EMPTY BODY]" << std::endl;
 		}
 #endif
 	}
@@ -102,6 +102,7 @@ bool	ActiveHTTP::on_readable(int fd) {
 	// it
 	if (_request.get_head() == 6) {
 		launch_middleware_chain(fd);
+		LOG.debug() << "End of middlewares (fd = " << fd << ")" << std::endl;
 		// If there is no ongoing task, set the response length to the length of
 		// the body produced by the middlewares, and send the response
 		if (!_delegation_to_task)
