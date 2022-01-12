@@ -19,6 +19,8 @@ class ServerConfig
 		uint16_t                    _port;
         bool                        _ip_already_set;
         std::vector<std::string>	_index;
+        std::string					_cgi_ext_s;
+		std::string					_cgi_bin_s;
 
 
         
@@ -37,6 +39,9 @@ class ServerConfig
         void            setIP_already_set(bool error);
         void            setIndex(std::vector<std::string> const &index);
 
+        void            set_cgi_ext(std::string const &cgi_ext);
+        void            set_cgi_bin(std::string const &cgi_bin);
+
         
 
         uint16_t                        getPort(void) const;
@@ -46,6 +51,9 @@ class ServerConfig
         std::string const               &getError(void) const;
         bool                            getIP_already_set(void) const;
         std::vector<std::string> const  &getIndex(void) const;
+
+        std::string const   &get_cgi_ext(void) const;
+        std::string const   &get_cgi_bin(void) const;
 
 
 

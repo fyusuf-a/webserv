@@ -83,7 +83,9 @@ namespace Utils
     }
     bool is_valid_directive(std::string const &dir)
     {
-        if (dir == "index" || dir == "root" || dir == "server_name" || dir == "listen" || dir == "host" || dir == "error")
+        if (dir == "index" || dir == "root" || dir == "server_name"
+        || dir == "listen" || dir == "host" || dir == "error"
+        || dir == "cgi_extension" || dir == "cgi_bin")
             return (true);
         return (false);
     }

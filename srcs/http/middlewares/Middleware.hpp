@@ -51,6 +51,15 @@ class IndexSelector : public Middleware, public Singleton<IndexSelector>
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
 
+class ExtractQuery : public Middleware, public Singleton<ExtractQuery>
+{
+	public:
+		static Log& LOG;
+		ExtractQuery(){};
+		virtual	~ExtractQuery() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
+};
+
 // Also manages HEAD requests
 class MethodGET : public Middleware, public Singleton<MethodGET>
 {
