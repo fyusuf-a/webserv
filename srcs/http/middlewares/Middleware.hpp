@@ -47,8 +47,18 @@ class MethodChecker : public Middleware, public Singleton<MethodChecker>
 class IndexSelector : public Middleware, public Singleton<IndexSelector>
 {
 	public:
+		static Log& LOG;
 		IndexSelector(){};
 		virtual	~IndexSelector() {};
+		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
+};
+
+class ExtractQuery : public Middleware, public Singleton<ExtractQuery>
+{
+	public:
+		static Log& LOG;
+		ExtractQuery(){};
+		virtual	~ExtractQuery() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
 

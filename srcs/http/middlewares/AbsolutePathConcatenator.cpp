@@ -45,5 +45,6 @@ void		AbsolutePathConcatenator::body(ActiveHTTP&, Request& request, Response& re
 
     request.set_original_request_path(percent_decode(request.get_path()));
 	request.set_path(get_absolute_path(request, request.get_original_request_path()));
+
 	next();
 }

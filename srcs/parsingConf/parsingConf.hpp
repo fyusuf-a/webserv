@@ -31,29 +31,29 @@ class ParsingConf
         void    setup_location_directive(std::string const &line, ServerLocation &location);
         void    setup_server_directive(std::string const &line, ServerBlock &server);
 
-        void    setup_location(ITER &start, ITER &end, ServerBlock &server, std::string test);
+        void    setup_location(ITER &start, ITER &end, ServerBlock &server, const std::string& test);
         void    setup_server(ITER &start, ITER &end, ServerBlocks &servers);
 
         void    setup_servers(std::vector<std::string> &content, ServerBlocks &servers);
 
 
-        int     parse_directive(std::string const &line, std::string &directive);
+        int     parse_directive(const std::string&, std::string &directive);
         bool    parse_value(std::string const &line, std::string &value, int i);
 
 
-        std::vector<std::string>    parsing_index_value(std::string val);
-        std::vector<std::string>    parsing_methods_value(std::string val, std::string dir);
-        std::string                 parsing_path_value(std::string val, std::string dir);
-        std::string                 parsing_cgi_ext_value(std::string val, std::string dir);
-        std::string                 parsing_name_value(std::string val, std::string dir);
-        std::string                 parsing_location_path(std::string val);
-        std::string                 parsing_host_value(std::string val, std::string dir);
-        uint16_t                    parsing_port_value(std::string val, std::string dir);
-        size_t                      parsing_body_size_value(std::string val, std::string dir);
-        int                         parsing_bool_value(std::string val, std::string dir);
+        std::vector<std::string>    parsing_index_value(const std::string&);
+        std::vector<std::string>    parsing_methods_value(const std::string&, const std::string& dir);
+        std::string                 parsing_path_value(std::string, const std::string& dir);
+        std::string                 parsing_cgi_ext_value(std::string);
+        std::string                 parsing_name_value(const std::string&, const std::string& dir);
+        std::string                 parsing_location_path(const std::string&);
+        std::string                 parsing_host_value(const std::string&, const std::string& dir);
+        uint16_t                    parsing_port_value(const std::string&, const std::string& dir);
+        size_t                      parsing_body_size_value(const std::string&, const std::string& dir);
+        int                         parsing_bool_value(std::string, const std::string& dir);
 
-        void                         parsing(std::string path, ServerBlocks &servers);
-        std::vector<std::string>     parsing_line(std::string line, std::vector<std::string> content);
+        void                         parsing(const std::string& path, ServerBlocks &servers);
+        std::vector<std::string>     parsing_line(std::string, std::vector<std::string> content);
 };
 
 #endif

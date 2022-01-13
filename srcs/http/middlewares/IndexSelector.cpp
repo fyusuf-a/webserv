@@ -1,5 +1,6 @@
 #include "Middleware.hpp"
 
+Log& IndexSelector::LOG = Log::getInstance();
 
 void		IndexSelector::body(ActiveHTTP&, Request& request, Response& response, MiddlewareChain& next) {
 
@@ -20,14 +21,16 @@ void		IndexSelector::body(ActiveHTTP&, Request& request, Response& response, Mid
         if ( access((path + *it).c_str(), F_OK ) != -1)
             idx = path + *it;
     }
-
     if (idx != "")
         request.set_path(idx);
+
     else if (request.get_location().get_auto_index() == false)
+	{
+		LOG.debug() << "Autoindex is off" << std::endl;
         response.set_code(Response::NotFound);
+    }
     else
         response.set_index_display(true);
-
 
     next();
 }

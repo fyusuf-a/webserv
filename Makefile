@@ -20,6 +20,7 @@ SRC = 	main.cpp\
 	srcs/http/middlewares/MethodGET.cpp\
 	srcs/http/middlewares/MethodDELETE.cpp\
 	srcs/http/middlewares/MethodPOST.cpp\
+	srcs/http/middlewares/Extract_query.cpp\
 	srcs/http/middlewares/PathChopper.cpp\
 	srcs/http/middlewares/Sender.cpp\
 	srcs/http/middlewares/IndexSelector.cpp\
@@ -52,6 +53,9 @@ debug: CFLAGS +=
 debug: CFLAGS += -D DEBUG_FLAG
 debug: all
 
+test42: CFLAGS += -D TEST42 -D DEBUG_FLAG
+test42: all
+
 clean :
 	rm -f $(O_FILES)
 	@echo "\033[33;36mDeleting - *.o...\033[0m"
@@ -67,7 +71,7 @@ test : all
 	cd test && ./test_nioselector.sh
 	cd test && ./test_multiple_addresses_bind.sh
 	cd test && ./test_parsing.sh
-	cd test && ./test_methodGET.sh
+	cd test && ./test_GETPOST.sh
 
 .cpp.o:
 	${CC} ${CFLAGS} $(HEADERS) -c $< -o ${<:.cpp=.o}
