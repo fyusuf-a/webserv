@@ -55,12 +55,3 @@ std::string	percent_encode(const std::string str) {
 	}
 	return (encoded);
 }
-
-//int main(int, char **argv) {
-//	std::string after;
-//
-//	after = percent_encode(argv[1]);
-//	std::cout << argv[1] << std::endl;
-//	std::cout << after << std::endl;
-//	std::cout << percent_decode(after) << std::endl;
-//}

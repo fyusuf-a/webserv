@@ -11,6 +11,8 @@
 # include "../../utils/Log.hpp"
 # include "../../server/NIOSelector.hpp"
 
+std::string percent_decode(const std::string str);
+
 class MiddlewareChain;
 class ActiveHTTP;
 

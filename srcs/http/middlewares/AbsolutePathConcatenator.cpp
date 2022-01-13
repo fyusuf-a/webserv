@@ -34,7 +34,7 @@ std::string get_absolute_path(Request &request, const std::string &path) {
 	else if (request.get_server().get_server_conf().getRoot() == "")
 		absolute_path = "";
 	else
-		absolute_path = request.get_server().get_server_conf().getRoot() + request.get_path();
+		absolute_path = request.get_server().get_server_conf().getRoot() + path;
 	return (absolute_path);
 }
 
@@ -43,7 +43,7 @@ void		AbsolutePathConcatenator::body(ActiveHTTP&, Request& request, Response& re
     if (response.get_code() >= 400)
         return next();
 
-    request.set_original_request_path(request.get_path());
+    request.set_original_request_path(percent_decode(request.get_path()));
 	request.set_path(get_absolute_path(request, request.get_original_request_path()));
 	next();
 }

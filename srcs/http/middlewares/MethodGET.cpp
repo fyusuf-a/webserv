@@ -57,7 +57,7 @@ void		display_index(Request& request, Response& response) {
       oss << "</pre></body>";
     } 
     else {
-      response.set_code(Response::UnknownError);
+      response.set_code(Response::NotFound);
       return ;
     }
 	response.set_body(oss.str());
