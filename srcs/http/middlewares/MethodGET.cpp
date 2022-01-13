@@ -8,18 +8,20 @@
 
 Log& MethodGET::LOG = Log::getInstance();
 
-
-int         is_script2(Request& request, std::string path) {
-    std::string absolute_path = get_absolute_path(request, path);
-
-    struct stat s;
-    if (!stat(absolute_path.c_str(), &s)) {
-        if (s.st_mode & S_IFDIR)
-            return (0);
-        return (1);
-    }
-    else
-        return (0);
+std::string replace_reserved(char *ptr) {
+	std::size_t loc;
+	std::string reserved = "&<>\"";
+	std::size_t it = 0;
+	std::string replacement[4] = { "&amp", "&lt", "&gt", "&quot" };
+	std::string str(ptr);
+	
+	while (it < 4) {
+		loc = str.find(reserved[it]);
+		if (loc != std::string::npos)
+			str.replace(loc, 1, replacement[it]);
+		it++;
+	}
+	return (str);
 }
 
 void		display_index(Request& request, Response& response) {
@@ -48,7 +50,7 @@ void		display_index(Request& request, Response& response) {
 		oss	<< "<a href=\"http://"
 			<< request.get_server().get_server_conf().getName()
 			<< request.get_original_request_path() << ent->d_name << final_slash <<  "\">"
-			<< ent->d_name << final_slash
+			<< replace_reserved(ent->d_name) << final_slash
 			<< "</a>\n";
       }
       closedir(dir);
