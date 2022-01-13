@@ -3,11 +3,11 @@ rm -f Response/GET/my_*
 rm -f random*
 rm -f ./test42/random*
 rm -f ./Webserv
+touch ./test42/delete_file
+
 make -C ..
-
 mv ../Webserv ./
-./Webserv test42/test_GETPOST.conf &
-
+./Webserv test42/test_methods.conf &
 
 sleep 5
 
@@ -27,10 +27,10 @@ if [ "$(diff ./Response/GET/my_resp3 ./Response/GET/resp3)" != "" ]; then
 	echo "Error: Response/GET 3"
 	exit 1
 fi
-if [ "$(diff ./Response/GET/my_resp4 ./Response/GET/resp4)" != "" ]; then
-	echo "Error: Response/GET 4"
-	exit 1
-fi
+# if [ "$(diff ./Response/GET/my_resp4 ./Response/GET/resp4)" != "" ]; then
+# 	echo "Error: Response/GET 4"
+# 	exit 1
+# fi
 if [ "$(diff ./Response/GET/my_resp5 ./Response/GET/resp5)" != "" ]; then
 	echo "Error: Response/GET 5"
 	exit 1
@@ -74,29 +74,25 @@ if [ "$(diff random3.txt ./test42/random-output3.txt)" != "" ]; then
 	echo "Error: POST 3"
 	exit 1
 fi
-# if [ "$(diff ./Response/POST/my_resp4 ./Response/POST/resp4)" != "" ]; then
-# 	echo "Error: Response/POST 4"
-# 	exit 1
-# fi
-# if [ "$(diff ./Response/POST/my_resp5 ./Response/POST/resp5)" != "" ]; then
-# 	echo "Error: Response/POST 5"
-# 	exit 1
-# fi
-# if [ "$(diff ./Response/POST/my_resp6 ./Response/POST/resp6)" != "" ]; then
-# 	echo "Error: Response/POST 6"
-# 	exit 1
-# fi
-# if [ "$(diff ./Response/POST/my_resp7 ./Response/POST/resp7)" != "" ]; then
-# 	echo "Error: Response/POST 7"
-# 	exit 1
-# fi
-# if [ "$(diff ./Response/POST/my_resp8 ./Response/POST/resp8)" != "" ]; then
-# 	echo "Error: Response/POST 8"
-# 	exit 1
-# fi
+
+# \\ -------------- DELETE --------------- //
+diff <(head -n 1 ./Response/DELETE/my_resp1) <(head -n 1 ./Response/DELETE/resp1)
+if [ $? == "1" ]; then
+	echo "Error: DELETE 1"
+	exit 1
+fi
+diff <(head -n 1 ./Response/DELETE/my_resp2) <(head -n 1 ./Response/DELETE/resp2)
+if [ $? == "1" ]; then
+	echo "Error: DELETE 1"
+	exit 1
+fi
+
 
 rm -f Response/GET/my_*
+rm -f Response/DELETE/my_*
 rm -f random*
 rm -f ./test42/random* 
-rm -f ./Webserv
+
+make fclean -C ..
+
 exit 0

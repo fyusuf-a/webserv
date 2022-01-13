@@ -17,7 +17,8 @@ class Response
 			OK = 200,
 			Created = 201,
 			Accepted = 202,
-			// Redirection
+			NoContent = 204,
+			// Redirection1
 			MultipleChoices = 300,
 			MovedPermanently = 301,
 			Found = 302,
