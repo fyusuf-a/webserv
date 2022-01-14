@@ -4,7 +4,6 @@ SRC = 	main.cpp\
 	srcs/parsingConf/serverConfig.cpp\
 	srcs/parsingConf/serverLocation.cpp\
 	srcs/utils/utils.cpp\
-	srcs/utils/percent-encode-decode.cpp\
 	srcs/utils/Log.cpp\
 	srcs/utils/TransferEncoding.cpp\
 	srcs/utils/HeaderMap.cpp\

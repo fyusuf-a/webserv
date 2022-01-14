@@ -14,7 +14,7 @@ void		MethodDELETE::body(ActiveHTTP&, Request& request, Response& response, Midd
         return next();
 	else
 	{
-		int ret;
+		int ret = 0;
 		if (access(request.get_path().c_str(), 0) != 0)
 			response.set_code(Response::NotFound);
 		else if (access(request.get_path().c_str(), 4) != 0)

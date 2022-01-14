@@ -204,5 +204,39 @@ namespace Utils
 		}
 		return true;
 	}
+
+    std::size_t find_value(char val) {
+        std::string base1 = "0123456789ABCDEF";
+        std::string base2 = "0123456789abcdef";
+
+        if (!val)
+            throw (400);
+        if (base1.find(val) != std::string::npos)
+            return (base1.find(val));
+        else if (base2.find(val) != std::string::npos)
+            return (base2.find(val));
+        throw (400);
+    }
+
+    std::string percent_decode(const std::string str) {
+        std::string decoded;
+        std::size_t i = 0;
+        char ascii;
+
+        while (str[i]) {
+            if (str[i] != '%')
+                decoded += str[i];
+            else {
+                ascii = 0;
+                i++;
+                ascii += find_value(str[i]) * 16;
+                i++;
+                ascii += find_value(str[i]);
+                decoded += ascii;
+            }
+            i++;
+        }
+        return (decoded);
+}
 }
 

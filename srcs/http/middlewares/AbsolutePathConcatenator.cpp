@@ -43,7 +43,7 @@ void		AbsolutePathConcatenator::body(ActiveHTTP&, Request& request, Response& re
     if (response.get_code() >= 400)
         return next();
 
-    request.set_original_request_path(percent_decode(request.get_path()));
+    request.set_original_request_path(Utils::percent_decode(request.get_path()));
 	request.set_path(get_absolute_path(request, request.get_original_request_path()));
 
 	next();
