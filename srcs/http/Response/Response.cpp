@@ -15,6 +15,9 @@ std::string Response::http_code_to_str(http_code code) {
 		case 202:
 			return "Accepted";
 		break;
+		case 204:
+			return "No Content";
+		break;
 		case 300:
 			return "Multiple Choices";
 		break;
