@@ -45,8 +45,9 @@ void		display_index(Request& request, Response& response) {
 	    	response.set_code(Response::UnknownError);
 	    	return ;
 	    }
-	    if (s.st_mode & S_IFDIR)
+	    if (s.st_mode & S_IFDIR) {
 	    	final_slash = "/";
+	    }
 		oss	<< "<a href=\"http://"
 			<< request.get_server().get_server_conf().getName()
 			<< request.get_original_request_path() << ent->d_name << final_slash <<  "\">"
