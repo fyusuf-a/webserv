@@ -4,14 +4,14 @@
 # include "../Request/Request.hpp"
 # include "../../utils/Log.hpp"
 # include "../../utils/utils.hpp"
+# include "../../utils/HeaderMap.hpp"
 
 class ActiveHTTP;
 
 class Response
 {
 	public:
-		typedef std::map<std::string, std::string, Utils::cmpStringInsensitive>
-			header_map;
+		typedef HeaderMap::header_map header_map;
 		enum http_code {
 			// Success
 			OK = 200,
@@ -31,7 +31,7 @@ class Response
 			MethodNotAllowed = 405,
 			NotAcceptable = 406,
 			RequestTime_out = 408,
-			RequestEntityTooLarge = 413,
+			PayloadTooLarge = 413,
 			// Server Error
 			NotImplemented = 501,
 			HTTPNotSupported = 505,

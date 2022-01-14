@@ -153,14 +153,15 @@ Request::Request()
 Request::~Request() {
 }
 
+std::ostream& operator<(std::ostream& os, Request const& req) {
+	os << req.get_method() << " " << req.get_path() << " " << req.get_protocol() << "\r\n";
+	os << req.get_headers();
+	os << "\r\n";
+	return os;
+}
+
 std::ostream& operator<<(std::ostream& os, Request const& req) {
-       os << req.get_method() << " " << req.get_path() << " " << req.get_protocol() << "\r\n";
-	   Request::header_map const& my_headers = req.get_headers();
-       if (! my_headers.empty()) {
-               for (Request::header_map::const_iterator it = my_headers.begin(); it != my_headers.end() ; it++) {
-                       os << it->first << ": " << it->second << "\r\n";
-               }
-       }
-       os << "\r\n" << req.get_body();
+	   os < req;
+	   os << req.get_body();
        return os;
 }

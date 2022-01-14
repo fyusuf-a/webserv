@@ -17,6 +17,8 @@ mv ../Webserv ./
 sleep 5
 
 mkdir -p test42/put_test
+mkdir -p test42/post_body
+echo "youpi.bla's content" > test42/YoupiBanane/youpi.bla
 echo '' | ./ubuntu_tester http://localhost:8001
 echo "return value = $?"
 

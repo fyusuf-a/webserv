@@ -6,6 +6,7 @@ SRC = 	main.cpp\
 	srcs/utils/utils.cpp\
 	srcs/utils/Log.cpp\
 	srcs/utils/TransferEncoding.cpp\
+	srcs/utils/HeaderMap.cpp\
 	srcs/webserv/webserv.cpp\
 	srcs/server/Socket.cpp\
 	srcs/server/ActiveServer.cpp\

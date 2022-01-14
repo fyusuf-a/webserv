@@ -28,10 +28,10 @@ public:
 	ActiveHTTP(Socket*, INetAddress const&, std::vector<ServerBlock> const*);
 	virtual ~ActiveHTTP();
 
-	void write_beginning_on_write_buffer();
-	void launch_middleware_chain();
+	void write_beginning_on_write_buffer(int fd);
+	void launch_middleware_chain(int fd);
 	void postpone_timeout();
-	bool reinitialize();
+	bool reinitialize(int fd);
 	void add_content_length(std::ostringstream& oss);
 
 	void set_delegation_to_task(bool);

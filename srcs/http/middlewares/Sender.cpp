@@ -10,7 +10,8 @@ void Sender::body(ActiveHTTP& serv, Request& request, Response& response, Middle
 
 	// If the client wants to close the connection, grant its wish
 	try {
-		if (request.get_headers().at("Connection") == "close")
+		std::list<std::string>const& connection = request.get_headers().at("Connection");
+		if (connection.front() == "close")
 			response.set_header("Connection", "close");
 	}
 	catch (std::out_of_range& e) {

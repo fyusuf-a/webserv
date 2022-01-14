@@ -3,7 +3,7 @@ rm -f Response/GET/my_*
 rm -f random*
 rm -f ./test42/random*
 rm -f ./Webserv
-make -C ..
+make -C .. fclean && make -C .. test42
 
 mv ../Webserv ./
 ./Webserv test42/test_GETPOST.conf &
