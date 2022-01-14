@@ -2,6 +2,7 @@
 #define UTILS_HPP
 #include <vector>
 #include <string>
+#include <list>
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
@@ -11,6 +12,7 @@
 #include <dirent.h>
 #include <sstream>
 #include <map>
+#include "Log.hpp"
 
 namespace Utils
 {
@@ -36,13 +38,15 @@ namespace Utils
     void ft_trim(std::string &str);
     bool is_comentary(std::string &str);
 
-    // bool is_set(std::string value);
-    template <typename T>
-    bool is_set(std::vector<T> value);
+    //template <typename T>
+    //bool is_set(std::vector<T> value);
 
     int ft_find(std::string str, std::string find);
     int is_dir(const char *name);
     std::string toString(int &i);
+
+	bool set_fd_as_non_blocking(int fd, const char* fd_description);
+
 };
 
 struct MyException : public std::exception
@@ -52,6 +56,20 @@ struct MyException : public std::exception
    ~MyException() throw () {}
    const char* what() const throw() { return s.c_str(); }
 };
+
+template <typename T>
+T list_front(std::list<T> list) {
+	if (list.empty())
+		throw std::out_of_range("empty list");
+	return (*list.begin());
+}
+
+template <typename T>
+T list_back(std::list<T> list) {
+	if (list.empty())
+		throw std::out_of_range("empty list");
+	return (*(list.end() - 1));
+}
 
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const std::vector<T>& vec) {

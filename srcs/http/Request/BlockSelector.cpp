@@ -18,13 +18,20 @@ void		block_selector(ActiveHTTP& actHTTP, Request& request, Response& response) 
 		}
 	}
 
-	Request::header_map const& headers = request.get_headers();
-	Request::header_map::const_iterator it_host = headers.find("Host");
+	//Request::header_map const& headers = request.get_headers();
+	std::string host_value = "";
+	try {
+		host_value = HeaderMap::get_header_first_value(request.get_headers(), "Host");
+	}
+	catch (std::out_of_range&) {
+	}
+	//Request::header_map::const_iterator it_host = headers.find("Host");
 
-	if (it_host != headers.end()) {
+	//if (it_host != headers.end()) {
+	if (!host_value.empty()) {
 		for (std::vector<ServerBlock>::const_iterator it = tmp_servers.begin(); it != tmp_servers.end(); it++)
 		{
-			if (it->_serverConf.getName() == it_host->second && it->_serverConf.getAddress() == interface.getAddress())
+			if (it->_serverConf.getName() == host_value && it->_serverConf.getAddress() == interface.getAddress())
 			{
 				set = true;
 				request.set_server(*it);
@@ -45,11 +52,11 @@ void		block_selector(ActiveHTTP& actHTTP, Request& request, Response& response) 
 			}
 		}
 	}
-	if (it_host != headers.end()) {
+	if (!host_value.empty()) {
 		if (set == false) {
 			for (std::vector<ServerBlock>::const_iterator it = tmp_servers.begin(); it != tmp_servers.end(); it++)
 			{
-				if (it->_serverConf.getAddress() == 0 && it->_serverConf.getName() == it_host->second)
+				if (it->_serverConf.getAddress() == 0 && it->_serverConf.getName() == host_value)
 				{
 					set = true;
 					request.set_server(*it);

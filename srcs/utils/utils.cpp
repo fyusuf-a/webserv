@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cctype>
 #include <iomanip>
+#include <fcntl.h>
 
 
 namespace Utils
@@ -37,13 +38,13 @@ namespace Utils
 	std::string weekday_to_str(unsigned int i) {
 		static std::map<char, std::string> weekday_to_str;
 		if (weekday_to_str.empty()) {
-			weekday_to_str[0] = "Mon";
-			weekday_to_str[1] = "Tue";
-			weekday_to_str[2] = "Wed";
-			weekday_to_str[3] = "Thu";
-			weekday_to_str[4] = "Fri";
-			weekday_to_str[5] = "Sat";
-			weekday_to_str[6] = "Sun";
+			weekday_to_str[0] = "Sun";
+			weekday_to_str[1] = "Mon";
+			weekday_to_str[2] = "Tue";
+			weekday_to_str[3] = "Wed";
+			weekday_to_str[4] = "Thu";
+			weekday_to_str[5] = "Fri";
+			weekday_to_str[6] = "Sat";
 		}
 		if (i > 11)
 			return "";
@@ -194,5 +195,14 @@ namespace Utils
         ss << i;
         return ss.str();
     }
+
+	bool set_fd_as_non_blocking(int fd, const char* fd_description) {
+		if (fcntl(fd, F_SETFL, O_NONBLOCK) < 0)
+		{
+			Log::getInstance().error() << "cannot set " << fd_description << " as nonblocking" << std::endl;
+			return false;
+		}
+		return true;
+	}
 }
 
