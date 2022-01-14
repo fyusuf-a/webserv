@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 rm -f Response/GET/my_*
+rm -f Response/DELETE/my_*
 rm -f random*
 rm -f ./test42/random*
 rm -f ./Webserv
 touch ./test42/delete_file
+make -C .. fclean && make -C ..
 
-make -C .. fclean && make -C  ..
 mv ../Webserv ./
 ./Webserv test42/test_methods.conf &
 
@@ -83,7 +84,7 @@ if [ $? == "1" ]; then
 fi
 diff <(head -n 1 ./Response/DELETE/my_resp2) <(head -n 1 ./Response/DELETE/resp2)
 if [ $? == "1" ]; then
-	echo "Error: DELETE 1"
+	echo "Error: DELETE 2"
 	exit 1
 fi
 
