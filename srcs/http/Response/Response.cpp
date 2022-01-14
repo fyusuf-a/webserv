@@ -15,6 +15,9 @@ std::string Response::http_code_to_str(http_code code) {
 		case 202:
 			return "Accepted";
 		break;
+		case 204:
+			return "No Content";
+		break;
 		case 300:
 			return "Multiple Choices";
 		break;
@@ -51,6 +54,9 @@ std::string Response::http_code_to_str(http_code code) {
 		case 408:
 			return "Request Timeout";
 		break;
+		case 413:
+			return "Payload Too Large";
+		break;
 		case 501:
 			return "Not Implemented";
 		break;
@@ -73,7 +79,7 @@ std::string Response::http_code_to_str(http_code code) {
 			return "A Timeout Occurred";
 		break;
 		default:
-			return "Unknown Error";
+			return "I'm a teapot";
 	}
 }
 
@@ -102,7 +108,7 @@ const Response::header_map& Response::get_headers() const {
 }
 
 void	Response::set_header(const std::string& key, const std::string& value) {
-	_headers[key] = value;
+	HeaderMap::set_header(_headers, key, value, true);
 }
 
 void	Response::delete_header(const std::string& key) {
@@ -180,17 +186,13 @@ std::ostream& operator<<(std::ostream& os, const Response& resp) {
 
 std::ostream& operator<(std::ostream& os, const Response& resp) {
 	std::string const& custom_reason_phrase = resp.get_custom_reason_phrase();
-	std::string my_reason_phrase;
 	os << SERVER_PROTOCOL << " " << resp.get_code() << " ";
 	if (custom_reason_phrase.empty())
 		os << Response::http_code_to_str(static_cast<Response::http_code>(resp.get_code()));
 	else
 		os << resp.get_custom_reason_phrase();
 	os << "\r\n";
-	Response::header_map const& headers = resp.get_headers();
-	for (Response::header_map::const_iterator it = headers.begin();
-			it != headers.end(); ++it)
-		os << it->first << ": " << it->second << "\r\n";
+	os << resp.get_headers();
 	os << "\r\n";
 	return os;
 }

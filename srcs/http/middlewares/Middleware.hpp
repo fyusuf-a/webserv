@@ -84,6 +84,7 @@ class MethodDELETE : public Middleware, public Singleton<MethodDELETE>
 class MethodPOST : public Middleware, public Singleton<MethodPOST>
 {
 	public:
+		static Log& LOG;
 		MethodPOST(){};
 		virtual	~MethodPOST() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
@@ -110,10 +111,11 @@ class Error : public Middleware, public Singleton<Error>
 class CGIRunner : public Middleware, public Singleton<CGIRunner>
 {
 	private:
-		void set_env(std::map<std::string, std::string>& env
-							, ActiveHTTP const& server, Request const& request);
-		void convert_map_to_tab(std::map<std::string, std::string>env
-															, char** env_tab);
+		void set_env(Request::header_map& env, ActiveHTTP const& server,
+				Request const& request);
+		bool set_fd_as_non_blocking(int fd, char* fd_description);
+		size_t size_of_header_map(const Request::header_map& map);
+		void convert_map_to_tab(Request::header_map env, char** env_tab);
 
 	public:
 		static Log& LOG;
