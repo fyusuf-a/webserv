@@ -3,17 +3,18 @@
 #include <cstddef>
 #include <iostream>
 #include <map>
+#include <list>
 #include "../../parsingConf/serverBlock.hpp"
 #include "../../utils/Log.hpp"
+#include "../../utils/HeaderMap.hpp"
 
 class ServerBlock;
 
 class Request
 {
 	public:
+		typedef HeaderMap::header_map header_map;
 		static Log& LOG;
-		typedef std::map<std::string, std::string, Utils::cmpStringInsensitive>
-			header_map;
 	private:
 		std::string	_method;
 		std::string _path;
@@ -84,5 +85,6 @@ class Request
 };
 
 std::ostream& operator<<(std::ostream&, const Request&);
+std::ostream& operator<(std::ostream&, const Request&);
 
 #endif

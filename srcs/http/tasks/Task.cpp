@@ -20,7 +20,7 @@ Task::~Task() {
 	close(_fd);
 	_serv.remove_ongoing_task(this);
 	if (_serv.get_ongoing_tasks().empty())
-		_serv.reinitialize();
+		_serv.reinitialize(_fd);
 }
 
 int Task::get_fd() const {

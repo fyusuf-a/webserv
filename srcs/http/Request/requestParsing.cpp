@@ -1,4 +1,5 @@
 #include "Request.hpp"
+#include <stdexcept>
 #include <stdlib.h>
 
 Log& Request::LOG = Log::getInstance();
@@ -26,17 +27,24 @@ std::string	Request::extract_attribute(std::string& buffer, std::string terminat
 }
 
 void		Request::manage_head(std::string& buffer) {
-	if (_wrong == true || _too_big_body == true)
+	if (_wrong == true)
 		_head = 6;
 	if (_head == 6 || _head == 5)
 		return ;
 	if (_head == 4) {
 		if (buffer.find("\r\n", _lctr) == _lctr) {
 			_lctr += 2;
-			if (_headers.find("Content-Length") == _headers.end() && (_headers.find("Transfer-Encoding") == _headers.end() || _headers["Transfer-Encoding"] != "chunked"))
-				_head = 6;
-			else
+			try {
+				if (_headers.find("Content-Length") == _headers.end() &&
+						(_headers.find("Transfer-Encoding") == _headers.end()
+							|| HeaderMap::get_header_first_value(_headers, "Transfer-Encoding") != "chunked"))
+					_head = 6;
+				else
+					_head++;
+			}
+			catch (std::out_of_range& e) {
 				_head++;
+			}
 		}
 		else if (_over)
 			_head--;
@@ -46,7 +54,7 @@ void		Request::manage_head(std::string& buffer) {
 }
 
 void		Request::parse(std::string& buffer) {
-	//LOG.debug() << "buffer (head = " << _head << "):" << std::endl << buffer << std::endl;
+	//LOG.debug() << "buffer (head = " << _head << "):\n_" << buffer << "_" << std::endl;
 	_lctr = 0;
 	while ((_head == 1 || _head == 2) && buffer[_lctr] == ' ')
 		++_lctr;
@@ -79,12 +87,24 @@ void		Request::parse(std::string& buffer) {
 			tmp = extract_attribute(buffer, "\r\n");
 			field_value = ft_strtrim(tmp);
 			if (_over)
-				_headers.insert(std::pair<std::string, std::string>(_field_name, field_value));
+				HeaderMap::set_header(_headers, _field_name, field_value);
 			break;
 		case 5:
-			if ((_method == "POST" || _method == "PUT") && _headers.find("Content-Length") != _headers.end()) {
+			std::string content_length = "";
+			try {
+				content_length  = HeaderMap::get_header_first_value(_headers, "Content-Length");
+			}
+			catch (std::out_of_range&) {
+			}
+			std::string transfer_encoding = "";
+			try {
+				transfer_encoding = HeaderMap::get_header_first_value(_headers, "Transfer-Encoding");
+			}
+			catch (std::out_of_range&) {
+			}
+			if ((_method == "POST" || _method == "PUT") && !content_length.empty()) {
 				if (_to_read == 0)
-					_to_read = ::atoi(_headers["Content-Length"].c_str());
+					_to_read = ::atoi(content_length.c_str());
 				if (_to_read > _location.get_body_size()) {
 					_too_big_body = true;
 					break;
@@ -102,7 +122,7 @@ void		Request::parse(std::string& buffer) {
 					_over = false;
 				}
 			}
-			else if ((_method == "POST" || _method == "PUT") && _headers.find("Transfer-Encoding") != _headers.end() && _headers["Transfer-Encoding"] == "chunked") {
+			else if ((_method == "POST" || _method == "PUT") && transfer_encoding == "chunked") {
 				if (_to_read == 0 && !_last_zero_read) {
 					field_value = extract_attribute(buffer, "\r\n");
 					if (field_value == "")
@@ -131,7 +151,8 @@ void		Request::parse(std::string& buffer) {
 				else if (buffer.substr(_lctr + _to_read, 2) != "\r\n")
 					_wrong = true;
 				else {
-					_body += body_chunk;
+					if (!_too_big_body)
+						_body += body_chunk;
 					_lctr += body_chunk.length() + 2;
 				}
 				if (_body.length() > _location.get_body_size())

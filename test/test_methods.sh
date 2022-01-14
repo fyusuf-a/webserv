@@ -5,7 +5,7 @@ rm -f ./test42/random*
 rm -f ./Webserv
 touch ./test42/delete_file
 
-make -C ..
+make -C .. fclean && make -C  ..
 mv ../Webserv ./
 ./Webserv test42/test_methods.conf &
 
