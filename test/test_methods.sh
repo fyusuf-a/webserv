@@ -83,7 +83,7 @@ if [ $? == "1" ]; then
 fi
 diff <(head -n 1 ./Response/DELETE/my_resp2) <(head -n 1 ./Response/DELETE/resp2)
 if [ $? == "1" ]; then
-	echo "Error: DELETE 1"
+	echo "Error: DELETE 2"
 	exit 1
 fi
 
