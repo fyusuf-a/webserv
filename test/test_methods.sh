@@ -15,7 +15,7 @@ sleep 5
 bash Requete/requete.sh
 kill $!
 
-# \\ -------------- GET--------------- //
+# \\ -------------- GET --------------- //
 if [ "$(diff ./Response/GET/my_resp1 ./Response/GET/resp1)" != "" ]; then
 	echo "Error: Response/GET 1"
 	exit 1
@@ -89,11 +89,12 @@ if [ $? == "1" ]; then
 fi
 
 
-rm -f Response/GET/my_*
+rm -f Response/GET/my_*5
 rm -f Response/DELETE/my_*
 rm -f random*
 rm -f ./test42/random* 
 
 make fclean -C ..
+rm Webserv
 
 exit 0
