@@ -9,17 +9,20 @@
 Log& MethodGET::LOG = Log::getInstance();
 
 std::string replace_reserved(char *ptr) {
-	std::size_t loc;
+	std::size_t loc = -1;
 	std::string reserved = "&<>\"";
 	std::size_t it = 0;
 	std::string replacement[4] = { "&amp", "&lt", "&gt", "&quot" };
 	std::string str(ptr);
 	
 	while (it < 4) {
-		loc = str.find(reserved[it]);
+		loc = str.find(reserved[it], loc + 1);
 		if (loc != std::string::npos)
 			str.replace(loc, 1, replacement[it]);
-		it++;
+		else {
+			it++;
+			loc = -1;
+		}
 	}
 	return (str);
 }
