@@ -1,13 +1,16 @@
 <html>
 <head><title>Index of /</title></head>
 <body><pre>
+<a href="http://localhost:8002/./">./</a>
+<a href="http://localhost:8002/../">../</a>
 <a href="http://localhost:8002/test42.conf">test42.conf</a>
+<a href="http://localhost:8002/index.html">index.html</a>
+<a href="http://localhost:8002/post_body/">post_body/</a>
 <a href="http://localhost:8002/test_methods.conf">test_methods.conf</a>
-<a href="http://localhost:8002/pro<<<pro">pro&lt&lt&ltpro</a>
+<a href="http://localhost:8002/pro%24%23%5D%26pro">pro$#]&amppro</a>
 <a href="http://localhost:8002/YoupiBanane/">YoupiBanane/</a>
 <a href="http://localhost:8002/get_path/">get_path/</a>
+<a href="http://localhost:8002/pro<<<pro">pro&lt&lt&ltpro</a>
+<a href="http://localhost:8002/delete_file">delete_file</a>
 <a href="http://localhost:8002/put_test/">put_test/</a>
-<a href="http://localhost:8002/index.html">index.html</a>
-<a href="http://localhost:8002/../">../</a>
-<a href="http://localhost:8002/./">./</a>
 </pre></body>
