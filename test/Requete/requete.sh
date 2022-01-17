@@ -25,8 +25,6 @@ curl -s localhost:8001/directory/Yeah > Response/GET/my_resp10
 # \\ Request 11 // 
 curl -s localhost:8001/directory/Yeah/not_happy.bad_extension > Response/GET/my_resp11
 # \\ Request 12 // 
-touch ./test42/YoupiBanane/pro\<\<\<pro
-touch ./test42/YoupiBanane/pro\$\#\]\&pro
 curl -s localhost:8002/YoupiBanane/ > Response/GET/my_resp12
 
 
