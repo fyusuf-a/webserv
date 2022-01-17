@@ -53,7 +53,7 @@ void		display_index(Request& request, Response& response) {
 	    }
 		oss	<< "<a href=\"http://"
 			<< request.get_server().get_server_conf().getName()
-			<< request.get_original_request_path() << ent->d_name << final_slash <<  "\">"
+			<< request.get_original_request_path() << Utils::percent_encode(ent->d_name) << final_slash <<  "\">"
 			<< replace_reserved(ent->d_name) << final_slash
 			<< "</a>\n";
       }

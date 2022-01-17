@@ -237,6 +237,28 @@ namespace Utils
             i++;
         }
         return (decoded);
-}
+    }
+    
+    std::string percent_encode(const std::string str) {
+        std::string encoded;
+        std::size_t i = 0;
+        int first_dig = 0;
+        std::string base = "0123456789ABCDEF";
+        char c;
+
+        while (str[i]) {
+            c = str[i];
+            if (c != '!' && (c < '#' || c > ',') && c != '/' && c != ':' && c != ';' && c != '=' && c != '?' && c != '@' && c != '[' && c != ']')
+                encoded += str[i];
+            else {
+                encoded += '%';
+                first_dig = str[i] / 16;
+                encoded += base[first_dig];
+                encoded += base[str[i] - first_dig * 16];
+            }
+            i++;
+        }
+        return (encoded);
+    }
 }
 
