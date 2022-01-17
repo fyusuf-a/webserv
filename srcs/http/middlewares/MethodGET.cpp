@@ -38,7 +38,7 @@ void		display_index(Request& request, Response& response) {
 	oss << "<html>\n<head><title>Index of "
 		<< request.get_original_request_path()
 		<< "</title></head>\n<body>"
-		<< "<pre>Name\n";
+		<< "<pre>\n";
 
     if ((dir = opendir(request.get_path().c_str())) != NULL) {
       while ((ent = readdir(dir)) != NULL) {
