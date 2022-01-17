@@ -60,6 +60,10 @@ if [ "$(diff ./Response/GET/my_resp11 ./Response/GET/resp11)" != "" ]; then
 	echo "Error: Response/GET 11"
 	exit 1
 fi
+if [ "$(diff ./Response/GET/my_resp12 ./Response/GET/resp12)" != "" ]; then
+	echo "Error: Response/GET 12"
+	exit 1
+fi
 
 
 # \\ -------------- POST --------------- //

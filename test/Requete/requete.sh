@@ -24,6 +24,9 @@ curl -s localhost:8001/directory/nop/other.pouac > Response/GET/my_resp9
 curl -s localhost:8001/directory/Yeah > Response/GET/my_resp10
 # \\ Request 11 // 
 curl -s localhost:8001/directory/Yeah/not_happy.bad_extension > Response/GET/my_resp11
+# \\ Request 12 // 
+touch ./test42/pro\<\<\<pro
+curl -s localhost:8001/ > Response/GET/my_resp12
 
 
 # \\ ------------ POST ---------//
