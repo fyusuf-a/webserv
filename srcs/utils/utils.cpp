@@ -206,8 +206,8 @@ namespace Utils
 	}
 
     std::size_t find_value(char val) {
-        std::string base1 = "0123456789ABCDEF";
-        std::string base2 = "0123456789abcdef";
+        static const std::string base1 = "0123456789ABCDEF";
+        static const std::string base2 = "0123456789abcdef";
 
         if (!val)
             throw (400);
@@ -243,7 +243,7 @@ namespace Utils
         std::string encoded;
         std::size_t i = 0;
         int first_dig = 0;
-        std::string base = "0123456789ABCDEF";
+        static std::string base = "0123456789ABCDEF";
         char c;
 
         while (str[i]) {

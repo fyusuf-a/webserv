@@ -3,6 +3,7 @@
 
 void		CheckSyntax::body(ActiveHTTP& actHTTP, Request & request, Response & response, MiddlewareChain& next) {
 	(void)actHTTP;
+
     if (response.get_code() >= 400) {
         next();
         return ;
