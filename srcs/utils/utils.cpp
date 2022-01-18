@@ -209,15 +209,11 @@ namespace Utils
         static const std::string base1 = "0123456789ABCDEF";
         static const std::string base2 = "0123456789abcdef";
 
-        if (!str[i] || (base1.find(str[i]) == std::string::npos && base2.find(str[i]) == std::string::npos)) {
-            std::cout << "ah" <<std::endl;
+        if (!str[i] || (base1.find(str[i]) == std::string::npos && base2.find(str[i]) == std::string::npos))
             return (false);
-        }
         ++i;
-        if (!str[i] || (base1.find(str[i]) == std::string::npos && base2.find(str[i]) == std::string::npos)) {
-            std::cout << "a2h" <<std::endl;
+        if (!str[i] || (base1.find(str[i]) == std::string::npos && base2.find(str[i]) == std::string::npos))
             return (false);
-        }
         return (true);
     }
 
