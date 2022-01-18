@@ -89,7 +89,7 @@ if [ $? == "1" ]; then
 fi
 
 
-rm -f Response/GET/my_*5
+rm -f Response/GET/my_*
 rm -f Response/DELETE/my_*
 rm -f random*
 rm -f ./test42/random* 
