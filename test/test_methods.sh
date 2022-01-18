@@ -28,10 +28,10 @@ if [ "$(diff ./Response/GET/my_resp3 ./Response/GET/resp3)" != "" ]; then
 	echo "Error: Response/GET 3"
 	exit 1
 fi
-# if [ "$(diff ./Response/GET/my_resp4 ./Response/GET/resp4)" != "" ]; then
-# 	echo "Error: Response/GET 4"
-# 	exit 1
-# fi
+if [ "$(diff ./Response/GET/my_resp4 ./Response/GET/resp4)" != "" ]; then
+	echo "Error: Response/GET 4"
+	exit 1
+fi
 if [ "$(diff ./Response/GET/my_resp5 ./Response/GET/resp5)" != "" ]; then
 	echo "Error: Response/GET 5"
 	exit 1
@@ -58,10 +58,6 @@ if [ "$(diff ./Response/GET/my_resp10 ./Response/GET/resp10)" != "" ]; then
 fi
 if [ "$(diff ./Response/GET/my_resp11 ./Response/GET/resp11)" != "" ]; then
 	echo "Error: Response/GET 11"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp12 ./Response/GET/resp12)" != "" ]; then
-	echo "Error: Response/GET 12"
 	exit 1
 fi
 
