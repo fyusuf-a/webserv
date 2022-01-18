@@ -25,7 +25,9 @@ namespace Utils
 	std::string month_to_str(unsigned int i);
 	std::string weekday_to_str(unsigned int i);
 	std::ostream& print_date(std::ostream& os, bool show_weekday = true, bool show_gmt = true);
-
+	std::string percent_decode(const std::string str);
+	std::string	percent_encode(const std::string str);
+	
     bool is_space(char const c);
     bool is_spaces(std::string const s);
     bool is_valid_methods(std::string const &s);
