@@ -205,17 +205,27 @@ namespace Utils
 		return true;
 	}
 
+    bool        next_chars_code(std::string str, std::size_t i) {
+        static const std::string base1 = "0123456789ABCDEF";
+        static const std::string base2 = "0123456789abcdef";
+
+        if (!str[i] || (base1.find(str[i]) == std::string::npos && base2.find(str[i]) == std::string::npos))
+            return (false);
+        ++i;
+        if (!str[i] || (base1.find(str[i]) == std::string::npos && base2.find(str[i]) == std::string::npos))
+            return (false);
+        return (true);
+    }
+
     std::size_t find_value(char val) {
         static const std::string base1 = "0123456789ABCDEF";
         static const std::string base2 = "0123456789abcdef";
 
-        if (!val)
-            throw (400);
         if (base1.find(val) != std::string::npos)
             return (base1.find(val));
-        else if (base2.find(val) != std::string::npos)
+        else
             return (base2.find(val));
-        throw (400);
+
     }
 
     std::string percent_decode(const std::string str) {
@@ -224,9 +234,7 @@ namespace Utils
         char ascii;
 
         while (str[i]) {
-            if (str[i] != '%')
-                decoded += str[i];
-            else {
+            if (str[i] == '%' && next_chars_code(str, i + 1)) {
                 ascii = 0;
                 i++;
                 ascii += find_value(str[i]) * 16;
@@ -234,6 +242,8 @@ namespace Utils
                 ascii += find_value(str[i]);
                 decoded += ascii;
             }
+            else 
+                decoded += str[i];
             i++;
         }
         return (decoded);
