@@ -21,7 +21,8 @@ void MiddlewareChain::init() {
 	CGIRunner&	 					cgi_runner = CGIRunner::getInstance();
 	Error&	 						error_page = Error::getInstance();
 	Sender& 						sender = Sender::getInstance();
-	ExtractQuery& 					extr_query = ExtractQuery::getInstance();
+	ExtractQueryAndExtension& 		extr_query =
+										ExtractQueryAndExtension::getInstance();
 
 	_chain.push_back(&check_syntax);
 	_chain.push_back(&apc);

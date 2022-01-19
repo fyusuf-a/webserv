@@ -32,7 +32,7 @@ void		MethodPOST::body(ActiveHTTP& serv, Request& request, Response& response, M
 		return next();
 	}
 	response.delete_header("Transfer-Encoding");
-	response.set_header("Content-Length", "0");
+	response.set_header("Content-Length", "0", true);
 	new POSTTask(fd, serv);
 	response.set_code(Response::OK);
 	return next();

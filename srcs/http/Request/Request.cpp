@@ -130,6 +130,7 @@ Request & 		Request::operator=( Request const & rhs ){
 		_query = rhs._query;
 		_is_script = rhs._is_script;
 		_to_read = rhs._to_read;
+		_file_extension = rhs._file_extension;
 	}
 	return *this;
 }

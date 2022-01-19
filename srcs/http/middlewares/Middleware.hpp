@@ -51,12 +51,13 @@ class IndexSelector : public Middleware, public Singleton<IndexSelector>
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
 
-class ExtractQuery : public Middleware, public Singleton<ExtractQuery>
+class ExtractQueryAndExtension : public Middleware,
+									public Singleton<ExtractQueryAndExtension>
 {
 	public:
 		static Log& LOG;
-		ExtractQuery(){};
-		virtual	~ExtractQuery() {};
+		ExtractQueryAndExtension(){};
+		virtual	~ExtractQueryAndExtension() {};
 		virtual void	body(ActiveHTTP&, Request&, Response&, MiddlewareChain&);
 };
 

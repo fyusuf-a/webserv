@@ -35,6 +35,7 @@ class Request
 		std::string _query;
 		bool		_is_script;
 		unsigned long	_to_read;
+		std::string	_file_extension;
 
 		ServerBlock 	_server;
 		ServerLocation	_location;

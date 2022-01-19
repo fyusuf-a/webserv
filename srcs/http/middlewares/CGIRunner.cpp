@@ -171,8 +171,8 @@ void		CGIRunner::body(ActiveHTTP& server, Request& request
 	pipe(out_pipe);
 	if (!Utils::set_fd_as_non_blocking(in_pipe[0], "in-pipe read extremity")
 		|| !Utils::set_fd_as_non_blocking(in_pipe[1], "in-pipe write extremity")
-		|| !Utils::set_fd_as_non_blocking(out_pipe[0], "out-pipe read extremity")
-		|| !Utils::set_fd_as_non_blocking(out_pipe[1], "out-pipe write extremity"))
+		|| !Utils::set_fd_as_non_blocking(out_pipe[0], "out-pipe read extremity"))
+		//|| !Utils::set_fd_as_non_blocking(out_pipe[1], "out-pipe write extremity"))
 	{
 		close(in_pipe[0]);
 		close(in_pipe[1]);

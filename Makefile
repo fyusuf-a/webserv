@@ -20,7 +20,7 @@ SRC = 	main.cpp\
 	srcs/http/middlewares/MethodGET.cpp\
 	srcs/http/middlewares/MethodDELETE.cpp\
 	srcs/http/middlewares/MethodPOST.cpp\
-	srcs/http/middlewares/Extract_query.cpp\
+	srcs/http/middlewares/Extract_query_and_extension.cpp\
 	srcs/http/middlewares/PathChopper.cpp\
 	srcs/http/middlewares/Sender.cpp\
 	srcs/http/middlewares/IndexSelector.cpp\
@@ -55,6 +55,11 @@ debug: all
 
 test42: CFLAGS += -D TEST42 -D DEBUG_FLAG
 test42: all
+
+docker:
+	docker rm -f web_server && \
+	docker build -t webserv -f test/docker-wordpress/Dockerfile . && \
+	docker run --name web_server -p 80:80 -d webserv
 
 clean :
 	rm -f $(O_FILES)

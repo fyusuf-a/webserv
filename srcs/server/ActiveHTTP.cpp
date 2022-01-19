@@ -54,7 +54,7 @@ void ActiveHTTP::add_content_length(std::ostringstream& oss) {
 	if (it == headers.end())
 	{
 		oss << _response.get_body().length();
-		_response.set_header("Content-Length", oss.str()); 
+		_response.set_header("Content-Length", oss.str(), false); 
 		oss.str("");
 	}
 }

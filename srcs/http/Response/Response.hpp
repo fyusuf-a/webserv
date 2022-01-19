@@ -87,7 +87,8 @@ class Response
 		std::string const&	get_custom_reason_phrase() const;
 
 		void		set_code(unsigned int code);
-		void		set_header(const std::string& key, const std::string& value);
+		void		set_header(const std::string& key, const std::string& value,
+											bool replace);
 		void		set_body(std::string body);
 		void		set_beginning_written_on_write_buffer(bool);
 		void 		set_written_on_write_buffer(bool);

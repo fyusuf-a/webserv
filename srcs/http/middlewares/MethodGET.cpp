@@ -43,7 +43,7 @@ void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, Mid
 	os << file_size;
 
 	response.delete_header("Transfer-Encoding");
-	response.set_header("Content-Length", os.str());
+	response.set_header("Content-Length", os.str(), true);
 
 	new GETTask(fd, serv);
 	return next();
