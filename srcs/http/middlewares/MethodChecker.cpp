@@ -9,7 +9,7 @@ void		MethodChecker::body(ActiveHTTP& actHTTP, Request& request, Response& respo
 	(void)response;
 	(void)actHTTP;
 
-    if (response.get_code() >= 400){
+    if (response.get_code() >= 400 || response.get_code() == 301){
         next();
         return ;
     }
