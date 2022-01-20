@@ -1,5 +1,4 @@
 #include "Middleware.hpp"
-#include "Middleware.hpp"
 #include <sstream>
 #include <stdio.h>
 #include <string>
