@@ -11,7 +11,7 @@ g++ -g3 -D DEBUG_FLAG -I ../includes -Wall -Werror -Wextra --std=c++98 ./test_pa
 
 ./a.out $FD1 >> $FD2
 
-if [ "$?" != "11" ]; then
+if [ "$?" != "11" ]; thengit ad
 	rm -f $FD1
 	rm -f $FD2
 	rm a.out
@@ -29,3 +29,4 @@ rm -f $FD1
 rm -f $FD2
 rm a.out
 exit 0
+
