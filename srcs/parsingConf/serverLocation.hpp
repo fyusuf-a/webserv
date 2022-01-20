@@ -21,6 +21,7 @@ class ServerLocation
 		bool      			    	_auto_index;
 		bool    			    	_auth_basic;
 		int							_body_size;
+        std::string                 _redirection;
 
 
 
@@ -38,6 +39,7 @@ class ServerLocation
         void      set_cgi_ext(std::string const &cgi_ext);
         void      set_cgi_bin(std::string const &cgi_bin);
         void      set_language(std::string const &language);
+        void      set_redirection(std::string const &redirection);
         void      set_auth_basic_file(std::string const &language);
         void      set_location_path(std::string const &val);
         void      set_auto_index(bool val);
@@ -52,6 +54,7 @@ class ServerLocation
         std::string const   &get_cgi_bin(void) const;
         std::string const   &get_language(void) const;
         std::string const   &get_auth_basic_file() const;
+        std::string const   &get_redirection() const;
         std::string const   &get_location_path(void) const;
         bool                 get_auto_index(void) const;
         bool                 get_auth_basic(void) const;

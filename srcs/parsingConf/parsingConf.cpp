@@ -281,6 +281,9 @@ void  ParsingConf::setup_location_directive(std::string const &line, ServerLocat
     else if (directive == "cgi_bin" && is_set(location.get_cgi_bin(), directive) )
         location.set_cgi_bin( parsing_path_value(value, directive) );
 
+    else if (directive == "redirection" && is_set(location.get_redirection(), directive) )
+        location.set_redirection( parsing_path_value(value, directive) );
+
     else if (directive == "autoindex" && is_set(location.get_auto_index(), directive) )
         location.set_auto_index( parsing_bool_value(value, directive) );
 

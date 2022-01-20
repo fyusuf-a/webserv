@@ -28,18 +28,26 @@ std::string get_absolute_path(Request &request, const std::string &path) {
 			absolute_path += &(path[i]);
 		}
 
-		if (*(absolute_path.end() - 1) != '/' && Utils::is_dir(absolute_path.c_str()))
-			absolute_path += "/";
+
 	}
 	else if (request.get_server().get_server_conf().getRoot() == "")
 		absolute_path = "";
 	else
 		absolute_path = request.get_server().get_server_conf().getRoot() + path;
+	if (*(absolute_path.end() - 1) != '/' && Utils::is_dir(absolute_path.c_str()))
+		absolute_path += "/";
 	return (absolute_path);
 }
 
 void		AbsolutePathConcatenator::body(ActiveHTTP&, Request& request, Response& response, MiddlewareChain& next) {
-   
+
+	if (request.get_location().get_redirection() != "")
+	{
+		request.set_path(request.get_location().get_redirection());
+		response.set_header("Location", request.get_location().get_redirection());
+		response.set_code(Response::MovedPermanently);
+	}
+	
     if (response.get_code() >= 400)
         return next();
 

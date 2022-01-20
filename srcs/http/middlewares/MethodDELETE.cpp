@@ -10,7 +10,8 @@ Log& MethodDELETE::LOG = Log::getInstance();
 void		MethodDELETE::body(ActiveHTTP&, Request& request, Response& response, MiddlewareChain& next) {
 
 // if body return 204
-	if (response.get_code() >= 400 || request.get_method() != "DELETE" || request.get_is_script())
+	if (response.get_code() >= 400 || response.get_code() == 301
+	|| request.get_method() != "DELETE" || request.get_is_script())
         return next();
 	else
 	{

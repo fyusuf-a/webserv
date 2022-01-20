@@ -1,4 +1,5 @@
 #include "Middleware.hpp"
+#include "Middleware.hpp"
 #include <sstream>
 #include <stdio.h>
 #include <string>
@@ -69,7 +70,7 @@ void		display_index(Request& request, Response& response) {
 
 void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, MiddlewareChain& next) {
 
-	if (response.get_code() >= 400
+	if (response.get_code() >= 400 || response.get_code() == 301
 		|| !(request.get_method() == "GET" || request.get_method() == "HEAD")
 		|| request.get_is_script())
         return next();
@@ -80,6 +81,7 @@ void		MethodGET::body(ActiveHTTP&serv, Request& request, Response& response, Mid
     }
 
 	const char *filename = request.get_path().c_str();
+
 
 	if (!Utils::is_file(filename) || access(filename, 0) != 0)
 	{
