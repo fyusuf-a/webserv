@@ -1,0 +1,12 @@
+<html>
+<head><title>Index of /YoupiBanane/</title></head>
+<body><pre>
+<a href="http://localhost:8002/YoupiBanane/youpi.bad_extension">youpi.bad_extension</a>
+<a href="http://localhost:8002/YoupiBanane/Yeah/">Yeah/</a>
+<a href="http://localhost:8002/YoupiBanane/nop/">nop/</a>
+<a href="http://localhost:8002/YoupiBanane/pro<<<pro">pro&lt&lt&ltpro</a>
+<a href="http://localhost:8002/YoupiBanane/youpi.bla">youpi.bla</a>
+<a href="http://localhost:8002/YoupiBanane/pro%24%23%5D%26pro">pro$#]&amppro</a>
+<a href="http://localhost:8002/YoupiBanane/../">../</a>
+<a href="http://localhost:8002/YoupiBanane/./">./</a>
+</pre></body>

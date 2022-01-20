@@ -28,9 +28,9 @@ void		IndexSelector::body(ActiveHTTP&, Request& request, Response& response, Mid
 	{
 		LOG.debug() << "Autoindex is off" << std::endl;
         response.set_code(Response::NotFound);
-	}
-
-
+    }
+    else
+        response.set_index_display(true);
 
     next();
 }

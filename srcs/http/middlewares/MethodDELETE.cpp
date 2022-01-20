@@ -14,12 +14,30 @@ void		MethodDELETE::body(ActiveHTTP&, Request& request, Response& response, Midd
         return next();
 	else
 	{
-		if (access(request.get_path().c_str(), 0) != 0)
+		int ret = 0;
+		std::string path =request.get_path();
+		
+		if (access(path.c_str(), 0) != 0)
+		{
 			response.set_code(Response::NotFound);
-		else if (access(request.get_path().c_str(), 4) != 0)
+			return next();
+		}
+		else if (access(path.c_str(), 4) != 0)
+		{
 			response.set_code(Response::Forbidden);
-		else if ( remove(request.get_path().c_str()) != 0)
+			return next();
+
+		}
+		else if ((ret = remove(path.c_str())) && ret == -1)
 			LOG.error() << "error cant delete file" << std::endl;
+		if (!ret)
+		{
+			#ifdef TEST42
+				response.set_code(Response::OK);
+			#else
+				response.set_code(Response::NoContent);
+			#endif
+		}
 	}
 	next();
 }

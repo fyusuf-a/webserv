@@ -17,7 +17,8 @@ class Response
 			OK = 200,
 			Created = 201,
 			Accepted = 202,
-			// Redirection
+			NoContent = 204,
+			// Redirection1
 			MultipleChoices = 300,
 			MovedPermanently = 301,
 			Found = 302,
@@ -64,6 +65,8 @@ class Response
 		bool		_beginning_written_on_write_buffer;
 		bool		_written_on_write_buffer;
 
+		bool		_index_display;
+
 	public:
 		static std::string http_code_to_str(http_code);
 	
@@ -82,6 +85,7 @@ class Response
 		void				delete_header(const std::string& key);
 		unsigned int		get_code(void) const;
 		bool				get_ready();
+		bool				get_index_display() const;
 		bool 				get_beginning_written_on_write_buffer() const;
 		bool 				get_written_on_write_buffer() const;
 		std::string const&	get_custom_reason_phrase() const;
@@ -89,6 +93,7 @@ class Response
 		void		set_code(unsigned int code);
 		void		set_header(const std::string& key, const std::string& value,
 											bool replace);
+		void		set_index_display(bool status);
 		void		set_body(std::string body);
 		void		set_beginning_written_on_write_buffer(bool);
 		void 		set_written_on_write_buffer(bool);

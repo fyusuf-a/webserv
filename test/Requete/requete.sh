@@ -36,19 +36,14 @@ curl -v -X POST  --data-binary  @"random2.txt" -H "Transfer-Encoding: chunked" h
 # \\ Request 3 // 
 yes this is a test | head -n 250000 > random3.txt
 curl -v -X POST  --data-binary  @"random3.txt" -H "Transfer-Encoding: chunked" http://localhost:8002/random-output3.txt
-# curl -s localhost:8001/directory/youpi.bla  > Response/POST/my_resp2       |  size -> 100000000
-# # \\ Request 3 // 
-# curl -s localhost:8001/directory/youpa.bla  > Response/POST/my_resp3       | size -> 100000000
-# # \\ Request 4 // 
-# curl -s localhost:8001/directory/youpi.bla > Response/POST/my_resp4        | size -> 100000000 with special header
-# # \\ Request 5 // 
-# curl -s localhost:8001/post_body > Response/POST/my_resp5                  | size -> 0
-# # \\ Request 6 // 
-# curl -s localhost:8001/post_body > Response/POST/my_resp6                  | size -> 100
-# # \\ Request 7 // 
-# curl -s localhost:8001/post_body > Response/POST/my_resp7                  | size -> 200
-# # \\ Request 8 // 
-# curl -s localhost:8001/post_body > Response/POST/my_resp8                  | size -> 101
+
+
+# \\ ------------ DELETE ---------//
+# \\ Request 1 // 
+curl -I -X DELETE http://localhost:8002/delete_file > Response/DELETE/my_resp1
+# \\ Request 2 // 
+curl -I -X DELETE http://localhost:8002/delete_file > Response/DELETE/my_resp2
+
 exit 0
 
 
