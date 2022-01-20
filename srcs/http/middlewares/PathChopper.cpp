@@ -17,7 +17,7 @@ int         is_script(Request& request, std::string path) {
 
 void		PathChopper::body(ActiveHTTP&, Request& request, Response& response, MiddlewareChain& next) {
 
-    if (response.get_code() >= 400){
+    if (response.get_code() >= 400 || response.get_code() == 301){
         next();
         return ;
     }

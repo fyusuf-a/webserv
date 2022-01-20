@@ -40,7 +40,10 @@ std::string get_absolute_path(Request &request, const std::string &path) {
 }
 
 void		AbsolutePathConcatenator::body(ActiveHTTP&, Request& request, Response& response, MiddlewareChain& next) {
-
+    if (response.get_code() >= 400)
+	{
+        return next();
+	}
 	if (request.get_location().get_redirection() != "")
 	{
 		request.set_path(request.get_location().get_redirection());
@@ -48,8 +51,7 @@ void		AbsolutePathConcatenator::body(ActiveHTTP&, Request& request, Response& re
 		response.set_code(Response::MovedPermanently);
 	}
 	
-    if (response.get_code() >= 400)
-        return next();
+
 
     request.set_original_request_path(Utils::percent_decode(request.get_path()));
 	request.set_path(get_absolute_path(request, request.get_original_request_path()));
