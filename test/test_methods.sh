@@ -29,6 +29,7 @@ if [ "$(diff ./Response/GET/my_resp3 ./Response/GET/resp3)" != "" ]; then
 	exit 1
 fi
 if [ "$(diff ./Response/GET/my_resp4 ./Response/GET/resp4)" != "" ]; then
+	diff ./Response/GET/my_resp4 ./Response/GET/resp4
 	echo "Error: Response/GET 4"
 	exit 1
 fi
