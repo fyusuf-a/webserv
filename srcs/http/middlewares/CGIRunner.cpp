@@ -55,6 +55,7 @@ void		CGIRunner::set_env(Request::header_map& env, ActiveHTTP const& server, Req
 #else
 	env["PATH_INFO"].push_front(request.get_extra_path());
 #endif
+	LOG.debug() << "PATH_INFO = \"" << list_front(env["PATH_INFO"]) << '\"' << std::endl; 
 
 	// Setting PATH_TRANSLATED (same as SCRIPT_FILENAME?)
 	env["PATH_TRANSLATED"].push_front(env["PATH_INFO"].empty() ?
