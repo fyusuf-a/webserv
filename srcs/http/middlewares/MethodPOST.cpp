@@ -8,7 +8,7 @@ Log& MethodPOST::LOG = Log::getInstance();
 
 void		MethodPOST::body(ActiveHTTP& serv, Request& request, Response& response, MiddlewareChain& next) {
 
-	if (response.get_code() >= 400
+	if (response.get_code() >= 400 || response.get_code() == 301
 		|| !(request.get_method() == "POST" || request.get_method() == "PUT")
 		|| request.get_is_script()) {
         return next();

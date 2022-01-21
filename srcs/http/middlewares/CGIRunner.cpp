@@ -147,7 +147,7 @@ void CGIRunner::convert_map_to_tab(Request::header_map env , char** env_tab) {
 
 void		CGIRunner::body(ActiveHTTP& server, Request& request
 								, Response& response, MiddlewareChain& next) {
-	if (response.get_code() >= 400 || !request.get_is_script())
+	if (response.get_code() >= 400 || response.get_code() == 301 || !request.get_is_script())
 		return next();
 
 	Request::header_map env;

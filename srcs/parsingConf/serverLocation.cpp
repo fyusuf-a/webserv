@@ -2,12 +2,12 @@
 
 
 ServerLocation::ServerLocation() :
-_root(""), _cgi_ext(""), _cgi_bin(""), _language(""), _auth_basic_file(""), _location_path(""), _auto_index(0), _auth_basic(0), _body_size(-1){}
+_root(""), _cgi_ext(""), _cgi_bin(""), _language(""), _auth_basic_file(""), _location_path(""), _auto_index(0), _auth_basic(0), _body_size(-1), _redirection(""){}
 
 ServerLocation::ServerLocation(const ServerLocation &other) :
 _index(other._index), _methods(other._methods), _root(other._root), _cgi_ext(other._cgi_ext),
 _cgi_bin(other._cgi_bin), _language(other._language), _auth_basic_file(other._auth_basic_file),
-_location_path(other._location_path), _auto_index(other._auto_index), _auth_basic(other._auth_basic), _body_size(other._body_size){}
+_location_path(other._location_path), _auto_index(other._auto_index), _auth_basic(other._auth_basic), _body_size(other._body_size), _redirection(other._redirection){}
 
 ServerLocation::~ServerLocation(){}
     
@@ -27,6 +27,7 @@ ServerLocation &ServerLocation::operator=(const ServerLocation &other)
 		_body_size = other._body_size;
 		_location_path = other._location_path;
 		_root = other._root;
+		_redirection = other._redirection;
 	}
     return (*this);
 }
@@ -41,6 +42,7 @@ void                             ServerLocation::set_cgi_bin(std::string const &
 void                             ServerLocation::set_language(std::string const &language){ this->_language = language; }
 void                             ServerLocation::set_auth_basic_file(std::string const &path){ this->_auth_basic_file = path; }
 void                             ServerLocation::set_location_path(std::string const &path){ this->_location_path = path; }
+void                             ServerLocation::set_redirection(std::string const &path){ this->_redirection = path; }
 void                             ServerLocation::set_auth_basic(bool n){this->_auth_basic = n; }
 void                             ServerLocation::set_auto_index(bool n){ this->_auto_index = n; }
 void                             ServerLocation::set_body_size(size_t val){ this->_body_size = val; }
@@ -55,6 +57,7 @@ std::string const                &ServerLocation::get_cgi_bin(void) const{ retur
 std::string const                &ServerLocation::get_language(void) const{ return (this->_language); }
 std::string const                &ServerLocation::get_auth_basic_file(void) const{ return (this->_auth_basic_file); }
 std::string const                &ServerLocation::get_location_path(void) const{ return (this->_location_path); }
+std::string const                &ServerLocation::get_redirection(void) const{ return (this->_redirection); }
 bool                              ServerLocation::get_auto_index(void) const{ return (this->_auto_index); }
 bool                              ServerLocation::get_auth_basic(void) const{ return (this->_auth_basic); }
 size_t                            ServerLocation::get_body_size(void) const{ return (this->_body_size); }

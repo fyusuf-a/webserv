@@ -102,7 +102,7 @@ namespace Utils
     {
         if (dir == "index" || dir == "methods" || dir == "cgi_extension"
         || dir == "cgi_bin" || dir == "language" || dir == "autoindex" || dir == "root"
-        || dir == "client_max_body_size" || dir == "auth_basic" || dir == "auth_basic_user_file")
+        || dir == "client_max_body_size" || dir == "auth_basic" || dir == "auth_basic_user_file" || dir == "redirection")
             return (true);
         return (false);
     }
