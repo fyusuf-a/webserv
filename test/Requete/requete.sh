@@ -9,7 +9,9 @@ curl -s localhost:8001/directory > Response/GET/my_resp2
 # \\ Request 3 // 
 curl -s localhost:8001/directory/youpi.bad_extension > Response/GET/my_resp3
 # \\ Request 4 // 
+echo "REQUEST 4"
 curl -s localhost:8001/directory/youpi.bla > Response/GET/my_resp4
+curl -s localhost:8001/directory/youpi.bla | cat -e
 # \\ Request 5 // 
 curl -s localhost:8001/directory/oulalala > Response/GET/my_resp5
 # \\ Request 6 // 
