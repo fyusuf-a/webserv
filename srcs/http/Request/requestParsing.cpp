@@ -105,10 +105,8 @@ void		Request::parse(std::string& buffer) {
 			if ((_method == "POST" || _method == "PUT") && !content_length.empty()) {
 				if (_to_read == 0)
 					_to_read = ::atoi(content_length.c_str());
-				if (_to_read > _location.get_body_size()) {
+				if (_to_read > _location.get_body_size())
 					_too_big_body = true;
-					break;
-				}
 				if (buffer.length() >= _to_read) {
 					_body += buffer.substr(_lctr, _to_read);
 					_lctr += _to_read;
