@@ -15,6 +15,8 @@ sleep 5
 bash Requete/requete.sh
 kill $!
 
+php-cgi --version
+
 # \\ -------------- GET --------------- //
 if [ "$(diff ./Response/GET/my_resp1 ./Response/GET/resp1)" != "" ]; then
 	echo "Error: Response/GET 1"
@@ -29,7 +31,12 @@ if [ "$(diff ./Response/GET/my_resp3 ./Response/GET/resp3)" != "" ]; then
 	exit 1
 fi
 if [ "$(diff ./Response/GET/my_resp4 ./Response/GET/resp4)" != "" ]; then
-	diff ./Response/GET/my_resp4 ./Response/GET/resp4
+	php-cgi --version
+	//diff ./Response/GET/my_resp4 ./Response/GET/resp4
+	echo MY_RESP4
+	cat -e ./Response/GET/my_resp4
+	echo RESP4
+	cat -e ./Response/GET/resp4
 	echo "Error: Response/GET 4"
 	exit 1
 fi
