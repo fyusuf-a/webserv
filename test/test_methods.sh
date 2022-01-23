@@ -1,108 +1,85 @@
 #!/usr/bin/env bash
-rm -f Response/GET/my_*
-rm -f Response/DELETE/my_*
+
+rm -f test_methods/GET/my_*
+rm -f test_methods/DELETE/my_*
 rm -f random*
 rm -f ./test42/random*
 rm -f ./Webserv
+
 touch ./test42/delete_file
-make -C .. fclean && make -C .. debug
+make -C .. fclean && make -C .. debug -j4
 
-mv ../Webserv ./
-./Webserv test42/test_methods.conf &
+../Webserv test_methods/test_methods.conf &
 
-sleep 5
+sleep 2
 
-bash Requete/requete.sh
-kill $!
-
-php-cgi --version
+# 1st argument : request number
+# 2nd argument : path
+function test_get() {
+	curl -s localhost:8001$2 > test_methods/GET/my_resp$1
+	if [ "$(diff ./test_methods/GET/my_resp$1 ./test_methods/GET/resp$1)" != "" ]; then
+		echo "Error: GET $1"
+		exit 1
+	fi
+}
 
 # \\ -------------- GET --------------- //
-if [ "$(diff ./Response/GET/my_resp1 ./Response/GET/resp1)" != "" ]; then
-	echo "Error: Response/GET 1"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp2 ./Response/GET/resp2)" != "" ]; then
-	echo "Error: Response/GET 2"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp3 ./Response/GET/resp3)" != "" ]; then
-	echo "Error: Response/GET 3"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp4 ./Response/GET/resp4)" != "" ]; then
-	php-cgi --version
-	//diff ./Response/GET/my_resp4 ./Response/GET/resp4
-	echo MY_RESP4
-	cat -e ./Response/GET/my_resp4
-	echo RESP4
-	cat -e ./Response/GET/resp4
-	echo "Error: Response/GET 4"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp5 ./Response/GET/resp5)" != "" ]; then
-	echo "Error: Response/GET 5"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp6 ./Response/GET/resp6)" != "" ]; then
-	echo "Error: Response/GET 6"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp7 ./Response/GET/resp7)" != "" ]; then
-	echo "Error: Response/GET 7"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp8 ./Response/GET/resp8)" != "" ]; then
-	echo "Error: Response/GET 8"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp9 ./Response/GET/resp9)" != "" ]; then
-	echo "Error: Response/GET 9"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp10 ./Response/GET/resp10)" != "" ]; then
-	echo "Error: Response/GET 10"
-	exit 1
-fi
-if [ "$(diff ./Response/GET/my_resp11 ./Response/GET/resp11)" != "" ]; then
-	echo "Error: Response/GET 11"
-	exit 1
-fi
-
-
-# \\ -------------- POST --------------- //
-if [ "$(diff random1.txt ./test42/random-output1.txt)" != "" ]; then
-	echo "Error: POST 1"
-	exit 1
-fi
-if [ "$(diff random2.txt ./test42/random-output2.txt)" != "" ]; then
-	echo "Error: POST 2"
-	exit 1
-fi
-if [ "$(diff random3.txt ./test42/random-output3.txt)" != "" ]; then
-	echo "Error: POST 3"
-	exit 1
-fi
+test_get 1 "" GET
+test_get 2 /directory GET
+test_get 3 /directory/youpi.bad_extension GET
+test_get 4 /directory/youpi.bla GET
+test_get 5 /directory/oulalala GET
+test_get 6 /directory/nop GET
+test_get 7 /directory/nop/ GET
+test_get 8 /directory/nop/other.pouic GET
+test_get 9 /directory/nop/other.pouac GET
+test_get 10 /directory/Yeah GET
+test_get 11 /directory/Yeah/not_happy.bad_extension GET
 
 # \\ -------------- DELETE --------------- //
-diff <(head -n 1 ./Response/DELETE/my_resp1) <(head -n 1 ./Response/DELETE/resp1)
-if [ $? == "1" ]; then
-	echo "Error: DELETE 1"
-	exit 1
-fi
-diff <(head -n 1 ./Response/DELETE/my_resp2) <(head -n 1 ./Response/DELETE/resp2)
-if [ $? == "1" ]; then
-	echo "Error: DELETE 2"
-	exit 1
-fi
 
+# 1st argument : request number
+# 2nd argument : path
+# 3rd argument : expected status code
+function test_delete() {
+	RESP=$(curl -s -o /dev/null -w %{http_code} -X DELETE localhost:8001$2)
+	if [ $RESP != $3 ]; then
+		echo "dollar 2 = " $2
+		echo -n "Error on DELETE request no $1: "
+		echo expected $3, got $RESP
+		exit 1
+	fi
+}
+test_delete 1 /delete_file 204
+test_delete 2 /delete_file 404
 
-rm -f Response/GET/my_*
-rm -f Response/DELETE/my_*
+# \\ -------------- POST --------------- //
+
+# 1st argument : request number
+function test_post() {
+	curl -v -X POST  --data-binary  @"random$1.txt" -H "Transfer-Encoding: chunked" http://localhost:8001/random-output$1.txt
+	if [ "$(diff random$1.txt ./test42/random-output$1.txt)" != "" ]; then
+		echo "Error: POST $1"
+		exit 1
+	fi
+}
+
+dd if=/dev/random of=random1.txt bs=1 count=158745
+test_post 1
+
+dd if=/dev/random of=random2.txt bs=1 count=10000000
+test_post 2
+
+yes this is a test | head -n 250000 > random3.txt
+test_post 3
+
+# \\ -------------- Cleaning up --------------- //
+
+kill $!
+make fclean -C ..
+
+rm -f test_methods/GET/my_*
 rm -f random*
 rm -f ./test42/random* 
-
-make fclean -C ..
-rm Webserv
 
 exit 0

@@ -1,11 +1,10 @@
 #include "Middleware.hpp"
 #include "MiddlewareChain.hpp"
+#include <algorithm>
 
 //405
 
 void		MethodChecker::body(ActiveHTTP& actHTTP, Request& request, Response& response, MiddlewareChain& next) {
-
-
 	(void)response;
 	(void)actHTTP;
 
@@ -14,15 +13,9 @@ void		MethodChecker::body(ActiveHTTP& actHTTP, Request& request, Response& respo
         return ;
     }
 
-	bool set = false;
-
-	for (std::vector<std::string>::const_iterator it = request.get_location().get_methods().begin(); it != request.get_location().get_methods().end(); it++)
-	{
-		if (*it == request.get_method())
-			set = true;
-	}
-
-	if (set == false)
+	std::vector<std::string> methods = request.get_location().get_methods();
+	std::string method = request.get_method();
+	if (std::find(methods.begin(), methods.end(), method) == methods.end())
 		response.set_code(Response::MethodNotAllowed);
-	next();
+	return next();
 }

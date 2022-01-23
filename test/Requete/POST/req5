@@ -1,8 +1,0 @@
-POST /post_body HTTP/1.1\r
-Host: localhost:8001\r
-User-Agent: G> 2021/12/14 12:26:09.411279  length=64 from=210153381 to=210153444
-o-http-client/1.1\r
-Transfer-Encoding: chunked\r
-Content-Type: test/file\r
-Accept-Encoding: gzip\r
-\r
