@@ -89,7 +89,15 @@ bool CGIOutTask::always(int) {
 	return (true);
 }
 
-bool CGIOutTask::on_close(int) { 
+bool CGIOutTask::on_close(int fd) { 
+	static bool first_call = true;
+	if (first_call)
+	{
+		first_call = false;
+		on_readable(fd);
+		return (false);
+	}
+	first_call = true;
 	delete (this);
 	return (false);
 }
