@@ -36,10 +36,10 @@ public:
 
 protected:
 	Socket			*_socket;
-	bool			on_writable(int fd);
-	bool			on_readable(int fd);
-	bool			on_close(int fd);
-	bool			always(int fd);
+	virtual bool	on_writable(int fd);
+	virtual bool	on_readable(int fd);
+	virtual bool	on_close(int fd);
+	virtual bool	always(int fd);
 
 private:
 	void init(const INetAddress& address, bool nonblocking);

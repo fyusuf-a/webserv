@@ -21,7 +21,10 @@ namespace Utils
 	};
 	struct cmpStringInsensitive {
 		bool operator()(const std::string&, const std::string&) const;
+		static bool is_less(const std::string&, const std::string&);
+		static bool is_equal(const std::string&, const std::string&);
 	};
+	bool is_equal_insensitive(const std::string&, const std::string&);
 	std::string month_to_str(unsigned int i);
 	std::string weekday_to_str(unsigned int i);
 	std::ostream& print_date(std::ostream& os, bool show_weekday = true, bool show_gmt = true);
@@ -49,6 +52,7 @@ namespace Utils
 
 	bool set_fd_as_non_blocking(int fd, const char* fd_description);
 
+	std::string find_mime_type(std::string& ext);
 };
 
 struct MyException : public std::exception
@@ -80,7 +84,5 @@ std::ostream& operator<<(std::ostream& os, const std::vector<T>& vec) {
 		os << vec[i] << (i == len - 1 ? "" : ",");
 	return os;
 }
-
-
 
 #endif

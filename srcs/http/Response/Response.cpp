@@ -107,8 +107,9 @@ const Response::header_map& Response::get_headers() const {
 	return _headers;
 }
 
-void	Response::set_header(const std::string& key, const std::string& value) {
-	HeaderMap::set_header(_headers, key, value, true);
+void	Response::set_header(const std::string& key, const std::string& value,
+		bool replace) {
+	HeaderMap::set_header(_headers, key, value, replace);
 }
 
 void	Response::delete_header(const std::string& key) {

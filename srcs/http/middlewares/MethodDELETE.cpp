@@ -34,9 +34,9 @@ void		MethodDELETE::body(ActiveHTTP&, Request& request, Response& response, Midd
 		if (!ret)
 		{
 			#ifdef TEST42
-				response.set_code(200);
+				response.set_code(Response::OK);
 			#else
-				response.set_code(204);
+				response.set_code(Response::NoContent);
 			#endif
 		}
 	}

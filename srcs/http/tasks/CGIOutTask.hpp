@@ -22,10 +22,10 @@ class CGIOutTask : public Task
 
 
     protected:
-        virtual bool   on_readable(int fd);
-        virtual bool   on_writable(int);
-        virtual bool   on_close(int);
-        virtual bool   always(int);
+        virtual bool on_readable(int);
+        virtual bool on_writable(int);
+        virtual bool on_close(int);
+        virtual bool always(int);
 
 		// Contains a temporary string buffer or is a direct pointer to the
 		// write buffer of the ActiveHTTP server
@@ -38,6 +38,7 @@ class CGIOutTask : public Task
 		// parsing, a Content-Length header was encountered and this value
 		// reflects it, otherwise, the response must be chunked
 		ssize_t			_content_length;
+		int				_status; // a temporary variable to check the exit value
 
 	private:
 		bool parse(Response&);

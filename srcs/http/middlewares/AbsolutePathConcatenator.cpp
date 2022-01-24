@@ -47,7 +47,7 @@ void		AbsolutePathConcatenator::body(ActiveHTTP&, Request& request, Response& re
 	if (request.get_location().get_redirection() != "")
 	{
 		request.set_path(request.get_location().get_redirection());
-		response.set_header("Location", request.get_location().get_redirection());
+		response.set_header("Location", request.get_location().get_redirection(), true);
 		response.set_code(Response::MovedPermanently);
 	}
 	

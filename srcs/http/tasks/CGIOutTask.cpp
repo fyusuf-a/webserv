@@ -16,7 +16,7 @@ CGIOutTask::CGIOutTask(int fd, ActiveHTTP& serv, int pid)
 	LOG.debug() << "New CGIOut task (fd = " << _fd << ")" << std::endl;
 }
 
-CGIOutTask::~CGIOutTask(){
+CGIOutTask::~CGIOutTask() {
 	waitpid(_pid, NULL, WNOHANG);
 	TransferEncoding::final_chunk_on_buffer(_serv.get_write_buffer());
 }
@@ -25,7 +25,7 @@ bool CGIOutTask::on_readable(int fd) {
 	Response& response = _serv.get_response();
 
 	if (_state == S_WAITING_FOR_MIDDLEWARES) {
-		if (_serv.get_response().get_ready())
+		if (response.get_ready())
 			_state = S_HEADER_NAME;
 		else
 			return true;
@@ -38,9 +38,17 @@ bool CGIOutTask::on_readable(int fd) {
 	// If no data is read from the pipe, delete the task
 	if (ret <= 0)
 	{
-		LOG.debug() << "Deleting task because of non-positive value of read" << std::endl;
-		return on_close(fd);
+		waitpid(_pid, &_status, WNOHANG);
+		if (WIFEXITED(_status)) {
+			LOG.debug() << "Process has exited  and read returned a "
+				"non-positive value (fd = " << fd << ")" << std::endl;
+			on_close(fd);
+			return false;
+		}
+		return true;
 	}
+
+	bool is_head_method = _serv.get_request().get_method() == "HEAD";
 	// If the end of headers is not reached, parse the headers
 	if (_state != S_BODY)
 	{
@@ -53,23 +61,21 @@ bool CGIOutTask::on_readable(int fd) {
 			if (_content_length == -1)
 			{
 				response.delete_header("Content-Length");
-				response.set_header("Transfer-Encoding", "chunked");
+				response.set_header("Transfer-Encoding", "chunked", true);
 			}
 			_serv.write_beginning_on_write_buffer(fd);
-			if (_serv.get_request().get_method() == "HEAD")
-				return on_close(fd);
-			if (_content_length == -1)
-				TransferEncoding::to_chunk_on_buffer(_serv.get_write_buffer(),
-																	_buffer);
-			else
+			if (!is_head_method && _content_length == -1)
+				TransferEncoding::to_chunk_on_buffer(
+										_serv.get_write_buffer(), _buffer);
+			else if (!is_head_method)
 				_serv.get_write_buffer() += _buffer;
 		}
 	}
 	else if (_state == S_BODY) {
-		if (_content_length == -1)
+		if (!is_head_method && _content_length == -1)
 			TransferEncoding::to_chunk_on_buffer(_serv.get_write_buffer(),
 																	tmp, ret);
-		else
+		else if (!is_head_method)
 			_serv.get_write_buffer().append(tmp, ret);
 	}
 	return (true);
@@ -83,7 +89,15 @@ bool CGIOutTask::always(int) {
 	return (true);
 }
 
-bool	CGIOutTask::on_close(int) { 
+bool CGIOutTask::on_close(int fd) { 
+	static bool first_call = true;
+	if (first_call)
+	{
+		first_call = false;
+		on_readable(fd);
+		return (false);
+	}
+	first_call = true;
 	delete (this);
 	return (false);
 }
@@ -143,8 +157,6 @@ void CGIOutTask::parse_custom_status(Response& response, size_t res) {
 }
 
 bool CGIOutTask::parse_header_value(Response& response) {
-	static int use = 0;
-	use++;
 	size_t res = _buffer.find("\r\n", _index);
 	if (res != std::string::npos)
 	{
@@ -157,12 +169,12 @@ bool CGIOutTask::parse_header_value(Response& response) {
 			else
 				break;
 		}
-		if (_header_name != "Status")
+		// Supersede the value given by Webserv to the response
+		if (Utils::cmpStringInsensitive::is_equal(_header_name, "Content-Type")) {
 			response.set_header(_header_name
-										, _buffer.substr(_index, res - _index));
-		else
-			parse_custom_status(response, res);
-		if (_header_name == "Content-Length") {
+				, _buffer.substr(_index, res - _index), true);
+		}
+		else if (Utils::cmpStringInsensitive::is_equal(_header_name, "Content-Length")) {
 			try {
 				std::string content_length_str =
 					HeaderMap::get_header_first_value(response.get_headers(), "Content-Length");
@@ -170,6 +182,12 @@ bool CGIOutTask::parse_header_value(Response& response) {
 			}
 			catch (std::out_of_range& e) {
 			}
+		}
+		else {
+			if (Utils::cmpStringInsensitive::is_equal(_header_name, "Status"))
+				parse_custom_status(response, res);
+			response.set_header(_header_name
+				, _buffer.substr(_index, res - _index), false);
 		}
 		_header_name = "";
 		_index = res + 2;

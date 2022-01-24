@@ -7,7 +7,7 @@ Webserv
 .vscode
 compile_commands.json
 .clangd
-test/Response/GET/my_resp*
+test/test_methods/GET/my_resp*
 test/test42/put_test/file_should_exist_after
 test/test42/YoupiBanane/youpla.bla
 test/ubuntu_tester
