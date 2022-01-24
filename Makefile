@@ -56,9 +56,9 @@ debug: all
 test42: CFLAGS += -D TEST42 -D DEBUG_FLAG
 test42: all
 
-docker:
+site:
 	docker rm -f web_server && \
-	docker build -t webserv -f test/docker-wordpress/Dockerfile . && \
+	docker build -t webserv -f test/docker-site/Dockerfile . && \
 	docker run --name web_server -p 80:80 -d webserv
 
 clean :

@@ -34,6 +34,7 @@ class Response
 			RequestTime_out = 408,
 			PayloadTooLarge = 413,
 			// Server Error
+			InternalServerError = 500,
 			NotImplemented = 501,
 			HTTPNotSupported = 505,
 			UnknownError = 520,

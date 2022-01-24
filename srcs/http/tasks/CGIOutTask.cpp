@@ -1,4 +1,5 @@
 #include "CGIOutTask.hpp"
+#include <cstdlib>
 #include <stdexcept>
 #include <unistd.h>
 #include <sys/types.h>
@@ -17,7 +18,16 @@ CGIOutTask::CGIOutTask(int fd, ActiveHTTP& serv, int pid)
 }
 
 CGIOutTask::~CGIOutTask() {
-	waitpid(_pid, NULL, WNOHANG);
+	int status;
+	waitpid(_pid, &status, WNOHANG);
+	if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+	{
+		Response& response = _serv.get_response();
+		response.set_code(Response::InternalServerError);
+		response.set_header("Content-Length", 0, true);
+		response.delete_header("Transfer-Encoding");
+		_serv.write_beginning_on_write_buffer(_fd);
+	}
 	TransferEncoding::final_chunk_on_buffer(_serv.get_write_buffer());
 }
 
