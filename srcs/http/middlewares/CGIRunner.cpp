@@ -52,10 +52,8 @@ void		CGIRunner::set_env(Request::header_map& env, ActiveHTTP const& server, Req
 #ifdef TEST42
 	// The test CGI executable from 42 does not follow RFC's rules
 	env["PATH_INFO"].push_front(request.get_original_request_path());
-	std::cout << "test42 : setting PATH_INFO to \"" << request.get_original_request_path() << "\"" << std::endl;
 #else
 	env["PATH_INFO"].push_front(request.get_extra_path());
-	std::cout << "no test42 : setting PATH_INFO to \"" << request.get_extra_path() << "\"" << std::endl;
 #endif
 
 	// Setting PATH_TRANSLATED (same as SCRIPT_FILENAME?)

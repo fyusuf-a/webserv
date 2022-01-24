@@ -45,7 +45,6 @@ public:
 	time_t const&	get_last_time_active() const;
 	Request&		get_request();
 	Response&		get_response();
-	std::string&	get_write_buffer();
 	char*			get_tmp();
 	std::list<Task*> const& get_ongoing_tasks() const;
 	bool			get_delegation_to_task() const;

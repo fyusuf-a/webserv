@@ -6,7 +6,7 @@ Log& ActiveServer::LOG = Log::getInstance();
 
 ActiveServer::ActiveServer() : Callback(), _status(false) {
 	_socket = new Socket();
-	NIOSelector::getInstance().add(_socket->getFd(), *this, READ | WRITE);
+	NIOSelector::getInstance().add(_socket->getFd(), *this, READ);
 }
 
 ActiveServer::ActiveServer(const ActiveServer& src) : Callback(src) {
@@ -15,7 +15,7 @@ ActiveServer::ActiveServer(const ActiveServer& src) : Callback(src) {
 
 ActiveServer::ActiveServer(Socket* socket) {
 	_socket = socket;
-	NIOSelector::getInstance().add(_socket->getFd(), *this, READ | WRITE);
+	NIOSelector::getInstance().add(_socket->getFd(), *this, READ);
 }
 
 ActiveServer& ActiveServer::operator=(const ActiveServer& src) {
@@ -80,7 +80,16 @@ bool ActiveServer::on_writable(int fd) {
 		return on_close(fd);
 	}
 	_write_buffer = _write_buffer.substr(sent);
+	if (_write_buffer.empty())
+		NIOSelector::getInstance().updateOps(fd, READ);
 	return (true);
+}
+
+void ActiveServer::write_on_write_buffer(const std::string& str) {
+	if (str.empty())
+		return ;
+	_write_buffer += str;
+	NIOSelector::getInstance().updateOps(_socket->getFd(), READ | WRITE);
 }
 
 bool ActiveServer::on_close(int) {

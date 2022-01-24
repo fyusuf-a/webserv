@@ -88,6 +88,14 @@ void	NIOSelector::add(int fd, Callback& callback, short operations) {
 						  , 0});
 }
 
+void NIOSelector::showOps() {
+	for (std::map<int, t_action>::iterator it = _actions.begin(); it != _actions.end(); it++) {
+		LOG.debug() << it->first << " "
+			<< (_polled_fds[_actions[it->first].index].events & READ ? "READ/" : "") << " "
+			<< (_polled_fds[_actions[it->first].index].events & WRITE ? "WRITE/" : "") << std::endl;
+	}
+}
+
 void	NIOSelector::updateOps(int fd, short operations) {
 	if (_actions.find(fd) != _actions.end())
 		_polled_fds[_actions[fd].index].events = operations;
@@ -121,14 +129,18 @@ void	NIOSelector::remove(int fd) {
 
 void	NIOSelector::poll() {
 	int			ret = ::poll(_polled_fds.data(), _polled_fds.size(), _timeout);
-	int			fd;
-	time_t		now;
-	short		revents;
-	t_action	action;
-
-	time(&now);
+	if (ret == 0)
+		return ;
 	if (ret < 0)
 		throw std::runtime_error("poll: unexpected error");
+
+	int			fd;
+	time_t		now;
+
+	time(&now);
+	
+	short		revents;
+	t_action	action;
 	for (unsigned long i = 0; i < _polled_fds.size(); i++) {
 		fd = _polled_fds[i].fd;
 		revents = _polled_fds[i].revents;
@@ -140,7 +152,7 @@ void	NIOSelector::poll() {
 			action.callback->on_close(fd);
 			continue;
 		}
-		if (revents & (POLLIN | POLLPRI) && !action.callback->on_readable(fd))
+		if (revents & (POLLIN | POLLPRI) && !action.callback->on_readable(fd)) 
 			continue;
 		if (revents & POLLOUT && !action.callback->on_writable(fd))
 			continue;

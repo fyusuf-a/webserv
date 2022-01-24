@@ -18,6 +18,7 @@ public:
 	virtual ~ActiveServer();
 	Socket			*getSocket() const;
 	void		     setStatus(bool val);
+	void			write_on_write_buffer(const std::string& str);
 
 protected:
 	std::string		_write_buffer;

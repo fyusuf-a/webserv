@@ -26,7 +26,7 @@ void Sender::body(ActiveHTTP& serv, Request& request, Response& response, Middle
 	response.set_header("Date", oss.str(), true);
 	oss.str("");
 	
-	// If ther is an ongoing task, set the response as ready for the task to come
+	// If there is an ongoing task, set the response as ready for the task to come
 	if (serv.get_delegation_to_task())
 		response.ready();
 }

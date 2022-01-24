@@ -3,12 +3,13 @@
 
 #include <iostream>
 #include <sys/types.h>
+#include "../server/ActiveHTTP.hpp"
 
 namespace TransferEncoding {
 	
-	void to_chunk_on_buffer(std::string& buffer, std::string& str);
-	void to_chunk_on_buffer(std::string& buffer, char* str, ssize_t length);
-	void final_chunk_on_buffer(std::string& buffer);
+	void write_chunk_on_write_buffer(ActiveHTTP& serv, std::string& str);
+	void write_chunk_on_write_buffer(ActiveHTTP& serv, char* str, ssize_t length);
+	void write_final_chunk_on_write_buffer(ActiveHTTP&);
 };
 
 #endif

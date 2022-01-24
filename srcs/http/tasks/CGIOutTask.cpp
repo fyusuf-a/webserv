@@ -18,7 +18,7 @@ CGIOutTask::CGIOutTask(int fd, ActiveHTTP& serv, int pid)
 
 CGIOutTask::~CGIOutTask() {
 	waitpid(_pid, NULL, WNOHANG);
-	TransferEncoding::final_chunk_on_buffer(_serv.get_write_buffer());
+	TransferEncoding::write_final_chunk_on_write_buffer(_serv);
 }
 
 bool CGIOutTask::on_readable(int fd) {
@@ -65,18 +65,16 @@ bool CGIOutTask::on_readable(int fd) {
 			}
 			_serv.write_beginning_on_write_buffer(fd);
 			if (!is_head_method && _content_length == -1)
-				TransferEncoding::to_chunk_on_buffer(
-										_serv.get_write_buffer(), _buffer);
+				TransferEncoding::write_chunk_on_write_buffer(_serv, _buffer);
 			else if (!is_head_method)
-				_serv.get_write_buffer() += _buffer;
+				_serv.write_on_write_buffer(_buffer);
 		}
 	}
 	else if (_state == S_BODY) {
 		if (!is_head_method && _content_length == -1)
-			TransferEncoding::to_chunk_on_buffer(_serv.get_write_buffer(),
-																	tmp, ret);
+			TransferEncoding::write_chunk_on_write_buffer(_serv, tmp, ret);
 		else if (!is_head_method)
-			_serv.get_write_buffer().append(tmp, ret);
+			_serv.write_on_write_buffer(std::string(tmp, ret));
 	}
 	return (true);
 }

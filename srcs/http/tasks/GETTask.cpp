@@ -28,7 +28,7 @@ bool GETTask::on_readable(int fd) {
 				_serv.get_response().set_code(Response::UnknownError);
 				return on_close(fd);
 			}
-			_serv.get_write_buffer().append(tmp, ret);
+			_serv.write_on_write_buffer(std::string(tmp, ret));
 		break;
 	}
 	return (true);

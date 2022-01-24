@@ -110,7 +110,7 @@ bool	ActiveHTTP::on_readable(int fd) {
 			std::ostringstream oss;
 			add_content_length(oss);
 			oss << _response;
-			_write_buffer += oss.str();
+			write_on_write_buffer(oss.str());
 			LOG.debug() << "Request totally written on the write buffer (fd = "<< fd << ")" << std::endl;
 			if (reinitialize(fd) == false)
 				return false;
@@ -198,10 +198,6 @@ Response &ActiveHTTP::get_response() {
 	return (_response);
 }
 
-std::string& ActiveHTTP::get_write_buffer() {
-	return (_write_buffer);
-}
-
 char* ActiveHTTP::get_tmp() {
 	return (_tmp);
 }
@@ -242,7 +238,7 @@ void	ActiveHTTP::launch_middleware_chain(int fd) {
 void	ActiveHTTP::write_beginning_on_write_buffer(int fd) {	
 	std::ostringstream os;
 	os < _response;
-	_write_buffer += os.str();
+	write_on_write_buffer(os.str());
 	LOG.debug() << "Beginning of the request written on the write buffer (fd = "<< fd << ")" << std::endl;
 	_response.set_beginning_written_on_write_buffer(true);
 }
@@ -257,6 +253,7 @@ bool	ActiveHTTP::reinitialize(int fd) {
 	_request = Request();
 	_response = Response();
 	_delegation_to_task = false;
+
 	LOG.debug() << "ActiveHTTP server is reinitialized (fd = "<< fd << ")" << std::endl;
 	return true;
 }

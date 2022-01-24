@@ -70,6 +70,7 @@ class NIOSelector : public Singleton<NIOSelector> {
 
 		void	updateOps(int fd, short operations=READ | WRITE);
 		void	removeOps(int fd, short operations=READ | WRITE);
+		void	showOps();
 		void	remove(int fd);
 		void	poll();
 };

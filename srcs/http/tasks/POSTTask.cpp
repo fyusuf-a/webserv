@@ -46,7 +46,7 @@ bool POSTTask::on_writable(int fd) {
 				if (_output_to_write_buffer == WRITE_ON_WRITE_BUFFER) {
 					std::ostringstream oss;
 					oss << _serv.get_response();
-					_serv.get_write_buffer() += oss.str();
+					_serv.write_on_write_buffer(oss.str());
 				}
 				return on_close(fd);
 			}
