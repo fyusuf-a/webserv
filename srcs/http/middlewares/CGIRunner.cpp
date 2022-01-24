@@ -52,10 +52,11 @@ void		CGIRunner::set_env(Request::header_map& env, ActiveHTTP const& server, Req
 #ifdef TEST42
 	// The test CGI executable from 42 does not follow RFC's rules
 	env["PATH_INFO"].push_front(request.get_original_request_path());
+	std::cout << "test42 : setting PATH_INFO to \"" << request.get_original_request_path() << "\"" << std::endl;
 #else
 	env["PATH_INFO"].push_front(request.get_extra_path());
+	std::cout << "no test42 : setting PATH_INFO to \"" << request.get_extra_path() << "\"" << std::endl;
 #endif
-	LOG.debug() << "PATH_INFO = \"" << list_front(env["PATH_INFO"]) << '\"' << std::endl; 
 
 	// Setting PATH_TRANSLATED (same as SCRIPT_FILENAME?)
 	env["PATH_TRANSLATED"].push_front(env["PATH_INFO"].empty() ?
@@ -131,18 +132,22 @@ size_t CGIRunner::size_of_header_map(const Request::header_map& map) {
 }
 
 void CGIRunner::convert_map_to_tab(Request::header_map env , char** env_tab) {
-	env_tab[size_of_header_map(env)] = 0;
+	env_tab[env.size()] = 0;
 	std::string tmp;
 	size_t i = 0;
 	for (Request::header_map::iterator it = env.begin()
-												; it != env.end(); it++) {
+												; it != env.end(); it++, i++) {
+		tmp = it->first + "=";
 		for (std::list<std::string>::const_iterator jt = it->second.begin();
-					jt != it->second.end(); jt++, i++) {
+					jt != it->second.end(); jt++) {
 			//tmp = it->first + "=" + it->second;
-			tmp = it->first + "=" + *jt;
-			env_tab[i] = new char[tmp.size() + 1];
-			strcpy(env_tab[i], tmp.c_str());
+			if (jt != it->second.begin())
+				tmp += "; ";
+			tmp += *jt;
 		}
+		env_tab[i] = new char[tmp.size() + 1];
+		strcpy(env_tab[i], tmp.c_str());
+		env_tab[i][tmp.size()] = 0;
 	}
 }
 
@@ -153,7 +158,7 @@ void		CGIRunner::body(ActiveHTTP& server, Request& request
 
 	Request::header_map env;
 	set_env(env, server, request);
-	char *env_tab[size_of_header_map(env) + 1];
+	char *env_tab[env.size() + 1];
 	convert_map_to_tab(env, env_tab);
 
 	std::string const& cgi_program =
@@ -173,7 +178,6 @@ void		CGIRunner::body(ActiveHTTP& server, Request& request
 	if (!Utils::set_fd_as_non_blocking(in_pipe[0], "in-pipe read extremity")
 		//|| !Utils::set_fd_as_non_blocking(in_pipe[1], "in-pipe write extremity")
 		|| !Utils::set_fd_as_non_blocking(out_pipe[0], "out-pipe read extremity"))
-		//|| !Utils::set_fd_as_non_blocking(out_pipe[1], "out-pipe write extremity"))
 	{
 		close(in_pipe[0]);
 		close(in_pipe[1]);
@@ -196,7 +200,8 @@ void		CGIRunner::body(ActiveHTTP& server, Request& request
 
 	new POSTTask(in_pipe[1], server, POSTTask::NO_WRITE_ON_WRITE_BUFFER);
 	new CGIOutTask(out_pipe[0], server, pid);
-	for (size_t i = 0; i < size_of_header_map(env); i++)
+	for (size_t i = 0; i < env.size(); i++) {
 		delete env_tab[i];
+	}
 	next();
 }
