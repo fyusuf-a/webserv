@@ -28,7 +28,7 @@ int main(int ac, char **av)
     }
     catch(std::exception& caught)
     {
-        LOG.error() << caught.what() << std::endl;
+        LOG.error() << "main: " << caught.what() << std::endl;
         exit(EXIT_FAILURE) ;
     }
  	return (0);
