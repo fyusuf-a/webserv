@@ -9,7 +9,7 @@ rm -f ./Webserv
 touch ./test42/delete_file
 make -C .. fclean && make -C .. debug -j4
 
-../Webserv test_methods/test_methods.conf
+../Webserv test_methods/test_methods.conf &
 
 sleep 2
 
