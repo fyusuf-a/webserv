@@ -17,6 +17,7 @@ typedef enum {
 	INFO,
 	WARNING,
 	ERROR,
+	NONE
 } log_level_t;
 
 class Log : public Singleton<Log> {
