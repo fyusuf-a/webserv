@@ -56,23 +56,6 @@ std::ostream& operator<<(std::ostream& os, const std::map<int, NIOSelector::t_ac
 	return os;
 }*/
 
-
-void	NIOSelector::my_add(int fd, Callback& callback, short operations) {
-	LOG.debug() << "Adding fd no " << fd << " to NIOSelector with operations "
-		<< (operations & READ ? "READ/" : "") << (operations & WRITE ? "WRITE/" : "")  << std::endl;
-	if (_actions.find(fd) != _actions.end())
-	{
-		LOG.error() << "fd=" << fd << " already existed in NIOSelector map" << std::endl;
-		remove(fd);
-	}
-	_actions[fd] = (t_action){_polled_fds.size(), &callback};
-	_polled_fds.push_back((struct pollfd)
-						{ fd
-						  , operations
-						  , 0});
-}
-
-
 void	NIOSelector::add(int fd, Callback& callback, short operations) {
 	LOG.debug() << "Adding fd no " << fd << " to NIOSelector with operations "
 		<< (operations & READ ? "READ/" : "") << (operations & WRITE ? "WRITE/" : "")  << std::endl;
