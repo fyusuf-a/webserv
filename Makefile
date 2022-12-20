@@ -39,7 +39,7 @@ SRC = 	main.cpp\
 
 NAME = Webserv
 HEADERS = -I includes 
-CC = g++
+CC = clang++
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -g3
 O_FILES = $(SRC:.cpp=.o)
 

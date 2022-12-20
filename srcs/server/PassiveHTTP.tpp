@@ -15,11 +15,6 @@ template<typename T>
 Log& PassiveHTTP<T>::LOG = Log::getInstance();
 
 template<typename T>
-PassiveHTTP<T>::PassiveHTTP() : PassiveServer<T>() {
-	_server_blocks = ServerBlock();
-}
-
-template<typename T>
 PassiveHTTP<T>::PassiveHTTP(const PassiveHTTP& src) : PassiveServer<T>(src) {
 	*this = src;
 }
