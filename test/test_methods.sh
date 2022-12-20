@@ -6,8 +6,7 @@ rm -f random*
 rm -f ./test42/random*
 rm -f ./Webserv
 
-touch ./test42/delete_file
-make -C .. fclean && make -C .. debug -j4
+make -C .. fclean && make -C .. test42 -j4
 
 ../Webserv test_methods/test_methods.conf &
 
@@ -19,6 +18,7 @@ function test_get() {
 	curl -s localhost:8001$2 > test_methods/GET/my_resp$1
 	if [ "$(diff ./test_methods/GET/my_resp$1 ./test_methods/GET/resp$1)" != "" ]; then
 		echo "Error: GET $1"
+		kill $!
 		exit 1
 	fi
 }
@@ -38,19 +38,22 @@ test_get 11 /directory/Yeah/not_happy.bad_extension GET
 
 # \\ -------------- DELETE --------------- //
 
+touch ./test42/delete_file
+
 # 1st argument : request number
 # 2nd argument : path
 # 3rd argument : expected status code
 function test_delete() {
 	RESP=$(curl -s -o /dev/null -w %{http_code} -X DELETE localhost:8001$2)
 	if [ $RESP != $3 ]; then
-		echo "dollar 2 = " $2
+		echo "path = " $2
 		echo -n "Error on DELETE request no $1: "
 		echo expected $3, got $RESP
+		kill $!
 		exit 1
 	fi
 }
-test_delete 1 /delete_file 204
+test_delete 1 /delete_file 200
 test_delete 2 /delete_file 404
 
 # \\ -------------- POST --------------- //
@@ -60,6 +63,7 @@ function test_post() {
 	curl -v -X POST  --data-binary  @"random$1.txt" -H "Transfer-Encoding: chunked" http://localhost:8001/random-output$1.txt
 	if [ "$(diff random$1.txt ./test42/random-output$1.txt)" != "" ]; then
 		echo "Error: POST $1"
+		kill $!
 		exit 1
 	fi
 }
