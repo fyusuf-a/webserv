@@ -10,7 +10,7 @@ class GETTask : public Task
 {
     public:
 		enum state {
-			S_WAITING_FOR_MIDDLEWARES,
+			S_WRITING_BEGINNING,
 			S_BEGINNING_WRITTEN
 		};
 

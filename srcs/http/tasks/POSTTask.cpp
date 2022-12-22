@@ -6,7 +6,6 @@
 POSTTask::POSTTask(int fd, ActiveHTTP& serv, does_write_on_write_buffer condition)
 	: Task(fd, serv, WRITE)
 	, _head(0)
-	, _state(S_WAITING_FOR_MIDDLEWARES)
 	, _output_to_write_buffer(condition)
 {
 	_size = serv.get_request().get_body().size();
@@ -20,39 +19,31 @@ bool POSTTask::on_readable(int) {
 }
 
 bool POSTTask::on_writable(int fd) {
-	switch ((int)_state) {
-		case S_WAITING_FOR_MIDDLEWARES:
-			if (_serv.get_response().get_ready())
-				_state = S_BEGINNING_WRITTEN;
-		break;
-		case S_BEGINNING_WRITTEN:
-			Request &request = _serv.get_request();
-			std::string body = request.get_body();
+	Request &request = _serv.get_request();
+	std::string body = request.get_body();
 
-			const char *str = body.c_str() + _head;
-			//LOG.debug() << _head << "/" << std::endl;
-			//LOG.debug() << _size << " written" << std::endl;
+	const char *str = body.c_str() + _head;
+	//LOG.debug() << _head << "/" << std::endl;
+	//LOG.debug() << _size << " written" << std::endl;
 
-			ssize_t body_length = body.length() - _head;
-			//ssize_t write_length = POST_BUFFER_LENGTH > body_length ? body_length : POST_BUFFER_LENGTH;
-			//ssize_t ret = write(fd, str, write_length);
-			ssize_t ret = write(fd, str, body_length);
+	ssize_t body_length = body.length() - _head;
+	//ssize_t write_length = POST_BUFFER_LENGTH > body_length ? body_length : POST_BUFFER_LENGTH;
+	//ssize_t ret = write(fd, str, write_length);
+	ssize_t ret = write(fd, str, body_length);
 
-			if (ret < 0) {
-				LOG.error() << "An error happened on fd = " << fd << std::endl;
-				_serv.get_response().set_code(Response::UnknownError);
-				return on_close(fd); }
-			if (ret == 0) {
-				if (_output_to_write_buffer == WRITE_ON_WRITE_BUFFER) {
-					std::ostringstream oss;
-					oss << _serv.get_response();
-					_serv.get_write_buffer() += oss.str();
-				}
-				return on_close(fd);
-			}
-			_head += ret;
-		break;
+	if (ret < 0) {
+		LOG.error() << "An error happened on fd = " << fd << std::endl;
+		_serv.get_response().set_code(Response::UnknownError);
+		return on_close(fd); }
+	if (ret == 0) {
+		if (_output_to_write_buffer == WRITE_ON_WRITE_BUFFER) {
+			std::ostringstream oss;
+			oss << _serv.get_response();
+			_serv.get_write_buffer() += oss.str();
+		}
+		return on_close(fd);
 	}
+	_head += ret;
 	return (true);
 }
 

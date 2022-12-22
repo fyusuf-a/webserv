@@ -55,12 +55,10 @@ class Response
 		/*
 		 * The lifetime of a response is :
 		 * request._treated_by_middlewares
-		 * -> _ready at the end of the middleware chain
 		 * (-> _beginning_written_on_write_buffer)
 		 * -> _written_on_write_buffer
 		 */
 
-		bool		_ready;
 		// If a task is running, enables it only if the first part of the
 		// request is sent
 		bool		_beginning_written_on_write_buffer;
@@ -76,16 +74,10 @@ class Response
 		Response( Response const & src );
 		Response & operator=( Response const & rhs );
 
-
-		// Ends the chain of the middleware, a task might add things to the
-		// body
-		void		ready();
-
 		std::string	get_body(void) const;
 		const header_map&	get_headers() const;
 		void				delete_header(const std::string& key);
 		unsigned int		get_code(void) const;
-		bool				get_ready();
 		bool				get_index_display() const;
 		bool 				get_beginning_written_on_write_buffer() const;
 		bool 				get_written_on_write_buffer() const;

@@ -11,7 +11,6 @@ class CGIOutTask : public Task
 {
     public:
 		enum parsing_state {
-			S_WAITING_FOR_MIDDLEWARES,
 			S_HEADER_NAME,
 			S_HEADER_VALUE,
 			S_BODY

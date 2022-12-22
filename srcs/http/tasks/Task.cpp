@@ -9,7 +9,6 @@ Log& Task::LOG = Log::getInstance();
 //}
 
 Task::Task(int fd, ActiveHTTP& serv, short mode) : _fd(fd), _serv(serv) {
-	serv.set_delegation_to_task(true);
 	serv.add_ongoing_task(this);
 	NIOSelector::getInstance().add(_fd, *this, mode);
 }
@@ -21,6 +20,8 @@ Task::~Task() {
 	_serv.remove_ongoing_task(this);
 	if (_serv.get_ongoing_tasks().empty())
 		_serv.reinitialize(_fd);
+	// Re-establish the read operations on the socket
+	NIOSelector::getInstance().updateOps(_serv.getSocket()->getFd(), READ | WRITE);
 }
 
 int Task::get_fd() const {

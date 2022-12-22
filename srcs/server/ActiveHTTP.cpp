@@ -12,8 +12,7 @@ void		block_selector(ActiveHTTP& actHTTP, Request& request, Response& response);
 
 Log& ActiveHTTP::LOG = Log::getInstance();
 
-ActiveHTTP::ActiveHTTP() : ActiveServer(), _server_blocks(NULL), _chain(NULL),
-	_delegation_to_task(false)
+ActiveHTTP::ActiveHTTP() : ActiveServer(), _server_blocks(NULL), _chain(NULL)
 {
 	time(&_last_time_active);
 }
@@ -23,7 +22,6 @@ ActiveHTTP::ActiveHTTP(Socket* socket, INetAddress const& interface, std::vector
 													, _interface(interface)
 													, _server_blocks(server_blocks)
 													, _chain(NULL)
-													, _delegation_to_task(false)
 {
 	_original_port = interface.getPort();
 	time(&_last_time_active);
@@ -32,8 +30,6 @@ ActiveHTTP::ActiveHTTP(Socket* socket, INetAddress const& interface, std::vector
 ActiveHTTP::ActiveHTTP(Socket* socket) : ActiveServer(socket)
 										, _server_blocks(NULL)
 										, _chain(NULL)
-										, _delegation_to_task(false)
-									
 {
 	time(&_last_time_active);
 }
@@ -105,7 +101,7 @@ bool	ActiveHTTP::on_readable(int fd) {
 		LOG.debug() << "End of middlewares (fd = " << fd << ")" << std::endl;
 		// If there is no ongoing task, set the response length to the length of
 		// the body produced by the middlewares, and send the response
-		if (!_delegation_to_task)
+		if (this->get_ongoing_tasks().empty())
 		{
 			std::ostringstream oss;
 			add_content_length(oss);
@@ -114,6 +110,10 @@ bool	ActiveHTTP::on_readable(int fd) {
 			LOG.debug() << "Request totally written on the write buffer (fd = "<< fd << ")" << std::endl;
 			if (reinitialize(fd) == false)
 				return false;
+		}
+		// If there is an ongoing task, stop the reading from the socket
+		else {
+			NIOSelector::getInstance().removeOps(fd, WRITE);
 		}
 	}
 	return (true);
@@ -126,7 +126,7 @@ bool	ActiveHTTP::on_writable(int fd) {
 
 bool	ActiveHTTP::always(int fd) {
 	// If a request is parsed and a task is still running, the server should not timeout
-	if (_response.get_ready())
+	if (!this->get_ongoing_tasks().empty())
 	{
 		//LOG.debug() << "postponing timeout for fd " << fd << std::endl;
 		postpone_timeout();
@@ -166,10 +166,6 @@ std::list<Task*> const& ActiveHTTP::get_ongoing_tasks() const {
 	_server_blocks = server_blocks;
 }*/
 
-void ActiveHTTP::set_delegation_to_task(bool set) {
-	_delegation_to_task = set;
-}
-
 void ActiveHTTP::set_chain(MiddlewareChain* const& chain) {
 	_chain = chain;
 }
@@ -204,10 +200,6 @@ std::string& ActiveHTTP::get_write_buffer() {
 
 char* ActiveHTTP::get_tmp() {
 	return (_tmp);
-}
-
-bool ActiveHTTP::get_delegation_to_task() const {
-	return (_delegation_to_task);
 }
 
 void	ActiveHTTP::postpone_timeout() {
@@ -256,7 +248,6 @@ bool	ActiveHTTP::reinitialize(int fd) {
 	}
 	_request = Request();
 	_response = Response();
-	_delegation_to_task = false;
 	LOG.debug() << "ActiveHTTP server is reinitialized (fd = "<< fd << ")" << std::endl;
 	return true;
 }

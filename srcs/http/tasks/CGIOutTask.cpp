@@ -34,13 +34,6 @@ CGIOutTask::~CGIOutTask() {
 bool CGIOutTask::on_readable(int fd) {
 	Response& response = _serv.get_response();
 
-	if (_state == S_WAITING_FOR_MIDDLEWARES) {
-		if (response.get_ready())
-			_state = S_HEADER_NAME;
-		else
-			return true;
-	}
-
 	// Read from the pipe
 	char* tmp = _serv.get_tmp();
 	ssize_t ret = read(fd, tmp, BUFFER_LENGTH);

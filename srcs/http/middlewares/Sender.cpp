@@ -7,6 +7,7 @@ Sender::Sender() {
 }
 
 void Sender::body(ActiveHTTP& serv, Request& request, Response& response, MiddlewareChain&) {
+	(void)serv;
 
 	// If the client wants to close the connection, grant its wish
 	try {
@@ -25,8 +26,4 @@ void Sender::body(ActiveHTTP& serv, Request& request, Response& response, Middle
 	Utils::print_date(oss);
 	response.set_header("Date", oss.str(), true);
 	oss.str("");
-	
-	// If ther is an ongoing task, set the response as ready for the task to come
-	if (serv.get_delegation_to_task())
-		response.ready();
 }

@@ -12,11 +12,6 @@
 class POSTTask : public Task
 {
     private: 
-		enum state {
-			S_WAITING_FOR_MIDDLEWARES,
-			S_BEGINNING_WRITTEN
-		};
-
 		ssize_t     _head;      
 		size_t		_size;
 
@@ -34,7 +29,6 @@ class POSTTask : public Task
         virtual bool	on_writable(int);
         virtual bool	on_close(int);
         virtual bool	always(int);
-		state			_state;
 		does_write_on_write_buffer
 						_output_to_write_buffer;
 };

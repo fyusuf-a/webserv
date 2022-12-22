@@ -129,7 +129,6 @@ Response & 		Response::operator=( Response const & rhs ){
 		_index_display = rhs._index_display;
 		_body = rhs._body;
 		_headers = rhs._headers;
-		_ready = rhs._ready;
 		_beginning_written_on_write_buffer = rhs._beginning_written_on_write_buffer;
 		_written_on_write_buffer = rhs._beginning_written_on_write_buffer;
 	}
@@ -139,20 +138,11 @@ Response::Response( Response const & src ) {
 	*this = src;
 }
 
-Response::Response() : _code(OK), _ready(false), _beginning_written_on_write_buffer(false), _index_display(false) {
+Response::Response() : _code(OK), _beginning_written_on_write_buffer(false), _index_display(false) {
 					   //, _written_on_write_buffer(false) {
 }
 
 Response::~Response() {
-}
-
-void Response::ready() {
-	LOG.debug() << "Response is ready" << std::endl;
-	_ready = true;
-}
-
-bool Response::get_ready() {
-	return _ready;
 }
 
 bool Response::get_beginning_written_on_write_buffer() const {
