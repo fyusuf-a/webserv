@@ -8,7 +8,7 @@ rm -f ./Webserv
 
 make -C .. fclean && make -C .. test42 -j4
 
-../Webserv test_methods/test_methods.conf &
+valgrind --leak-check=full --show-leak-kinds=all ../Webserv test_methods/test_methods.conf &
 
 sleep 2
 

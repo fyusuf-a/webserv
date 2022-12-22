@@ -40,7 +40,7 @@ SRC = 	main.cpp\
 NAME = Webserv
 HEADERS = -I includes 
 CC = clang++
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -g3
+CFLAGS = -Wall -Wextra -Werror -std=c++98
 O_FILES = $(SRC:.cpp=.o)
 
 all : $(NAME)
@@ -49,11 +49,10 @@ $(NAME) : $(O_FILES)
 	$(CC) $(CFLAGS) $(HEADERS) $(O_FILES) -o $(NAME)
 	@echo "\033[33;32mCompilation...\t""\033[33;31mDONE 🙃\033[0m"
 
-debug: CFLAGS +=
-debug: CFLAGS += -D DEBUG_FLAG
+debug: CFLAGS += -g3 -gdwarf-4 -D DEBUG_FLAG
 debug: all
 
-test42: CFLAGS += -D TEST42 -D DEBUG_FLAG
+test42: CFLAGS += -g3 -gdwarf-4 -D TEST42 -D DEBUG_FLAG
 test42: all
 
 site:

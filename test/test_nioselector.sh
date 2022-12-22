@@ -4,7 +4,7 @@ g++ -g3 -D DEBUG_FLAG -I../includes -Wall -Werror -Wextra --std=c++98 ../srcs/ut
 PORT1=8080
 PORT2=8081
 
-valgrind --show-leak-kinds=all ./a.out 2>valgrind.log &
+valgrind --leak-check=full --show-leak-kinds=all ./a.out 2>valgrind.log &
 sleep 1
 echo -n "s" | nc -w1 localhost $PORT1 > my_test.txt ; echo -n "N" | nc -w1 localhost $PORT2 >> my_test.txt
 if  pgrep -f valgrind > /dev/null; then
